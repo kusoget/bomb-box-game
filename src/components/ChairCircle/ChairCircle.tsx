@@ -108,13 +108,7 @@ export default function ChairCircle({
                             <span className={styles.chairNumber}>{chair.id}</span>
                             {/* トラップ表示（爆弾アイコン） */}
                             {isTrapped && (
-                                <div className={styles.bombIcon}>
-                                    <img
-                                        src={`${process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game'}/images/pop_bomb.png`}
-                                        alt="Bomb"
-                                        style={{ width: '40px', height: 'auto' }}
-                                    />
-                                </div>
+                                <div className={styles.bombIcon}>💣</div>
                             )}
                             <div className={styles.electricWire} />
                         </div>

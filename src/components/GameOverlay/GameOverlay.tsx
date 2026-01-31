@@ -87,24 +87,29 @@ export default function GameOverlay({
 
         let titleText = '';
         let titleStyle = '';
+        let resultIcon = '';
 
         if (revealResult.safe) {
-            // セーフの場合 - シンプルに「XポイントGET！」
+            // セーフの場合
             if (isOpener) {
                 titleText = `${revealResult.points}ポイントGET！`;
                 titleStyle = styles.safe;
+                resultIcon = '🎉'; // 自分が獲得→嬉しい
             } else {
                 titleText = `相手が${revealResult.points}ポイント獲得...`;
                 titleStyle = styles.shock;
+                resultIcon = '😢'; // 相手が獲得→悲しい
             }
         } else {
             // アウト（爆発）の場合
             if (isOpener) {
                 titleText = '爆発！';
                 titleStyle = styles.shock;
+                resultIcon = '💥'; // 自分が爆発→ショック
             } else {
                 titleText = '爆破成功！';
                 titleStyle = styles.safe;
+                resultIcon = '😈'; // 相手を爆破→嬉しい
             }
         }
 
@@ -112,12 +117,12 @@ export default function GameOverlay({
             <div className={styles.resultOverlay}>
                 <div className={styles.resultContent}>
                     <div className={styles.resultIcon}>
-                        {revealResult.safe ? '🎉' : '💥'}
+                        {resultIcon}
                     </div>
                     <div className={`${styles.resultTitle} ${titleStyle}`}>
                         {titleText}
                     </div>
-                    {!revealResult.safe && (
+                    {!revealResult.safe && isOpener && (
                         <div className={styles.pointsLost}>得点リセット</div>
                     )}
                 </div>

@@ -193,55 +193,24 @@ export function getRandomAvatar(): string {
     return avatars[Math.floor(Math.random() * avatars.length)];
 }
 
-// アバターコードから画像パスまたは表示文字を取得するヘルパー
+// アバターコードから表示文字を取得するヘルパー（絵文字モード）
 export function getAvatarDisplay(avatarCode: string | undefined | null): { type: 'image' | 'text', value: string } {
     if (!avatarCode) return { type: 'text', value: '?' };
 
-    // basePath for Next.js subdirectory deployment
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
-
-    // マッピング定義 (relative paths without basePath)
-    const imageMap: Record<string, string> = {
-        // Current Short Codes
-        'ghost': '/images/pop_ghost.png',
-        'fox': '/images/pop_fox.png',
-        'bomb': '/images/pop_bomb.png',
-        // Single letter fallbacks (legacy/truncated data)
-        'g': '/images/pop_ghost.png',
-        'f': '/images/pop_fox.png',
-        'b': '/images/pop_bomb.png',
-        // Legacy/Compat Codes
-        'pop_ghost': '/images/pop_ghost.png',
-        'pop_fox': '/images/pop_fox.png',
-        'pop_bomb': '/images/pop_bomb.png',
-        // Handle potentially saved raw filenames or bad paths
-        'pop_ghost.png': '/images/pop_ghost.png',
-        'pop_fox.png': '/images/pop_fox.png',
-        'pop_bomb.png': '/images/pop_bomb.png',
-        '/pop_ghost.png': '/images/pop_ghost.png',
-        '/pop_fox.png': '/images/pop_fox.png',
-        '/pop_bomb.png': '/images/pop_bomb.png',
+    // 絵文字マッピング
+    const emojiMap: Record<string, string> = {
+        'ghost': '👻',
+        'fox': '🦊',
+        'bomb': '💣',
+        'g': '👻',
+        'f': '🦊',
+        'b': '💣',
     };
 
-    if (imageMap[avatarCode]) {
-        // Prepend basePath to the image path
-        return { type: 'image', value: `${basePath}${imageMap[avatarCode]}` };
+    if (emojiMap[avatarCode]) {
+        return { type: 'text', value: emojiMap[avatarCode] };
     }
 
-    // パスが直接保存されている場合
-    if (avatarCode.startsWith('/') || avatarCode.startsWith('http')) {
-        // If it looks like a legacy path at root, try to fix it
-        if (avatarCode.startsWith('/pop_') && !avatarCode.startsWith('/images/')) {
-            return { type: 'image', value: `${basePath}/images${avatarCode}` };
-        }
-        // If it already starts with basePath, return as-is
-        if (avatarCode.startsWith(basePath)) {
-            return { type: 'image', value: avatarCode };
-        }
-        // Otherwise prepend basePath
-        return { type: 'image', value: `${basePath}${avatarCode}` };
-    }
-
-    // 絵文字やその他のテキスト
+    // そのまま返す（絵文字やその他のテキスト）
     return { type: 'text', value: avatarCode };
 }
