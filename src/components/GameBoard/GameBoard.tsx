@@ -284,19 +284,12 @@ export default function GameBoard({
                             centerContent={{
                                 mainText: (
                                     <span>
-                                        {getPhaseText()}
+                                        {/* Only show center text for non-instruction phases (e.g. results) */}
+                                        {['revealing', 'round_end', 'game_over'].includes(gameState.phase) ? getPhaseText() : null}
                                     </span>
                                 ),
                                 subText: (!isSitter && !isSwitcher && gameState.phase !== 'game_over') ? '観戦中...' : undefined,
-                                button: (canSetTrap && gameState.trappedChair) ? {
-                                    label: '決定',
-                                    onClick: () => onSetTrap(gameState.trappedChair!),
-                                    variant: 'danger'
-                                } : (canSelectChair && gameState.selectedChair) ? {
-                                    label: '決定',
-                                    onClick: onConfirmSelection,
-                                    variant: 'primary'
-                                } : undefined
+                                // Button removed from center
                             }}
                         />
 
@@ -324,6 +317,28 @@ export default function GameBoard({
                     </div>
                 </div>
             </div>
+
+            {/* 固定フッター (決定ボタン) */}
+            {(canSetTrap || canSelectChair) && (
+                <div className={styles.gameFooter}>
+                    <button
+                        className={`${styles.footerButton} ${canSetTrap ? styles.danger : ''}`}
+                        disabled={
+                            (canSetTrap && !gameState.trappedChair) ||
+                            (canSelectChair && !gameState.selectedChair)
+                        }
+                        onClick={() => {
+                            if (canSetTrap && gameState.trappedChair) {
+                                onSetTrap(gameState.trappedChair);
+                            } else if (canSelectChair) {
+                                onConfirmSelection();
+                            }
+                        }}
+                    >
+                        {canSetTrap ? '爆弾をセットする' : 'この箱にする'}
+                    </button>
+                </div>
+            )}
 
             {/* 感電エフェクト */}
             <ElectricEffect isActive={isShocking} />
