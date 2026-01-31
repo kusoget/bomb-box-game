@@ -63,9 +63,9 @@
     /* No minimal highlight */
 }
 
-/* Inactive Player Styles (Dimmed) */
+/* Inactive Player Styles (Dimmed rule removed) */
 .playerScore:not(.active) {
-    opacity: 0.5;
+    /* opacity: 0.5; REMOVED */
 }
 
 .playerTopRow {

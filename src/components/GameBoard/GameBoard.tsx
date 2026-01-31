@@ -281,16 +281,14 @@ export default function GameBoard({
                             isShocking={isShocking}
                             shockingChair={gameState.selectedChair}
                             onChairClick={handleChairClick}
-                            centerContent={{
-                                mainText: (
-                                    <span>
-                                        {/* Only show center text for non-instruction phases (e.g. results) */}
-                                        {['revealing', 'round_end', 'game_over'].includes(gameState.phase) ? getPhaseText() : null}
-                                    </span>
-                                ),
-                                subText: (!isSitter && !isSwitcher && gameState.phase !== 'game_over') ? '観戦中...' : undefined,
-                                // Button removed from center
-                            }}
+                            centerContent={
+                                ['revealing', 'round_end', 'game_over'].includes(gameState.phase)
+                                    ? {
+                                        mainText: <span>{getPhaseText()}</span>,
+                                        subText: undefined
+                                    }
+                                    : undefined
+                            }
                         />
 
                         {/* キャラクター表示 */}

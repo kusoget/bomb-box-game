@@ -72,11 +72,7 @@ export default function ChairCircle({
                             )}
                         </div>
                     ) : null
-                ) : (
-                    <div className={styles.centerText}>
-                        残り {remainingChairs.length} 脚
-                    </div>
-                )}
+                ) : null}
             </div>
 
             {/* 椅子 */}

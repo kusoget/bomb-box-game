@@ -48,10 +48,11 @@
     flex: 1;
     position: relative;
     background: transparent;
-    padding: 20px 0;
-    /* Reduced horizontal padding */
+    padding: 0;
+    /* Removed vertical padding */
     display: flex;
     align-items: center;
+    /* Vertically center the circle? */
     justify-content: center;
     /* Removed overflow: hidden to allow natural scroll if content is long */
 }
