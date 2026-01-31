@@ -187,6 +187,12 @@ export function generateRoomCode(): string {
 
 // アバター生成
 export function getRandomAvatar(): string {
-    const avatars = ['😀', '😎', '🤖', '👻', '🦊', '🐱', '🐶', '🦁', '🐸', '🐰'];
+    // ポップなキャラクター画像パス
+    const avatars = [
+        '/images/pop_bomb.png',
+        '/images/pop_ghost.png',
+        '/images/pop_fox.png'
+    ];
+    // ランダムで返す
     return avatars[Math.floor(Math.random() * avatars.length)];
 }

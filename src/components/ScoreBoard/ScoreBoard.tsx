@@ -79,6 +79,15 @@ export default function ScoreBoard({
         return '';
     };
 
+    // アバター描画ヘルパー
+    const renderAvatar = (avatar: string | undefined) => {
+        if (!avatar) return '?';
+        if (avatar.startsWith('/') || avatar.startsWith('http')) {
+            return <img src={avatar} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />;
+        }
+        return avatar;
+    };
+
     return (
         <div className={styles.container}>
             {/* Phase Header */}
@@ -91,7 +100,7 @@ export default function ScoreBoard({
                 {/* Player 1 */}
                 <div className={`${styles.playerScore} ${isPlayer1Active ? styles.active : ''}`}>
                     <div className={styles.playerTopRow}>
-                        <div className={styles.avatar}>{player1?.avatar ?? '?'}</div>
+                        <div className={styles.avatar}>{renderAvatar(player1?.avatar)}</div>
                         <div className={styles.scoreValue}>{p1Score}</div>
                     </div>
                     <div className={styles.playerBottomRow}>
@@ -119,7 +128,7 @@ export default function ScoreBoard({
                 <div className={`${styles.playerScore} ${styles.player2} ${isPlayer2Active ? styles.active : ''}`}>
                     <div className={styles.playerTopRow}>
                         <div className={styles.scoreValue}>{p2Score}</div>
-                        <div className={styles.avatar}>{player2?.avatar ?? '?'}</div>
+                        <div className={styles.avatar}>{renderAvatar(player2?.avatar)}</div>
                     </div>
                     <div className={styles.playerBottomRow}>
                         <div className={styles.lifeIndicator}>
