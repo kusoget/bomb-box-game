@@ -1,45 +1,17 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { GameState, Player, ChatMessage, Chair } from '@/types/game';
-import ChairCircle from '@/components/ChairCircle/ChairCircle';
-import Character from '@/components/Character/Character';
-import ScoreBoard from '@/components/ScoreBoard/ScoreBoard';
-import Chat from '@/components/Chat/Chat';
-import ElectricEffect from '@/components/ElectricEffect/ElectricEffect';
-import GameOverlay from '@/components/GameOverlay/GameOverlay';
-import RouletteOverlay from '@/components/RouletteOverlay/RouletteOverlay';
-import Toast from '@/components/Toast/Toast';
-import styles from './GameBoard.module.css';
-
-interface GameBoardProps {
-    gameState: GameState;
-    player1: Player | null;
-    player2: Player | null;
-    currentPlayerId: string;
-    messages: ChatMessage[];
-    onSetTrap: (chairId: number) => void;
-    onSelectChair: (chairId: number) => void;
-    onConfirmSelection: () => void;
-    onNextRound: () => void;
-    onSendMessage: (message: string) => void;
-    onBackToHome: () => void;
-}
+// ... imports
 
 export default function GameBoard({
-    gameState,
-    player1,
-    player2,
-    currentPlayerId,
-    messages,
-    onSetTrap,
-    onSelectChair,
-    onConfirmSelection,
-    onNextRound,
-    onSendMessage,
-    onBackToHome,
+    // ... props
 }: GameBoardProps) {
     const [isShocking, setIsShocking] = useState(false);
+
+    // 復元: 結果表示用のstate
+    const [revealResult, setRevealResult] = useState<{ safe: boolean; points: number } | null>(null);
+
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
@@ -69,9 +41,15 @@ export default function GameBoard({
                 setIsShocking(true);
             }
 
+            setRevealResult({
+                safe: !!isSafe,
+                points: selectedChair?.id ?? 0,
+            });
+
             // 結果表示後に次のラウンドへ
             const timer = setTimeout(() => {
                 setIsShocking(false);
+                setRevealResult(null);
                 onNextRound();
             }, 2500);
 
