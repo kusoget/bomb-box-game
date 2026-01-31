@@ -1,7 +1,8 @@
+/* Retro Pop Style Roulette */
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -11,46 +12,48 @@
 
 .content {
     text-align: center;
+    padding: 20px;
 }
 
 .title {
-    font-family: 'Orbitron', sans-serif;
-    color: var(--neon-cyan);
-    margin-bottom: 32px;
-    font-size: 1.5rem;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    font-family: 'Fredoka', sans-serif;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
 .rouletteBox {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid var(--neon-cyan);
-    padding: 40px 60px;
-    border-radius: 16px;
-    min-width: 300px;
+    background: var(--bg-secondary);
+    border: 4px solid var(--text-primary);
+    padding: 32px 48px;
+    border-radius: 20px;
+    min-width: 260px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    box-shadow: 6px 6px 0 var(--text-primary);
     transition: all 0.3s ease;
 }
 
 .rouletteBox.result {
-    border-color: var(--neon-yellow);
-    background: rgba(255, 255, 0, 0.1);
-    box-shadow: 0 0 50px rgba(255, 255, 0, 0.5);
-    transform: scale(1.1);
+    background: var(--pop-yellow);
+    border-color: var(--text-primary);
+    box-shadow: 8px 8px 0 var(--text-primary);
+    transform: scale(1.05);
 }
 
 .name {
+    font-family: 'Fredoka', sans-serif;
     font-size: 2rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .decided {
-    margin-top: 24px;
+    margin-top: 20px;
     font-size: 1.2rem;
-    color: var(--neon-yellow);
+    color: var(--text-primary);
     font-weight: 700;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
