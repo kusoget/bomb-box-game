@@ -49,6 +49,16 @@ export default function GameBoard({
     const isSitter = gameState.currentSitterId === currentPlayerId;
     const isSwitcher = gameState.currentSwitcherId === currentPlayerId;
 
+    // 椅子の位置を計算
+    const getChairPosition = useCallback((chairId: number, totalChairs: number) => {
+        const index = chairId - 1;
+        const radius = 42;
+        const angle = (index / totalChairs) * 2 * Math.PI - Math.PI / 2;
+        const x = 50 + radius * Math.cos(angle);
+        const y = 50 + radius * Math.sin(angle);
+        return { x, y };
+    }, []);
+
     // ... (existing code)
 
     // 結果表示の処理 & トースト表示
