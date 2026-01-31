@@ -68,12 +68,14 @@
   /* Thicker border for main actions */
 }
 
-/* Form */
+/* Form - Removed Card Styling for consistency */
 .formCard {
   margin-bottom: 48px;
-  background: var(--bg-card);
-  border: var(--border-main);
-  box-shadow: var(--shadow-pop);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  width: 100%;
 }
 
 .formTitle {
