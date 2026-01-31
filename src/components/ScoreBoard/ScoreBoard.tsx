@@ -46,9 +46,9 @@ export default function ScoreBoard({
         if (!gameState) return 'LOADING...';
         switch (gameState.phase) {
             case 'setting_trap':
-                return isSwitcher ? '爆弾をセットしてください' : '相手が爆弾をセット中';
+                return isSwitcher ? '爆弾をセットして！' : '相手が爆弾をセット中';
             case 'selecting_chair':
-                return isSitter ? '箱をえらんでください' : '相手が箱を選んでいます';
+                return isSitter ? '箱からポイントをGET！' : '相手が箱を選択中';
             case 'confirming':
                 return isSitter ? '決定しますか？' : '相手が確認中...';
             case 'revealing':

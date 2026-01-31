@@ -188,7 +188,8 @@ export function generateRoomCode(): string {
 // アバター生成
 export function getRandomAvatar(): string {
     // DBの制限(VARCHAR(10))に収まる短いコードを返す
-    const avatars = ['ghost', 'fox', 'bomb'];
+    // 'bomb' は除外（ゲーム内の爆弾と紛らわしいため）
+    const avatars = ['ghost', 'fox'];
     return avatars[Math.floor(Math.random() * avatars.length)];
 }
 
