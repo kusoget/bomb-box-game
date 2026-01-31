@@ -179,12 +179,16 @@ export async function PUT(request: NextRequest) {
         // 既存が0人なら1、1人なら2
         const playerNumber = (existingPlayers?.length ?? 0) + 1;
 
+        // 既存プレイヤーのアバターを除外してランダム選択
+        const existingAvatar = existingPlayers?.[0]?.avatar;
+        const newAvatar = getRandomAvatar(existingAvatar);
+
         // プレイヤー作成
         const { error: playerError } = await supabase.from('players').insert({
             id: playerId,
             room_id: room.id,
             name: playerName,
-            avatar: getRandomAvatar(),
+            avatar: newAvatar,
             player_number: playerNumber,
         });
 

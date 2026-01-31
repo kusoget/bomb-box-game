@@ -185,12 +185,17 @@ export function generateRoomCode(): string {
     return code;
 }
 
-// アバター生成
-export function getRandomAvatar(): string {
-    // DBの制限(VARCHAR(10))に収まる短いコードを返す
-    // 'bomb' は除外（ゲーム内の爆弾と紛らわしいため）
-    const avatars = ['ghost', 'fox'];
-    return avatars[Math.floor(Math.random() * avatars.length)];
+// 利用可能なアバター一覧
+export const AVATARS = ['ghost', 'fox', 'cat', 'dog', 'bear', 'rabbit', 'panda', 'tiger'] as const;
+
+// アバター生成（除外オプション付き）
+export function getRandomAvatar(excludeAvatar?: string): string {
+    // 除外リストを作成
+    const available = excludeAvatar
+        ? AVATARS.filter(a => a !== excludeAvatar)
+        : [...AVATARS];
+
+    return available[Math.floor(Math.random() * available.length)];
 }
 
 // アバターコードから表示文字を取得するヘルパー（絵文字モード）
@@ -201,7 +206,14 @@ export function getAvatarDisplay(avatarCode: string | undefined | null): { type:
     const emojiMap: Record<string, string> = {
         'ghost': '👻',
         'fox': '🦊',
+        'cat': '🐱',
+        'dog': '🐶',
+        'bear': '🐻',
+        'rabbit': '🐰',
+        'panda': '🐼',
+        'tiger': '🐯',
         'bomb': '💣',
+        // 短縮形（互換性のため）
         'g': '👻',
         'f': '🦊',
         'b': '💣',
