@@ -49,12 +49,14 @@ export default function Chat({
             // 読み上げ処理（デスクトップはembedded、モバイルはfloatingで読み上げ）
             if (newMessage && typeof window !== 'undefined' && 'speechSynthesis' in window) {
                 const isMobile = window.innerWidth <= 900;
+                // embedded=true → デスクトップ(isMobile=false)で読み上げ
+                // embedded=false → モバイル(isMobile=true)で読み上げ
                 const shouldSpeak = embedded ? !isMobile : isMobile;
 
                 if (shouldSpeak) {
                     const utterance = new SpeechSynthesisUtterance(newMessage.message);
                     utterance.lang = 'ja-JP';
-                    utterance.rate = 1.1; // 少し早め
+                    utterance.rate = 1.1;
                     utterance.pitch = 1.0;
                     utterance.volume = 0.8;
                     window.speechSynthesis.speak(utterance);
@@ -62,7 +64,8 @@ export default function Chat({
             }
         }
         prevMessagesLength.current = messages.length;
-    }, [messages, isOpen, embedded]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [messages.length, isOpen]);
 
     // 開いたときに未読をリセット
     useEffect(() => {
