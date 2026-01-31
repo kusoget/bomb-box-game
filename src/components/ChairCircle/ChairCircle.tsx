@@ -107,7 +107,11 @@ export default function ChairCircle({
                         <div className={styles.chairBody}>
                             <span className={styles.chairNumber}>{chair.id}</span>
                             {/* トラップ表示（爆弾アイコン） */}
-                            {isTrapped && <div className={styles.bombIcon}>💣</div>}
+                            {isTrapped && (
+                                <div className={styles.bombIcon}>
+                                    <img src="/images/pop_bomb.png" alt="Bomb" style={{ width: '40px', height: 'auto' }} />
+                                </div>
+                            )}
                             <div className={styles.electricWire} />
                         </div>
                         {/* 箱なので足は不要 <div className={styles.chairLegs}>

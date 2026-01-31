@@ -30,13 +30,14 @@
 .scoreBoard {
     display: flex;
     justify-content: space-between;
-    align-items: stretch;
-    /* Stretch to align heights */
-    padding: 10px 20px;
+    align-items: flex-start;
+    /* Align to top */
+    padding: 4px 16px;
+    /* Tighter to header */
     background: transparent;
     border: none;
     width: 100%;
-    gap: 12px;
+    gap: 8px;
 }
 
 /* Compact Player Layout */
