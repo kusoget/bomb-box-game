@@ -33,17 +33,36 @@ export default function Chat({
         onOpenChange?.(isOpen);
     }, [isOpen, onOpenChange]);
 
-    // 新しいメッセージが来たらスクロール & 通知
+    // 新しいメッセージが来たらスクロール & 通知 & 読み上げ
     useEffect(() => {
         if (messages.length > prevMessagesLength.current) {
+            // 最新のメッセージを取得
+            const newMessage = messages[messages.length - 1];
+
+            // スクロール処理
             if (isOpen) {
                 messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
                 setUnreadCount(prev => prev + 1);
             }
+
+            // 読み上げ処理（デスクトップはembedded、モバイルはfloatingで読み上げ）
+            if (newMessage && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+                const isMobile = window.innerWidth <= 900;
+                const shouldSpeak = embedded ? !isMobile : isMobile;
+
+                if (shouldSpeak) {
+                    const utterance = new SpeechSynthesisUtterance(newMessage.message);
+                    utterance.lang = 'ja-JP';
+                    utterance.rate = 1.1; // 少し早め
+                    utterance.pitch = 1.0;
+                    utterance.volume = 0.8;
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
         }
         prevMessagesLength.current = messages.length;
-    }, [messages, isOpen]);
+    }, [messages, isOpen, embedded]);
 
     // 開いたときに未読をリセット
     useEffect(() => {
