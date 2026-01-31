@@ -125,17 +125,17 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 240px;
-    height: 240px;
+    width: 280px;
+    /* Slightly larger area */
+    height: auto;
+    /* Allow auto height */
+    min-height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    /* No dark gradient */
-    background: transparent;
-    z-index: 5;
+    z-index: 10;
+    /* Ensure above chairs */
     pointer-events: none;
-    /* Let clicks pass through if empty */
 }
 
 .centerContent {
@@ -143,19 +143,28 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 8px;
     text-align: center;
     pointer-events: auto;
+
+    /* "Card" Styling for Center Info */
+    background: #fff;
+    border: 3px solid var(--text-primary);
+    border-radius: var(--border-radius);
+    padding: 16px 24px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+    max-width: 90%;
 }
 
 .centerMainText {
     font-family: 'Fredoka', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    /* Adjusted size */
     font-weight: 700;
     color: var(--text-primary);
-    /* White stroke for visibility over boxes? */
-    text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff;
-    line-height: 1.2;
+    line-height: 1.4;
+    word-break: break-word;
+    /* Prevent overflow */
 }
 
 .centerButton {
