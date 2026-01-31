@@ -11,44 +11,56 @@
     width: 100%;
     max-width: 500px;
     text-align: center;
+    background: var(--bg-card);
+    border: var(--border-main);
+    box-shadow: var(--shadow-pop);
+    padding: 32px;
 }
 
 .title {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 2rem;
     font-weight: 700;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    color: var(--text-primary);
     margin-bottom: 8px;
+    text-shadow: 2px 2px 0 #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .subtitle {
-    color: var(--text-muted);
+    font-family: 'Quicksand', sans-serif;
+    color: var(--text-secondary);
     margin-bottom: 32px;
+    font-weight: 600;
 }
 
 .roomCode {
-    background: rgba(0, 0, 0, 0.4);
-    border: 2px dashed var(--neon-cyan);
+    background: #fff;
+    border: 3px dashed var(--text-primary);
     border-radius: var(--border-radius-lg);
     padding: 20px;
     margin-bottom: 32px;
+    box-shadow: inset 4px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 .roomCodeLabel {
-    font-size: 0.8rem;
-    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 8px;
 }
 
 .roomCodeValue {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);
-    letter-spacing: 0.3em;
+    letter-spacing: 0.2em;
 }
 
 .copyButtons {
@@ -59,29 +71,47 @@
     margin-top: 24px;
 }
 
+/* Base button style override within lobby */
 .copyButton {
     min-width: 140px;
     font-size: 0.85rem;
-    padding: 8px 16px;
-    margin-top: 0;
+    padding: 10px 16px;
+    border: 2px solid var(--text-primary);
+    box-shadow: 2px 2px 0 var(--text-primary);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    background: #fff;
+    font-weight: 700;
+    transition: all var(--transition-fast);
+}
+
+.copyButton:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--text-primary);
+}
+
+.copyButton:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--text-primary);
 }
 
 .urlButton {
-    background: rgba(255, 0, 255, 0.1);
-    border-color: rgba(255, 0, 255, 0.3);
-    color: var(--neon-magenta);
+    background: var(--pop-purple);
+    color: #fff;
 }
 
-.urlButton:hover {
-    background: rgba(255, 0, 255, 0.2);
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+.copyButton.codeButton {
+    /* Assuming I might add a class or just override here if needed, 
+       but for now standard copy button defaults to white or specific color */
+    background: var(--pop-cyan);
+    color: var(--text-primary);
 }
 
 .copySuccess {
-    color: var(--neon-green);
+    color: var(--pop-green);
+    font-weight: 700;
     font-size: 0.85rem;
     margin-top: 12px;
-    animation: fadeIn 0.3s ease;
 }
 
 .playersSection {
@@ -89,8 +119,9 @@
 }
 
 .sectionTitle {
-    font-size: 0.9rem;
-    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 16px;
@@ -106,54 +137,80 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 16px 24px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0, 255, 255, 0.2);
+    gap: 12px;
+    padding: 20px 24px;
+    background: #fff;
+    border: 3px solid var(--text-primary);
     border-radius: var(--border-radius);
-    min-width: 120px;
+    min-width: 130px;
+    box-shadow: 4px 4px 0 var(--text-primary);
+    transition: all 0.3s ease;
 }
 
 .playerSlot.filled {
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    /* Pop style filled state */
+    transform: rotate(-2deg);
+}
+
+.playerSlot.filled:last-child {
+    transform: rotate(2deg);
 }
 
 .playerSlot.empty {
     border-style: dashed;
-    opacity: 0.5;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0.7;
+    box-shadow: none;
 }
 
 .playerAvatar {
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-tertiary);
+    /* Image handling */
+    overflow: hidden;
     border-radius: 50%;
+    border: 2px solid var(--text-primary);
+    background: var(--bg-primary);
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatarText {
+    font-size: 2rem;
 }
 
 .playerName {
-    font-weight: 600;
+    font-weight: 700;
+    font-family: 'Quicksand', sans-serif;
     color: var(--text-primary);
+    font-size: 1.1rem;
 }
 
 .hostBadge {
     font-size: 0.7rem;
-    padding: 2px 8px;
-    background: var(--neon-magenta);
+    padding: 4px 8px;
+    background: var(--pop-orange);
     color: white;
-    border-radius: 10px;
+    border-radius: 999px;
+    border: 1px solid var(--text-primary);
+    font-weight: 700;
 }
 
 .youBadge {
     font-size: 0.7rem;
-    padding: 2px 8px;
-    background: var(--neon-cyan);
-    color: var(--bg-primary);
-    border-radius: 10px;
+    padding: 4px 8px;
+    background: var(--pop-cyan);
+    color: var(--text-primary);
+    border-radius: 999px;
+    border: 1px solid var(--text-primary);
+    font-weight: 700;
 }
 
 .waitingDots {
@@ -162,33 +219,76 @@
 }
 
 .waitingText {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 700;
     color: var(--text-muted);
 }
 
 .actions {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .startButton {
     font-size: 1.2rem;
     padding: 16px 40px;
+    background: var(--pop-yellow);
+    color: var(--text-primary);
+    border: 3px solid var(--text-primary);
+    box-shadow: 4px 4px 0 var(--text-primary);
+    font-weight: 800;
+}
+
+.startButton:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--text-primary);
+    background: #FFD700;
+    /* slightly brighter */
+}
+
+.startButton:disabled {
+    background: var(--text-muted);
+    border-color: #999;
+    color: #fff;
+    box-shadow: none;
 }
 
 .waitingForHost {
-    color: var(--text-muted);
-    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 16px;
+    background: #fff;
+    border: 2px dashed var(--text-primary);
+    border-radius: var(--border-radius);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .leaveButton {
     background: transparent;
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
     padding: 8px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
 .leaveButton:hover {
-    color: var(--neon-red);
+    color: var(--pop-red);
 }

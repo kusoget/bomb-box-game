@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Player, Room } from '@/types/game';
+import { getAvatarDisplay } from '@/lib/gameLogic';
 import styles from './Lobby.module.css';
 
 interface LobbyProps {
@@ -66,6 +67,14 @@ export default function Lobby({
 
     const canStart = players.length === 2;
 
+    const renderAvatar = (avatar: string | undefined) => {
+        const { type, value } = getAvatarDisplay(avatar);
+        if (type === 'image') {
+            return <img src={value} alt="Avatar" className={styles.avatarImage} />;
+        }
+        return <span className={styles.avatarText}>{value}</span>;
+    };
+
     return (
         <div className={styles.lobby}>
             <div className={`card ${styles.lobbyCard}`}>
@@ -78,13 +87,13 @@ export default function Lobby({
 
                     <div className={styles.copyButtons}>
                         <button
-                            className={`btn btn-secondary ${styles.copyButton}`}
+                            className={`${styles.copyButton} ${styles.codeButton}`}
                             onClick={copyRoomCode}
                         >
                             {copied ? '✓ コードをコピー' : 'コードをコピー'}
                         </button>
                         <button
-                            className={`btn btn-secondary ${styles.copyButton} ${styles.urlButton}`}
+                            className={`${styles.copyButton} ${styles.urlButton}`}
                             onClick={copyInviteUrl}
                         >
                             {urlCopied ? '✓ URLをコピー' : '招待URLをコピー'}
@@ -101,7 +110,7 @@ export default function Lobby({
                         <div className={`${styles.playerSlot} ${players[0] ? styles.filled : styles.empty}`}>
                             {players[0] ? (
                                 <>
-                                    <div className={styles.playerAvatar}>{players[0].avatar}</div>
+                                    <div className={styles.playerAvatar}>{renderAvatar(players[0].avatar)}</div>
                                     <div className={styles.playerName}>{players[0].name}</div>
                                     {players[0].id === room.hostId && (
                                         <span className={styles.hostBadge}>ホスト</span>
@@ -122,7 +131,7 @@ export default function Lobby({
                         <div className={`${styles.playerSlot} ${players[1] ? styles.filled : styles.empty}`}>
                             {players[1] ? (
                                 <>
-                                    <div className={styles.playerAvatar}>{players[1].avatar}</div>
+                                    <div className={styles.playerAvatar}>{renderAvatar(players[1].avatar)}</div>
                                     <div className={styles.playerName}>{players[1].name}</div>
                                     {players[1].id === room.hostId && (
                                         <span className={styles.hostBadge}>ホスト</span>
