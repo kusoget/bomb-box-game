@@ -155,8 +155,16 @@
 /* レスポンシブ */
 @media (max-width: 900px) {
     .gameBoard {
+        display: flex;
+        /* Switch to flex on mobile for simpler stacking */
+        flex-direction: column;
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto auto;
+        /* Reset grid cols */
+        grid-template-rows: auto;
+        /* Reset grid rows */
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
     }
 
     .sidebar {
