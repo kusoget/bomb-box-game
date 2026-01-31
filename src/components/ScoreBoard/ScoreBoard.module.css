@@ -6,37 +6,38 @@
 }
 
 .phaseHeader {
-    /* font-family: 'Orbitron', sans-serif; Removed to support Japanese nicely */
+    font-family: 'Fredoka', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    color: var(--text-primary);
+    /* Default black */
     margin-bottom: 0;
-    /* letter-spacing: 0.1em; */
     text-align: center;
     width: 100%;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-bottom: var(--border-main);
     transition: background 0.3s ease;
     position: sticky;
     top: 0;
     z-index: 100;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    /* Top rounding only */
 }
 
-/* My Action (Bright/Attention) */
+/* My Action (Colorful/Action) */
 .phaseAction {
-    background: linear-gradient(90deg, rgba(0, 255, 100, 0.2) 0%, rgba(0, 200, 255, 0.2) 100%);
-    border-bottom: 2px solid var(--neon-cyan);
-    color: var(--neon-cyan);
+    background: var(--pop-yellow);
+    /* Yellow is classic 'Warning/Action' in pop */
+    color: var(--text-primary);
+    border-bottom: var(--border-main);
 }
 
-/* Waiting (Dimmed/Caution) */
+/* Waiting (Dimmed) */
 .phaseWait {
-    background: linear-gradient(90deg, rgba(50, 50, 50, 0.4) 0%, rgba(30, 30, 30, 0.6) 100%);
-    border-bottom: 2px solid #555;
-    color: #aaa;
+    background: var(--bg-tertiary);
+    /* Grey */
+    color: var(--text-secondary);
 }
 
 .scoreBoard {
@@ -61,8 +62,9 @@
     padding: 8px;
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
-    background: rgba(0, 0, 0, 0.2);
-    /* Slight background for legibility */
+    background: rgba(255, 255, 255, 0.5);
+    /* Semi-transparent white */
+    border: 2px solid transparent;
 }
 
 /* Active Player Styles - Highlight removed as requested */
@@ -76,7 +78,7 @@
 
 /* Inactive Player Styles (Dimmed) */
 .playerScore:not(.active) {
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 .playerTopRow {
@@ -103,18 +105,20 @@
     justify-content: center;
     background: var(--bg-secondary);
     border-radius: 50%;
-    border: 2px solid var(--neon-cyan);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--text-primary);
+    box-shadow: 2px 2px 0 var(--text-primary);
 }
 
 .playerScore.player2 .avatar {
-    border-color: var(--neon-magenta);
+    border-color: var(--text-primary);
 }
 
 .playerName {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-secondary);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    /* Ensure contrast on colored bg */
     max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -122,17 +126,27 @@
 }
 
 .scoreValue {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 2rem;
     font-weight: 700;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    color: var(--text-primary);
+    /* No shadow, just bold */
 }
 
-.playerScore.player2 .scoreValue {
-    color: var(--neon-magenta);
-    text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-}
+/* Override text color when background is dark/colored? 
+   Actually, Purple/Orange backgrounds (MainArea) might mess up black text visibility?
+   If MainArea is Purple, we need White text.
+   But ScoreBoard is inside MainArea.
+   Let's see: MainArea has `turnPlayer1` (Purple). 
+   ScoreBoard elements are `text-primary` (Black).
+   Black on Purple is bad? #8B5CF6 is medium.
+   Maybe we should force ScoreBoard to be White text if main area is colored?
+   OR, the ScoreBoard container creates a "White Card" to isolate itself?
+   Currently ScoreBoard is transparent.
+   The user wanted "Connect".
+   If I make MainArea Purple, ScoreBoard needs to adapt.
+   I will leave defaults solid black for now, and see. Maybe "Cream" (`#FFF8E7`) text?
+*/
 
 .lifeIndicator {
     display: flex;
@@ -140,9 +154,9 @@
 }
 
 .lifeHeart {
-    font-size: 0.9rem;
+    font-size: 1rem;
     transition: all var(--transition-normal);
-    filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.5));
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.2));
 }
 
 .lifeHeart.lost {
@@ -151,33 +165,35 @@
     transform: scale(0.8);
 }
 
-/* 中央のラウンド表示 */
+/* Round Info (Center Pill) */
 .roundInfo {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0;
-    padding: 8px 12px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: var(--border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 6px 16px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--text-primary);
+    border-radius: 999px;
+    /* Pill */
+    box-shadow: 2px 2px 0 var(--text-primary);
     height: fit-content;
     align-self: center;
 }
 
 .roundLabel {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
 }
 
 .roundValue {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 1.5rem;
-    font-weight: 600;
-    color: #fff;
+    font-weight: 700;
+    color: var(--text-primary);
     line-height: 1;
 }
 

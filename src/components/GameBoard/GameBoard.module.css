@@ -7,6 +7,7 @@
     height: 100vh;
     padding: 20px;
     background: var(--bg-primary);
+    /* Polka dot or cream */
 }
 
 .header {
@@ -20,27 +21,27 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    /* Gap removed to connect ScoreBoard and GameArea visually */
     min-height: 0;
     border-radius: var(--border-radius-lg);
-    /* overflow: hidden; Removed to allow sticky header */
-    transition: background 0.5s ease;
-    background: var(--bg-secondary);
-    border: var(--border-glow);
+    /* Sticky header needs visible overflow usually, ensuring sticky context works */
+    border: var(--border-main);
+    box-shadow: var(--shadow-pop);
+    transition: all 0.5s var(--transition-bouncy);
+    background: var(--bg-card);
 }
 
-/* Player 1 Turn Theme (Cyan) */
+/* Player 1 Turn Theme (Purple) */
 .mainArea.turnPlayer1 {
-    background: linear-gradient(135deg, rgba(0, 255, 255, 0.15) 0%, rgba(10, 20, 40, 0.9) 100%);
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
-    border-color: rgba(0, 255, 255, 0.3);
+    background: var(--pop-purple);
+    border-color: var(--text-primary);
+    box-shadow: 8px 8px 0px 0px var(--text-primary);
 }
 
-/* Player 2 Turn Theme (Magenta) */
+/* Player 2 Turn Theme (Orange) */
 .mainArea.turnPlayer2 {
-    background: linear-gradient(135deg, rgba(255, 0, 255, 0.15) 0%, rgba(30, 10, 30, 0.9) 100%);
-    box-shadow: 0 0 30px rgba(255, 0, 255, 0.1);
-    border-color: rgba(255, 0, 255, 0.3);
+    background: var(--pop-orange);
+    border-color: var(--text-primary);
+    box-shadow: 8px 8px 0px 0px var(--text-primary);
 }
 
 .gameArea {
@@ -77,6 +78,11 @@
 .chatWrapper {
     flex: 1;
     min-height: 300px;
+    border: var(--border-main);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-pop);
+    background: var(--bg-card);
+    overflow: hidden;
 }
 
 .phaseLabel {
@@ -98,14 +104,18 @@
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
+/* Text Colors needs adjusting for dark backgrounds in Turn modes? 
+   No, PhaseHeader handles text. GameArea content handles itself. 
+   We might need to pass context to children if text needs to flip to white. */
+
 .textPlayer1 {
-    color: var(--neon-cyan);
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    color: var(--pop-purple);
+    font-weight: 800;
 }
 
 .textPlayer2 {
-    color: var(--neon-magenta);
-    text-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+    color: var(--pop-orange);
+    font-weight: 800;
 }
 
 .actionButton {
@@ -158,10 +168,6 @@
         display: flex;
         /* Switch to flex on mobile for simpler stacking */
         flex-direction: column;
-        grid-template-columns: 1fr;
-        /* Reset grid cols */
-        grid-template-rows: auto;
-        /* Reset grid rows */
         height: auto;
         min-height: 100vh;
         overflow-y: auto;
