@@ -59,6 +59,9 @@ export default function GameBoard({
     const revealTimerRef = useRef<NodeJS.Timeout | null>(null);
     // revealing処理済みフラグ
     const revealingHandledRef = useRef(false);
+    // ダブルクリック防止用のクールダウン
+    const lastClickTimeRef = useRef<number>(0);
+    const CLICK_COOLDOWN_MS = 500;
 
     // 椅子の位置を計算
     const getChairPosition = useCallback((chairId: number, totalChairs: number) => {
@@ -195,6 +198,13 @@ export default function GameBoard({
     }, [gameState.currentSitterId, gameState.selectedChair, getChairPosition]);
 
     const handleChairClick = (chairId: number) => {
+        // ダブルクリック防止
+        const now = Date.now();
+        if (now - lastClickTimeRef.current < CLICK_COOLDOWN_MS) {
+            return; // クールダウン中は無視
+        }
+        lastClickTimeRef.current = now;
+
         if (canSetTrap) {
             onSetTrap(chairId);
         } else if (canSelectChair) {
@@ -351,6 +361,13 @@ export default function GameBoard({
                                 (canSelectChair && !gameState.selectedChair)
                             }
                             onClick={() => {
+                                // ダブルクリック防止
+                                const now = Date.now();
+                                if (now - lastClickTimeRef.current < CLICK_COOLDOWN_MS) {
+                                    return;
+                                }
+                                lastClickTimeRef.current = now;
+
                                 if (canSetTrap && gameState.trappedChair) {
                                     onSetTrap(gameState.trappedChair);
                                 } else if (canSelectChair) {
