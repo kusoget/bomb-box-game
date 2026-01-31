@@ -76,12 +76,12 @@
     left: 0;
     width: 100%;
     padding: 10px 16px;
-    /* Tighter container */
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     background: var(--bg-secondary);
     border-top: 3px solid var(--text-primary);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 12px;
     z-index: 900;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);

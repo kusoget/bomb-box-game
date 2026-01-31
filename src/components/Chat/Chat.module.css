@@ -256,8 +256,8 @@
 /* Mobile - Full screen slide-up panel */
 @media (max-width: 768px) {
     .floatingWrapper {
-        bottom: 16px;
-        right: 16px;
+        bottom: 20px;
+        right: 20px;
     }
 
     .toggleButton {
@@ -294,16 +294,18 @@
 
     .chatHeader {
         border-radius: 20px 20px 0 0;
-        padding: 16px 20px;
+        padding: 14px 20px;
     }
 
     .messagesContainer {
-        padding: 16px;
+        padding: 12px 16px;
     }
 
     .inputContainer {
         padding: 12px 16px;
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        background: var(--bg-card);
+        border-top: 2px solid var(--text-primary);
     }
 
     .chatInput {
