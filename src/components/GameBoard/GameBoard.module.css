@@ -156,6 +156,62 @@
     }
 }
 
+/* Fixed Footer for Actions */
+.gameFooter {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-top: 3px solid var(--text-primary);
+    display: flex;
+    justify-content: center;
+    z-index: 900;
+    /* Above chat FAB but below overlays */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footerButton {
+    width: 100%;
+    max-width: 400px;
+    /* Limit width on tablets */
+    padding: 18px 24px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: var(--border-radius);
+    border: 3px solid var(--text-primary);
+    box-shadow: 4px 4px 0 var(--text-primary);
+    background: var(--pop-purple);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.footerButton:active:not(:disabled) {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--text-primary);
+}
+
+.footerButton.danger {
+    background: var(--pop-red);
+}
+
+.footerButton:disabled {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border-color: var(--text-secondary);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Make space for footer in main content */
+.gameBoard {
+    padding-bottom: 90px;
+}
+
 /* レスポンシブ */
 @media (max-width: 900px) {
     .gameBoard {

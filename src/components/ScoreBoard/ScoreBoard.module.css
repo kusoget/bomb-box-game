@@ -14,8 +14,8 @@
     margin-bottom: 0;
     text-align: center;
     width: 100%;
-    padding: 24px 16px;
-    /* Taller header */
+    padding: 12px 16px;
+    /* Reduced height */
     background: var(--bg-secondary);
     border-bottom: var(--border-main);
     transition: background 0.3s ease;
@@ -25,20 +25,7 @@
     /* Square corners */
 }
 
-/* My Action (Colorful/Action) */
-.phaseAction {
-    background: var(--pop-yellow);
-    /* Yellow is classic 'Warning/Action' in pop */
-    color: var(--text-primary);
-    border-bottom: var(--border-main);
-}
-
-/* Waiting (Dimmed) */
-.phaseWait {
-    background: var(--bg-tertiary);
-    /* Grey */
-    color: var(--text-secondary);
-}
+/* ... middle ... */
 
 .scoreBoard {
     display: flex;
@@ -62,9 +49,9 @@
     padding: 8px;
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.5);
-    /* Semi-transparent white */
-    border: 2px solid transparent;
+    background: transparent;
+    /* Removed background */
+    border: none;
 }
 
 /* Active Player Styles - Highlight removed as requested */

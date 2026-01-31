@@ -51,25 +51,27 @@ export default function ChairCircle({
             {/* 中央エリア */}
             <div className={styles.centerArea}>
                 {centerContent ? (
-                    <div className={styles.centerContent}>
-                        {centerContent.mainText && (
-                            <div className={styles.centerMainText}>{centerContent.mainText}</div>
-                        )}
-                        {centerContent.subText && (
-                            <div className={styles.centerSubText}>{centerContent.subText}</div>
-                        )}
-                        {centerContent.button && (
-                            <button
-                                className={`${styles.centerButton} ${styles[centerContent.button.variant]}`}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    centerContent.button!.onClick();
-                                }}
-                            >
-                                {centerContent.button.label}
-                            </button>
-                        )}
-                    </div>
+                    (centerContent.mainText || centerContent.subText || centerContent.button) ? (
+                        <div className={styles.centerContent}>
+                            {centerContent.mainText && (
+                                <div className={styles.centerMainText}>{centerContent.mainText}</div>
+                            )}
+                            {centerContent.subText && (
+                                <div className={styles.centerSubText}>{centerContent.subText}</div>
+                            )}
+                            {centerContent.button && (
+                                <button
+                                    className={`${styles.centerButton} ${styles[centerContent.button.variant]}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        centerContent.button!.onClick();
+                                    }}
+                                >
+                                    {centerContent.button.label}
+                                </button>
+                            )}
+                        </div>
+                    ) : null
                 ) : (
                     <div className={styles.centerText}>
                         残り {remainingChairs.length} 脚
