@@ -35,22 +35,21 @@
     border-radius: 0;
 }
 
-/* アクション待ちの時のアニメーション */
+/* アクション待ちの時のアニメーション - ゆっくり点滅 + 青色 */
 .phaseHeader.actionRequired {
-    animation: pulseText 1.5s ease-in-out infinite;
+    color: var(--pop-blue);
+    animation: blinkText 1.2s ease-in-out infinite;
 }
 
-@keyframes pulseText {
+@keyframes blinkText {
 
     0%,
     100% {
-        transform: scale(1);
         opacity: 1;
     }
 
     50% {
-        transform: scale(1.05);
-        opacity: 0.8;
+        opacity: 0.4;
     }
 }
 
@@ -169,7 +168,7 @@
     transform: scale(0.8);
 }
 
-/* Round Info (Center Pill - Now Transparent) */
+/* Round Info (Center) */
 .roundInfo {
     display: flex;
     flex-direction: column;
@@ -181,13 +180,8 @@
     border: none;
     border-radius: 0;
     box-shadow: none;
-    height: fit-content;
-    align-self: center;
-    /* or flex-start if we want it top aligned with avatars */
-    transform: scale(0.9);
-    /* Slightly smaller visually */
-    margin-top: 4px;
-    /* Align with avatar tops potentially? */
+    flex-shrink: 0;
+    min-width: 60px;
 }
 
 .roundLabel {
