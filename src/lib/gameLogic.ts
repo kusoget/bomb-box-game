@@ -196,7 +196,10 @@ export function getRandomAvatar(): string {
 export function getAvatarDisplay(avatarCode: string | undefined | null): { type: 'image' | 'text', value: string } {
     if (!avatarCode) return { type: 'text', value: '?' };
 
-    // マッピング定義
+    // basePath for Next.js subdirectory deployment
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+
+    // マッピング定義 (relative paths without basePath)
     const imageMap: Record<string, string> = {
         // Current Short Codes
         'ghost': '/images/pop_ghost.png',
@@ -216,16 +219,22 @@ export function getAvatarDisplay(avatarCode: string | undefined | null): { type:
     };
 
     if (imageMap[avatarCode]) {
-        return { type: 'image', value: imageMap[avatarCode] };
+        // Prepend basePath to the image path
+        return { type: 'image', value: `${basePath}${imageMap[avatarCode]}` };
     }
 
     // パスが直接保存されている場合
     if (avatarCode.startsWith('/') || avatarCode.startsWith('http')) {
         // If it looks like a legacy path at root, try to fix it
         if (avatarCode.startsWith('/pop_') && !avatarCode.startsWith('/images/')) {
-            return { type: 'image', value: `/images${avatarCode}` };
+            return { type: 'image', value: `${basePath}/images${avatarCode}` };
         }
-        return { type: 'image', value: avatarCode };
+        // If it already starts with basePath, return as-is
+        if (avatarCode.startsWith(basePath)) {
+            return { type: 'image', value: avatarCode };
+        }
+        // Otherwise prepend basePath
+        return { type: 'image', value: `${basePath}${avatarCode}` };
     }
 
     // 絵文字やその他のテキスト
