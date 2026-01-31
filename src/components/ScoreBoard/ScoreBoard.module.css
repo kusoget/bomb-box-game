@@ -1,68 +1,99 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.phaseHeader {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .scoreBoard {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
+    align-items: stretch;
+    /* Stretch to align heights */
+    padding: 10px 20px;
     background: transparent;
-    /* Changed from bg-card to transparent */
     border: none;
-    /* Removed border to merge */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    /* Optional separator */
-    border-radius: 0;
-    /* Removed radius since it's top part of MainArea */
-    gap: 20px;
+    width: 100%;
+    gap: 12px;
 }
 
 .playerScore {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 4px;
     flex: 1;
-    padding: 12px;
+    padding: 8px;
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.2);
+    /* Slight background for legibility */
 }
 
 /* Active Player Styles */
 .playerScore.active {
-    background: rgba(0, 255, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-    border: 1px solid rgba(0, 255, 255, 0.3);
-    transform: scale(1.02);
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    transform: scale(1.05);
+    z-index: 10;
 }
 
 .playerScore.player2.active {
-    background: rgba(255, 0, 255, 0.1);
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
-    border: 1px solid rgba(255, 0, 255, 0.3);
+    background: rgba(255, 0, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+    border: 1px solid rgba(255, 0, 255, 0.5);
 }
 
 /* Inactive Player Styles (Dimmed) */
 .playerScore:not(.active) {
-    opacity: 0.5;
-    background: transparent;
+    opacity: 0.6;
 }
 
-
-
-.playerInfo {
+.playerTopRow {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+.playerBottomRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
 }
 
 .avatar {
     font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--bg-secondary);
     border-radius: 50%;
     border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .playerScore.player2 .avatar {
@@ -70,10 +101,10 @@
 }
 
 .playerName {
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--text-primary);
-    max-width: 100px;
+    color: var(--text-secondary);
+    max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -81,27 +112,26 @@
 
 .scoreValue {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--neon-cyan);
-    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
 
 .playerScore.player2 .scoreValue {
     color: var(--neon-magenta);
-    text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
 }
 
 .lifeIndicator {
     display: flex;
-    gap: 4px;
+    gap: 2px;
 }
 
 .lifeHeart {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     transition: all var(--transition-normal);
-    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
-    cursor: default;
+    filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.5));
 }
 
 .lifeHeart.lost {
@@ -115,15 +145,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 12px 20px;
-    background: rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    gap: 0;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.4);
     border-radius: var(--border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    height: fit-content;
+    align-self: center;
 }
 
 .roundLabel {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text-muted);
@@ -131,54 +164,24 @@
 
 .roundValue {
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    color: var(--text-primary);
-}
-
-.halfIndicator {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-}
-
-.vsText {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    color: var(--text-muted);
-
-    .vsText {
-        font-size: 0.8rem;
-        margin: 0 8px;
-    }
+    color: #fff;
+    line-height: 1;
 }
 
 @media (max-width: 600px) {
-    .scoreBoard {
-        padding: 10px 16px;
-        gap: 10px;
-    }
-
-    .avatar {
-        width: 32px;
-        height: 32px;
-        font-size: 1.2rem;
-    }
-
-    .playerName {
-        font-size: 0.8rem;
-        max-width: 60px;
+    .phaseHeader {
+        font-size: 1.5rem;
     }
 
     .scoreValue {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 
-    .shockDot {
-        width: 8px;
-        height: 8px;
-    }
-
-    .roundValue {
-        font-size: 1rem;
+    .avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
     }
 }

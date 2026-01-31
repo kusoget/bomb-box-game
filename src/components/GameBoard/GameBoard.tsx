@@ -199,28 +199,14 @@ export default function GameBoard({
 
     // キャラクターの表示条件
     const showPlayer1 = useMemo(() => {
-        if (gameState.phase === 'revealing' || gameState.phase === 'game_over') return true;
-
-        // トラップ設置中: 自分（Switcher）は表示しない
-        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player1?.id) return false;
-
-        // トラップ設置中: 相手（Switcher）は、まだ箱を選んでいない場合は表示しない（重なり防止）
-        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player1?.id && !gameState.trappedChair) return false;
-
-        return activePlayerId === player1?.id;
-    }, [gameState.phase, activePlayerId, player1?.id, gameState.currentSwitcherId, gameState.trappedChair]);
+        // 全フェーズで表示する（位置調整で制御）
+        return true;
+    }, []);
 
     const showPlayer2 = useMemo(() => {
-        if (gameState.phase === 'revealing' || gameState.phase === 'game_over') return true;
-
-        // トラップ設置中: 自分（Switcher）は表示しない
-        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player2?.id) return false;
-
-        // トラップ設置中: 相手（Switcher）は、まだ箱を選んでいない場合は表示しない（重なり防止）
-        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player2?.id && !gameState.trappedChair) return false;
-
-        return activePlayerId === player2?.id;
-    }, [gameState.phase, activePlayerId, player2?.id, gameState.currentSwitcherId, gameState.trappedChair]);
+        // 全フェーズで表示する（位置調整で制御）
+        return true;
+    }, []);
 
     // ルーレット表示ロジック
     const shouldShowRoulette =
