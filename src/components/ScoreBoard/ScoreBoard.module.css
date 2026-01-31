@@ -49,17 +49,16 @@
     padding: 2px;
 }
 
+/* Compact Player Layout: Transparent & Header-Attached */
 .playerContent {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.4);
-    /* Slight pill background for readability */
-    padding: 6px 12px;
-    border-radius: 999px;
-    /* Pill */
-    border: 2px solid var(--text-primary);
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .playerInfo {
@@ -142,22 +141,25 @@
     transform: scale(0.8);
 }
 
-/* Round Info (Center Pill) */
+/* Round Info (Center Pill - Now Transparent) */
 .roundInfo {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0;
-    padding: 4px 12px;
-    background: var(--bg-secondary);
-    border: 2px solid var(--text-primary);
-    border-radius: 999px;
-    box-shadow: 2px 2px 0 var(--text-primary);
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
     height: fit-content;
     align-self: center;
+    /* or flex-start if we want it top aligned with avatars */
     transform: scale(0.9);
     /* Slightly smaller visually */
+    margin-top: 4px;
+    /* Align with avatar tops potentially? */
 }
 
 .roundLabel {
