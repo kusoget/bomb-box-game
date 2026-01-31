@@ -199,14 +199,16 @@ export default function GameBoard({
 
     // キャラクターの表示条件
     const showPlayer1 = useMemo(() => {
-        // 全フェーズで表示する（位置調整で制御）
+        // 爆弾セット中は表示しない
+        if (gameState.phase === 'setting_trap') return false;
         return true;
-    }, []);
+    }, [gameState.phase]);
 
     const showPlayer2 = useMemo(() => {
-        // 全フェーズで表示する（位置調整で制御）
+        // 爆弾セット中は表示しない
+        if (gameState.phase === 'setting_trap') return false;
         return true;
-    }, []);
+    }, [gameState.phase]);
 
     // ルーレット表示ロジック
     const shouldShowRoulette =

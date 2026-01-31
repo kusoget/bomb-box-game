@@ -62,19 +62,13 @@
     /* Slight background for legibility */
 }
 
-/* Active Player Styles */
+/* Active Player Styles - Highlight removed as requested */
 .playerScore.active {
-    background: rgba(0, 255, 255, 0.2);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-    border: 1px solid rgba(0, 255, 255, 0.5);
-    transform: scale(1.05);
-    z-index: 10;
+    /* No minimal highlight as main background indicates turn */
 }
 
 .playerScore.player2.active {
-    background: rgba(255, 0, 255, 0.2);
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
-    border: 1px solid rgba(255, 0, 255, 0.5);
+    /* No minimal highlight */
 }
 
 /* Inactive Player Styles (Dimmed) */
