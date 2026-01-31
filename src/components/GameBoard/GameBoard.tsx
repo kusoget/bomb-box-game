@@ -341,12 +341,7 @@ export default function GameBoard({
             {/* 感電エフェクト */}
             <ElectricEffect isActive={isShocking} />
 
-            {/* チャット (Floating) */}
-            <Chat
-                messages={messages}
-                currentPlayerId={currentPlayerId}
-                onSendMessage={onSendMessage}
-            />
+            {/* チャット (Floating Removed) */}
 
             {/* オーバーレイ（結果表示、ゲームオーバー） */}
             <GameOverlay
