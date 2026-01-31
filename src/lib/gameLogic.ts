@@ -205,6 +205,10 @@ export function getAvatarDisplay(avatarCode: string | undefined | null): { type:
         'ghost': '/images/pop_ghost.png',
         'fox': '/images/pop_fox.png',
         'bomb': '/images/pop_bomb.png',
+        // Single letter fallbacks (legacy/truncated data)
+        'g': '/images/pop_ghost.png',
+        'f': '/images/pop_fox.png',
+        'b': '/images/pop_bomb.png',
         // Legacy/Compat Codes
         'pop_ghost': '/images/pop_ghost.png',
         'pop_fox': '/images/pop_fox.png',
