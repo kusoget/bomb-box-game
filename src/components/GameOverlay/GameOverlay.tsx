@@ -94,7 +94,7 @@ export default function GameOverlay({
                 titleText = `${revealResult.points}ポイントGET！`;
                 titleStyle = styles.safe;
             } else {
-                titleText = '解除された...';
+                titleText = `相手が${revealResult.points}ポイント獲得...`;
                 titleStyle = styles.shock;
             }
         } else {
