@@ -8,6 +8,7 @@ import ScoreBoard from '@/components/ScoreBoard/ScoreBoard';
 import Chat from '@/components/Chat/Chat';
 import ElectricEffect from '@/components/ElectricEffect/ElectricEffect';
 import GameOverlay from '@/components/GameOverlay/GameOverlay';
+import RouletteOverlay from '@/components/RouletteOverlay/RouletteOverlay';
 import styles from './GameBoard.module.css';
 
 interface GameBoardProps {
@@ -105,12 +106,12 @@ export default function GameBoard({
         switch (gameState.phase) {
             case 'setting_trap':
                 return isSwitcher
-                    ? '爆発する箱を選んでください'
-                    : `${switcherName}がトラップ設置中`;
+                    ? '爆弾をセット'
+                    : `${switcherName}が\n爆弾設置中`;
             case 'selecting_chair':
                 return isSitter
-                    ? '開ける箱を選んでください'
-                    : `${sitterName}が箱を選択中`;
+                    ? '開ける箱を選択'
+                    : `${sitterName}が\n箱を選択中`;
             case 'confirming':
                 return isSitter
                     ? '確定しますか？'
@@ -138,17 +139,10 @@ export default function GameBoard({
                 ? getChairPosition(gameState.selectedChair, 12)
                 : { x: 50, y: 50 };
         } else {
-            // Switcher
-            if (isSelf) {
-                // 自分ならトラップ位置へ（迷う動き）
-                return gameState.trappedChair
-                    ? getChairPosition(gameState.trappedChair, 12)
-                    : { x: player.playerNumber === 1 ? 10 : 90, y: 85 };
-            }
-            // 相手なら定位置
+            // Switcher: トラップ設置中も移動しない（定位置）
             return { x: player.playerNumber === 1 ? 10 : 90, y: 85 };
         }
-    }, [gameState.currentSitterId, gameState.selectedChair, gameState.trappedChair, getChairPosition]);
+    }, [gameState.currentSitterId, gameState.selectedChair, getChairPosition]);
 
     const handleChairClick = (chairId: number) => {
         if (canSetTrap) {
@@ -175,16 +169,58 @@ export default function GameBoard({
     // キャラクターの表示条件
     const showPlayer1 = useMemo(() => {
         if (gameState.phase === 'revealing' || gameState.phase === 'game_over') return true;
+
+        // トラップ設置中: 自分（Switcher）は表示しない
+        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player1?.id) return false;
+
+        // トラップ設置中: 相手（Switcher）は、まだ箱を選んでいない場合は表示しない（重なり防止）
+        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player1?.id && !gameState.trappedChair) return false;
+
         return activePlayerId === player1?.id;
-    }, [gameState.phase, activePlayerId, player1?.id]);
+    }, [gameState.phase, activePlayerId, player1?.id, gameState.currentSwitcherId, gameState.trappedChair]);
 
     const showPlayer2 = useMemo(() => {
         if (gameState.phase === 'revealing' || gameState.phase === 'game_over') return true;
+
+        // トラップ設置中: 自分（Switcher）は表示しない
+        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player2?.id) return false;
+
+        // トラップ設置中: 相手（Switcher）は、まだ箱を選んでいない場合は表示しない（重なり防止）
+        if (gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player2?.id && !gameState.trappedChair) return false;
+
         return activePlayerId === player2?.id;
-    }, [gameState.phase, activePlayerId, player2?.id]);
+    }, [gameState.phase, activePlayerId, player2?.id, gameState.currentSwitcherId, gameState.trappedChair]);
+
+    // ルーレット表示ロジック
+    const shouldShowRoulette =
+        gameState.currentRound === 1 &&
+        gameState.phase === 'setting_trap' &&
+        !gameState.trappedChair;
+
+    const [showRoulette, setShowRoulette] = useState(shouldShowRoulette);
+
+    useEffect(() => {
+        if (!shouldShowRoulette) {
+            setShowRoulette(false);
+        }
+    }, [shouldShowRoulette]);
+
+    const handleRouletteComplete = useCallback(() => {
+        setShowRoulette(false);
+    }, []);
 
     return (
         <div className={styles.gameBoard}>
+            {/* ルーレット（先行決め） */}
+            {showRoulette && player1 && player2 && (
+                <RouletteOverlay
+                    player1Name={player1.name}
+                    player2Name={player2.name}
+                    startPlayerName={gameState.currentSwitcherId === player1.id ? player1.name : player2.name}
+                    onComplete={handleRouletteComplete}
+                />
+            )}
+
             {/* ヘッダー: スコアボード */}
             <div className={styles.header}>
                 <ScoreBoard
@@ -209,17 +245,17 @@ export default function GameBoard({
                             onChairClick={handleChairClick}
                             centerContent={{
                                 mainText: (
-                                    <span className={activePlayerColorClass}>
+                                    <span>
                                         {getPhaseText()}
                                     </span>
                                 ),
                                 subText: (!isSitter && !isSwitcher && gameState.phase !== 'game_over') ? '観戦中...' : undefined,
                                 button: (canSetTrap && gameState.trappedChair) ? {
-                                    label: '⚡ トラップ確定',
+                                    label: '決定',
                                     onClick: () => onSetTrap(gameState.trappedChair!),
                                     variant: 'danger'
                                 } : (canSelectChair && gameState.selectedChair) ? {
-                                    label: '決定！',
+                                    label: '決定',
                                     onClick: onConfirmSelection,
                                     variant: 'primary'
                                 } : undefined
@@ -235,7 +271,6 @@ export default function GameBoard({
                                 role={gameState.currentSitterId === player1.id ? 'sitter' : 'switcher'}
                                 targetPosition={getTargetPosition(player1, currentPlayerId === player1.id)}
                                 isShocking={isShocking && gameState.currentSitterId === player1.id}
-                                hasBomb={gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player1.id}
                             />
                         )}
                         {player2 && showPlayer2 && (
@@ -246,7 +281,6 @@ export default function GameBoard({
                                 role={gameState.currentSitterId === player2.id ? 'sitter' : 'switcher'}
                                 targetPosition={getTargetPosition(player2, currentPlayerId === player2.id)}
                                 isShocking={isShocking && gameState.currentSitterId === player2.id}
-                                hasBomb={gameState.phase === 'setting_trap' && gameState.currentSwitcherId === player2.id}
                             />
                         )}
                     </div>

@@ -144,93 +144,168 @@
     margin-top: 12px;
 }
 
-/* ゲームオーバー */
+/* Game Over / Result Screen */
 .gameOverOverlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, rgba(10, 10, 30, 0.98) 0%, rgba(20, 10, 40, 0.98) 100%);
+    background: radial-gradient(circle at center, rgba(20, 20, 50, 0.95) 0%, rgba(5, 5, 10, 0.98) 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 200;
+    z-index: 9999;
+    /* Ensure it's on top of everything */
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
 }
 
-.gameOverTitle {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 4rem;
-    font-weight: 900;
-    margin-bottom: 32px;
-    letter-spacing: 0.15em;
-    animation: glow 2s ease-in-out infinite;
+.resultContainer {
+    background: rgba(30, 30, 40, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 0 50px rgba(0, 0, 0, 0.8),
+        inset 0 0 20px rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90vw;
+    width: 500px;
+    animation: slideUpScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.gameOverTitle.win {
-    color: var(--neon-cyan);
-    text-shadow:
-        0 0 20px rgba(0, 255, 255, 0.8),
-        0 0 40px rgba(0, 255, 255, 0.5),
-        0 0 60px rgba(0, 255, 255, 0.3);
+@keyframes slideUpScale {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-.gameOverTitle.lose {
-    color: var(--neon-red);
-    text-shadow:
-        0 0 20px rgba(255, 51, 102, 0.8),
-        0 0 40px rgba(255, 51, 102, 0.5);
+.resultHeader {
+    text-align: center;
+    margin-bottom: 2.5rem;
 }
 
-.gameOverTitle.draw {
-    color: var(--neon-yellow);
-    text-shadow:
-        0 0 20px rgba(255, 255, 0, 0.8),
-        0 0 40px rgba(255, 255, 0, 0.5);
+.winnerAvatar {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+    animation: bounce 2s infinite ease-in-out;
 }
 
-@keyframes glow {
+@keyframes bounce {
 
     0%,
     100% {
-        filter: brightness(1);
+        transform: translateY(0);
     }
 
     50% {
-        filter: brightness(1.2);
+        transform: translateY(-15px);
     }
 }
 
-.gameOverReason {
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-}
-
-.finalScores {
-    display: flex;
-    gap: 60px;
-    margin-bottom: 40px;
-}
-
-.finalPlayerScore {
-    text-align: center;
-}
-
-.finalPlayerName {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-.finalScore {
+.resultTitle {
     font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0 0 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
-.finalScore.winner {
+.resultTitle.win {
+    background: linear-gradient(to bottom, #00ffff, #0088ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.6));
+}
+
+.resultTitle.lose {
+    background: linear-gradient(to bottom, #ff5588, #ff0000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6));
+}
+
+.resultTitle.draw {
+    background: linear-gradient(to bottom, #ffff00, #ffaa00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.6));
+}
+
+.winReason {
+    font-size: 1.2rem;
+    color: #ccc;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.scoreSummary {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    width: 100%;
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+}
+
+.playerBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.playerBlock.winner .scoreValue {
     color: var(--neon-cyan);
+    text-shadow: 0 0 15px var(--neon-cyan);
 }
 
-.continuButton {
-    margin-top: 20px;
+.vsLabel {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #666;
+    align-self: center;
+}
+
+.actionButtons {
+    width: 100%;
+}
+
+.homeButton {
+    width: 100%;
+    padding: 18px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #000;
+    background: var(--neon-cyan);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.homeButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 40px rgba(0, 255, 255, 0.6);
+    background: #fff;
 }

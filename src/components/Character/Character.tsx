@@ -10,7 +10,6 @@ interface CharacterProps {
     role: 'sitter' | 'switcher' | null;
     targetPosition: { x: number; y: number } | null;
     isShocking?: boolean;
-    hasBomb?: boolean;
 }
 
 export default function Character({
@@ -20,7 +19,6 @@ export default function Character({
     role,
     targetPosition,
     isShocking = false,
-    hasBomb = false,
 }: CharacterProps) {
     const [currentPosition, setCurrentPosition] = useState({ x: 50, y: 50 });
     const [isWalking, setIsWalking] = useState(false);
@@ -65,13 +63,12 @@ export default function Character({
         >
             <div className={styles.characterBody}>
                 <span>{avatar}</span>
-                {hasBomb && <span className={styles.bombIcon}>💣</span>}
-                {role && (
-                    <span className={`${styles.roleBadge} ${role === 'sitter' ? styles.sitter : styles.switcher}`}>
-                        {role === 'sitter' ? '解除' : '仕掛'}
-                    </span>
-                )}
             </div>
+            {role && (
+                <span className={`${styles.roleBadge} ${role === 'sitter' ? styles.sitter : styles.switcher}`}>
+                    {role === 'sitter' ? '解除' : '仕掛'}
+                </span>
+            )}
             <div className={styles.characterName}>{name}</div>
         </div>
     );

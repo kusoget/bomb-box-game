@@ -7,7 +7,7 @@
   --bg-secondary: #12122a;
   --bg-tertiary: #1a1a3a;
   --bg-card: rgba(20, 20, 50, 0.8);
-  
+
   /* ネオンカラー */
   --neon-cyan: #00ffff;
   --neon-magenta: #ff00ff;
@@ -15,27 +15,27 @@
   --neon-green: #00ff88;
   --neon-red: #ff3366;
   --neon-blue: #0088ff;
-  
+
   /* テキスト */
   --text-primary: #ffffff;
   --text-secondary: #a0a0c0;
   --text-muted: #606080;
-  
+
   /* エフェクト */
   --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.5);
   --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.5);
   --glow-yellow: 0 0 30px rgba(255, 255, 0, 0.7);
   --glow-red: 0 0 20px rgba(255, 51, 102, 0.5);
-  
+
   /* サイズ */
   --header-height: 60px;
   --chat-width: 320px;
-  
+
   /* トランジション */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
-  
+
   /* ボーダー */
   --border-glow: 1px solid rgba(0, 255, 255, 0.3);
   --border-radius: 8px;
@@ -60,7 +60,7 @@ body {
   font-weight: 500;
   color: var(--text-primary);
   background: var(--bg-primary);
-  background-image: 
+  background-image:
     radial-gradient(ellipse at 50% 0%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 40%),
     radial-gradient(ellipse at 20% 80%, rgba(0, 136, 255, 0.05) 0%, transparent 40%);
@@ -68,7 +68,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Orbitron', sans-serif;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -95,7 +100,7 @@ input {
 
 /* ネオンテキスト */
 .neon-text {
-  text-shadow: 
+  text-shadow:
     0 0 5px currentColor,
     0 0 10px currentColor,
     0 0 20px currentColor;
@@ -134,7 +139,7 @@ input {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(0, 255, 255, 0.6),
     0 0 60px rgba(0, 255, 255, 0.3);
 }
@@ -152,7 +157,7 @@ input {
 
 .btn-secondary:hover {
   background: rgba(255, 0, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(255, 0, 255, 0.4),
     inset 0 0 20px rgba(255, 0, 255, 0.1);
 }
@@ -165,7 +170,7 @@ input {
 
 .btn-danger:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(255, 51, 102, 0.6),
     0 0 60px rgba(255, 51, 102, 0.3);
 }
@@ -194,7 +199,7 @@ input {
 .input:focus {
   outline: none;
   border-color: var(--neon-cyan);
-  box-shadow: 
+  box-shadow:
     0 0 10px rgba(0, 255, 255, 0.3),
     inset 0 0 10px rgba(0, 255, 255, 0.05);
 }
@@ -224,52 +229,77 @@ input {
 
 /* アニメーション */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
 }
 
 @keyframes glow-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
   }
+
   50% {
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
   }
 }
 
 @keyframes electric-shock {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: brightness(1) saturate(1);
     transform: translate(0, 0);
   }
-  10%, 30%, 50%, 70%, 90% {
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     filter: brightness(2) saturate(2);
     transform: translate(-2px, 1px);
   }
-  20%, 40%, 60%, 80% {
+
+  20%,
+  40%,
+  60%,
+  80% {
     filter: brightness(0.8) saturate(0.5);
     transform: translate(2px, -1px);
   }
 }
 
 @keyframes flash {
-  0%, 50%, 100% {
+
+  0%,
+  50%,
+  100% {
     opacity: 0;
   }
-  25%, 75% {
+
+  25%,
+  75% {
     opacity: 1;
   }
 }

@@ -44,7 +44,8 @@
 .gameContainer {
     position: relative;
     width: 100%;
-    max-width: 600px;
+    max-width: 380px;
+    /* スマートフォンサイズに合わせて固定 */
     aspect-ratio: 1;
     /* margin: 0 auto; flex配置するので不要だが念のため */
 }

@@ -52,6 +52,8 @@ export default function ScoreBoard({
                 <span className={styles.roundLabel}>Round</span>
                 <span className={styles.roundValue}>{round}</span>
                 <span className={styles.halfIndicator}>{isHalfFront ? '表' : '裏'}</span>
+
+
             </div>
 
             {/* Player 2 */}

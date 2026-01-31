@@ -51,16 +51,37 @@
     letter-spacing: 0.3em;
 }
 
+.copyButtons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 24px;
+}
+
 .copyButton {
-    margin-top: 12px;
+    min-width: 140px;
     font-size: 0.85rem;
-    padding: 8px 20px;
+    padding: 8px 16px;
+    margin-top: 0;
+}
+
+.urlButton {
+    background: rgba(255, 0, 255, 0.1);
+    border-color: rgba(255, 0, 255, 0.3);
+    color: var(--neon-magenta);
+}
+
+.urlButton:hover {
+    background: rgba(255, 0, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
 }
 
 .copySuccess {
     color: var(--neon-green);
     font-size: 0.85rem;
-    margin-top: 8px;
+    margin-top: 12px;
+    animation: fadeIn 0.3s ease;
 }
 
 .playersSection {

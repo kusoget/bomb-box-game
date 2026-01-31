@@ -226,9 +226,14 @@ export function useGameState({ roomCode, playerId }: UseGameStateProps): UseGame
         }
     }, [roomCode, supabase]);
 
-    // リアルタイム購読
+    // リアルタイム購読 & ポーリング
     useEffect(() => {
         fetchInitialData();
+
+        // ポーリング（3秒ごとに更新確認）
+        const intervalId = setInterval(fetchInitialData, 3000);
+
+        return () => clearInterval(intervalId);
     }, [fetchInitialData]);
 
     // リアルタイム購読（roomIdが設定された後）

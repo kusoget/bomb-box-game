@@ -36,7 +36,7 @@ export default function ChairCircle({
 }: ChairCircleProps) {
     const remainingChairs = chairs.filter(c => !c.isRemoved);
     const totalChairs = chairs.length;
-    const radius = 42; // パーセント
+    const radius = 36; // パーセント（狭い画面でも収まるように調整）
 
     // 椅子の位置を計算（円形配置）
     const getChairPosition = (index: number, total: number) => {
@@ -108,12 +108,14 @@ export default function ChairCircle({
                     >
                         <div className={styles.chairBody}>
                             <span className={styles.chairNumber}>{chair.id}</span>
+                            {/* トラップ表示（爆弾アイコン） */}
+                            {isTrapped && <div className={styles.bombIcon}>💣</div>}
                             <div className={styles.electricWire} />
                         </div>
-                        <div className={styles.chairLegs}>
+                        {/* 箱なので足は不要 <div className={styles.chairLegs}>
                             <div className={styles.chairLeg} />
                             <div className={styles.chairLeg} />
-                        </div>
+                        </div> */}
                     </div>
                 );
             })}

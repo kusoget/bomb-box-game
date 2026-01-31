@@ -40,31 +40,42 @@ export default function GameOverlay({
             }
         };
 
+        const winnerPlayer = gameState.winner === player1?.id ? player1 : gameState.winner === player2?.id ? player2 : null;
+        const resultClass = isDraw ? styles.draw : isWinner ? styles.win : styles.lose;
+
         return (
             <div className={styles.gameOverOverlay}>
-                <div className={`${styles.gameOverTitle} ${isDraw ? styles.draw : isWinner ? styles.win : styles.lose}`}>
-                    {isDraw ? 'DRAW' : isWinner ? 'YOU WIN!' : 'YOU LOSE'}
-                </div>
-                <div className={styles.gameOverReason}>{getWinReasonText()}</div>
+                <div className={styles.resultContainer}>
+                    <div className={styles.resultHeader}>
+                        {winnerPlayer && (
+                            <div className={styles.winnerAvatar}>
+                                {winnerPlayer.avatar}
+                            </div>
+                        )}
+                        <h1 className={`${styles.resultTitle} ${resultClass}`}>
+                            {isDraw ? '引き分け' : isWinner ? '勝利' : '敗北'}
+                        </h1>
+                        <div className={styles.winReason}>{getWinReasonText()}</div>
+                    </div>
 
-                <div className={styles.finalScores}>
-                    <div className={styles.finalPlayerScore}>
-                        <div className={styles.finalPlayerName}>{player1?.name ?? 'Player 1'}</div>
-                        <div className={`${styles.finalScore} ${gameState.winner === player1?.id ? styles.winner : ''}`}>
-                            {gameState.player1Score}
+                    <div className={styles.scoreSummary}>
+                        <div className={`${styles.playerBlock} ${gameState.winner === player1?.id ? styles.winner : ''}`}>
+                            <div className={styles.playerName}>{player1?.name}</div>
+                            <div className={styles.scoreValue}>{gameState.player1Score}</div>
+                        </div>
+                        <div className={styles.vsLabel}>VS</div>
+                        <div className={`${styles.playerBlock} ${gameState.winner === player2?.id ? styles.winner : ''}`}>
+                            <div className={styles.playerName}>{player2?.name}</div>
+                            <div className={styles.scoreValue}>{gameState.player2Score}</div>
                         </div>
                     </div>
-                    <div className={styles.finalPlayerScore}>
-                        <div className={styles.finalPlayerName}>{player2?.name ?? 'Player 2'}</div>
-                        <div className={`${styles.finalScore} ${gameState.winner === player2?.id ? styles.winner : ''}`}>
-                            {gameState.player2Score}
-                        </div>
+
+                    <div className={styles.actionButtons}>
+                        <button className={styles.homeButton} onClick={onBackToHome}>
+                            HOMEへ戻る
+                        </button>
                     </div>
                 </div>
-
-                <button className={`btn btn-primary ${styles.continuButton}`} onClick={onBackToHome}>
-                    ホームに戻る
-                </button>
             </div>
         );
     }
@@ -78,7 +89,7 @@ export default function GameOverlay({
                         {revealResult.safe ? '✅' : '⚡'}
                     </div>
                     <div className={`${styles.resultTitle} ${revealResult.safe ? styles.safe : styles.shock}`}>
-                        {revealResult.safe ? 'SAFE!' : 'SHOCK!'}
+                        {revealResult.safe ? 'セーフ！' : '爆発！'}
                     </div>
                     {revealResult.safe ? (
                         <div className={styles.pointsGained}>+{revealResult.points} Points</div>

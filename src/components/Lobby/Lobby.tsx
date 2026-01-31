@@ -21,7 +21,16 @@ export default function Lobby({
     onStartGame,
     onLeaveRoom,
 }: LobbyProps) {
+    console.log('[Lobby] Render:', {
+        roomId: room.id,
+        hostId: room.hostId,
+        playerId: currentPlayerId,
+        isHost,
+        playersCount: players.length
+    });
+
     const [copied, setCopied] = useState(false);
+    const [urlCopied, setUrlCopied] = useState(false);
 
     const copyRoomCode = async () => {
         try {
@@ -29,16 +38,30 @@ export default function Lobby({
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            // フォールバック
-            const input = document.createElement('input');
-            input.value = room.roomCode;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            document.body.removeChild(input);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
+            fallbackCopy(room.roomCode, setCopied);
         }
+    };
+
+    const copyInviteUrl = async () => {
+        try {
+            const url = window.location.href;
+            await navigator.clipboard.writeText(url);
+            setUrlCopied(true);
+            setTimeout(() => setUrlCopied(false), 2000);
+        } catch {
+            fallbackCopy(window.location.href, setUrlCopied);
+        }
+    };
+
+    const fallbackCopy = (text: string, setStatus: (status: boolean) => void) => {
+        const input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        setStatus(true);
+        setTimeout(() => setStatus(false), 2000);
     };
 
     const canStart = players.length === 2;
@@ -46,20 +69,28 @@ export default function Lobby({
     return (
         <div className={styles.lobby}>
             <div className={`card ${styles.lobbyCard}`}>
-                <h1 className={styles.title}>⚡ Electric Chair</h1>
+                <h1 className={styles.title}>⚡ 爆弾箱ゲーム</h1>
                 <p className={styles.subtitle}>対戦相手を待っています...</p>
 
-                {/* ルームコード */}
                 <div className={styles.roomCode}>
                     <div className={styles.roomCodeLabel}>ルームコード</div>
                     <div className={styles.roomCodeValue}>{room.roomCode}</div>
-                    <button
-                        className={`btn btn-secondary ${styles.copyButton}`}
-                        onClick={copyRoomCode}
-                    >
-                        {copied ? '✓ コピーしました' : 'コピー'}
-                    </button>
-                    {copied && <div className={styles.copySuccess}>クリップボードにコピーしました</div>}
+
+                    <div className={styles.copyButtons}>
+                        <button
+                            className={`btn btn-secondary ${styles.copyButton}`}
+                            onClick={copyRoomCode}
+                        >
+                            {copied ? '✓ コードをコピー' : 'コードをコピー'}
+                        </button>
+                        <button
+                            className={`btn btn-secondary ${styles.copyButton} ${styles.urlButton}`}
+                            onClick={copyInviteUrl}
+                        >
+                            {urlCopied ? '✓ URLをコピー' : '招待URLをコピー'}
+                        </button>
+                    </div>
+                    {(copied || urlCopied) && <div className={styles.copySuccess}>クリップボードにコピーしました</div>}
                 </div>
 
                 {/* プレイヤー一覧 */}

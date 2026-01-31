@@ -1,16 +1,53 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './page.module.css';
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
-  const [mode, setMode] = useState<'menu' | 'create' | 'join'>('menu');
+  const searchParams = useSearchParams();
+  const [mode, setMode] = useState<'menu' | 'create' | 'join' | 'invite'>('menu');
   const [playerName, setPlayerName] = useState('');
   const [roomCode, setRoomCode] = useState('');
+  const [hostName, setHostName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const joinCode = searchParams.get('join');
+    if (joinCode) {
+      setRoomCode(joinCode.toUpperCase());
+      fetchHostInfo(joinCode.toUpperCase());
+    }
+  }, [searchParams]);
+
+  const fetchHostInfo = async (code: string) => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/rooms?code=${code}`);
+      if (res.ok) {
+        const data = await res.json();
+
+        // すでにゲーム中または終了している場合は、
+        // 復帰（Reconnection）画面を表示するために直接ルームへ飛ばす
+        if (data.status === 'playing' || data.status === 'finished') {
+          router.push(`/room/${data.roomCode}`);
+          return;
+        }
+
+        setHostName(data.hostName);
+        setMode('invite');
+      } else {
+        // ルームが見つからない場合は通常の参加画面へ
+        setMode('join');
+      }
+    } catch {
+      setMode('join');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCreateRoom = async () => {
     if (!playerName.trim()) {
@@ -99,7 +136,7 @@ export default function Home() {
         <div className={styles.logo}>
           <h1 className={styles.title}>
             <span className={styles.bolt}>💣</span>
-            Bomb Trap Game
+            爆弾箱ゲーム
             <span className={styles.bolt}>💥</span>
           </h1>
           <p className={styles.subtitle}>オンライン対戦爆発心理戦</p>
@@ -161,7 +198,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ルーム参加 */}
+        {/* ルーム参加 (通常) */}
         {mode === 'join' && (
           <div className={`card ${styles.formCard}`}>
             <h2 className={styles.formTitle}>ルームに参加</h2>
@@ -211,6 +248,43 @@ export default function Home() {
           </div>
         )}
 
+        {/* 招待参加 (URL経由) */}
+        {mode === 'invite' && (
+          <div className={`card ${styles.formCard}`}>
+            <div className={styles.inviteMessage}>
+              <span className={styles.hostName}>{hostName}</span>
+              さんから<br />
+              <span className={styles.inviteTitle}>爆弾箱ゲームに招待されました</span>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>ニックネーム</label>
+              <input
+                type="text"
+                className={`input ${styles.input}`}
+                placeholder="名前を入力..."
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                maxLength={20}
+                disabled={loading}
+                autoFocus
+              />
+            </div>
+
+            {error && <div className={styles.error}>{error}</div>}
+
+            <div className={styles.formActions}>
+              <button
+                className={`btn btn-primary ${styles.submitButton}`}
+                onClick={handleJoinRoom}
+                disabled={loading}
+              >
+                {loading ? '参加する' : '参加する'}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* ルール説明 */}
         <div className={styles.rules}>
           <h3 className={styles.rulesTitle}>遊び方</h3>
@@ -225,5 +299,13 @@ export default function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

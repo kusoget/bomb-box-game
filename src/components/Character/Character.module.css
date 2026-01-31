@@ -35,11 +35,13 @@
 }
 
 .characterName {
-    margin-top: 8px;
-    padding: 4px 12px;
-    background: rgba(0, 0, 0, 0.7);
+    margin-top: -12px;
+    /* 少し重ねる */
+    padding: 2px 10px;
+    background: rgba(0, 0, 0, 0.8);
     border-radius: 12px;
-    font-size: 0.75rem;
+    font-size: 0.6rem;
+    /* 小さくして重なり防止 */
     font-weight: 600;
     color: var(--text-primary);
     white-space: nowrap;
@@ -47,6 +49,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     border: 1px solid rgba(0, 255, 255, 0.3);
+    position: relative;
+    /* z-indexを効かせるため */
+    z-index: 5;
 }
 
 .character.player2 .characterName {
@@ -55,109 +60,95 @@
 
 /* 役割バッジ */
 .roleBadge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    padding: 2px 6px;
-    font-size: 0.6rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    border-radius: 4px;
-    letter-spacing: 0.05em;
-}
-
-.roleBadge.sitter {
-    background: var(--neon-green);
-    color: #000;
-}
-
-.roleBadge.switcher {
-    background: var(--neon-red);
-    color: #fff;
+    display: none;
+    /* 一旦非表示にする */
 }
 
 .bombIcon {
-    position: absolute;
-    bottom: -5px;
-    right: -5px;
-    font-size: 1.5rem;
-    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
-    animation: bomb-pulse 1s infinite alternate;
-    z-index: 5;
-}
-
-@keyframes bomb-pulse {
-    from {
-        transform: scale(1);
+    .bombIcon {
+        position: absolute;
+        bottom: 25px;
+        /* 名前の上あたり */
+        right: 5px;
+        /* 右端 */
+        font-size: 1.5rem;
+        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+        animation: bomb-pulse 1s infinite alternate;
+        z-index: 5;
     }
 
-    to {
-        transform: scale(1.2);
-    }
-}
+    @keyframes bomb-pulse {
+        from {
+            transform: scale(1);
+        }
 
-/* 感電アニメーション */
-.character.shocking .characterBody {
-    animation: character-shock 0.5s ease-in-out;
-    border-color: var(--neon-yellow);
-}
-
-@keyframes character-shock {
-
-    0%,
-    100% {
-        transform: translate(0, 0) scale(1);
-        filter: brightness(1);
+        to {
+            transform: scale(1.2);
+        }
     }
 
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-        transform: translate(-3px, 2px) scale(1.1);
-        filter: brightness(2) saturate(2);
+    /* 感電アニメーション */
+    .character.shocking .characterBody {
+        animation: character-shock 0.5s ease-in-out;
+        border-color: var(--neon-yellow);
     }
 
-    20%,
-    40%,
-    60%,
-    80% {
-        transform: translate(3px, -2px) scale(0.95);
-        filter: brightness(0.5);
-    }
-}
+    @keyframes character-shock {
 
-/* 待機アニメーション */
-.character.idle .characterBody {
-    animation: idle-bounce 2s ease-in-out infinite;
-}
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+            filter: brightness(1);
+        }
 
-@keyframes idle-bounce {
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+            transform: translate(-3px, 2px) scale(1.1);
+            filter: brightness(2) saturate(2);
+        }
 
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-5px);
-    }
-}
-
-/* 歩行アニメーション */
-.character.walking .characterBody {
-    animation: walk-bounce 0.3s ease-in-out infinite;
-}
-
-@keyframes walk-bounce {
-
-    0%,
-    100% {
-        transform: translateY(0) rotate(-3deg);
+        20%,
+        40%,
+        60%,
+        80% {
+            transform: translate(3px, -2px) scale(0.95);
+            filter: brightness(0.5);
+        }
     }
 
-    50% {
-        transform: translateY(-3px) rotate(3deg);
+    /* 待機アニメーション */
+    .character.idle .characterBody {
+        animation: idle-bounce 2s ease-in-out infinite;
     }
-}
+
+    @keyframes idle-bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    /* 歩行アニメーション */
+    .character.walking .characterBody {
+        animation: walk-bounce 0.3s ease-in-out infinite;
+    }
+
+    @keyframes walk-bounce {
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(-3deg);
+        }
+
+        50% {
+            transform: translateY(-3px) rotate(3deg);
+        }
+    }
