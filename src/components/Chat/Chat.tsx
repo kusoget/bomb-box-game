@@ -125,15 +125,15 @@ export default function Chat({
                 </div>
             )}
 
-            {/* Toggle button only for floating mode (not embedded) */}
-            {!embedded && (
+            {/* Toggle button only when chat is closed (floating mode only) */}
+            {!embedded && !isOpen && (
                 <button
                     className={styles.toggleButton}
-                    onClick={() => setIsOpen(!isOpen)}
-                    aria-label="Toggle Chat"
+                    onClick={() => setIsOpen(true)}
+                    aria-label="Open Chat"
                 >
-                    {isOpen ? '✕' : '💬'}
-                    {!isOpen && unreadCount > 0 && (
+                    💬
+                    {unreadCount > 0 && (
                         <span className={styles.unreadBadge}>{unreadCount}</span>
                     )}
                 </button>
