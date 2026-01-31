@@ -89,22 +89,22 @@ export default function GameOverlay({
         let titleStyle = '';
 
         if (revealResult.safe) {
-            // セーフの場合
+            // セーフの場合 - シンプルに「XポイントGET！」
             if (isOpener) {
-                titleText = 'セーフ！'; // 自分目線：成功
+                titleText = `${revealResult.points}ポイントGET！`;
                 titleStyle = styles.safe;
             } else {
-                titleText = '解除された...'; // 相手目線：失敗（かわされた）
-                titleStyle = styles.shock; // ネガティブな色
+                titleText = '解除された...';
+                titleStyle = styles.shock;
             }
         } else {
             // アウト（爆発）の場合
             if (isOpener) {
-                titleText = '爆発！'; // 自分目線：失敗
+                titleText = '爆発！';
                 titleStyle = styles.shock;
             } else {
-                titleText = '爆破成功！'; // 相手目線：成功（ハメた）
-                titleStyle = styles.safe; // ポジティブな色（実際はsafeクラス=青系ならOK、赤系なら別途定義必要かもだが一旦safeで）
+                titleText = '爆破成功！';
+                titleStyle = styles.safe;
             }
         }
 
@@ -112,14 +112,12 @@ export default function GameOverlay({
             <div className={styles.resultOverlay}>
                 <div className={styles.resultContent}>
                     <div className={styles.resultIcon}>
-                        {revealResult.safe ? '✅' : '⚡'}
+                        {revealResult.safe ? '🎉' : '💥'}
                     </div>
                     <div className={`${styles.resultTitle} ${titleStyle}`}>
                         {titleText}
                     </div>
-                    {revealResult.safe ? (
-                        <div className={styles.pointsGained}>+{revealResult.points} Points</div>
-                    ) : (
+                    {!revealResult.safe && (
                         <div className={styles.pointsLost}>得点リセット</div>
                     )}
                 </div>
