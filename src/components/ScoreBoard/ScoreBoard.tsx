@@ -103,9 +103,9 @@ export default function ScoreBoard({
     };
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${getPhaseClass()}`}>
             {/* Phase Header */}
-            <div className={`${styles.phaseHeader} ${getPhaseClass()}`}>
+            <div className={styles.phaseHeader}>
                 {getPhaseDisplayText()}
             </div>
 

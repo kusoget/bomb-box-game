@@ -316,9 +316,9 @@ export default function GameBoard({
                 </div>
             </div>
 
-            {/* 固定フッター (決定ボタン) */}
-            {(canSetTrap || canSelectChair) && (
-                <div className={styles.gameFooter}>
+            {/* 固定フッター (アクション & チャット) */}
+            <div className={styles.gameFooter}>
+                {(canSetTrap || canSelectChair) ? (
                     <button
                         className={`${styles.footerButton} ${canSetTrap ? styles.danger : ''}`}
                         disabled={
@@ -335,8 +335,19 @@ export default function GameBoard({
                     >
                         {canSetTrap ? '爆弾をセットする' : 'この箱にする'}
                     </button>
-                </div>
-            )}
+                ) : (
+                    /* アクションがない時はダミー要素で高さを確保するか、空にしておく（チャットは右寄せ） */
+                    <div />
+                )}
+
+                {/* チャット (Embedded) */}
+                <Chat
+                    messages={messages}
+                    currentPlayerId={currentPlayerId}
+                    onSendMessage={onSendMessage}
+                    embedded={true}
+                />
+            </div>
 
             {/* 感電エフェクト */}
             <ElectricEffect isActive={isShocking} />
