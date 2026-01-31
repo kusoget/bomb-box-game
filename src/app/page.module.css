@@ -149,7 +149,66 @@
   width: 100%;
   padding: 16px 32px;
   font-size: 1.1rem;
+  font-weight: 700;
+  background-color: var(--pop-purple);
+  /* Force Purple */
+  color: #fff;
+  /* Force White */
+  border: 2px solid var(--text-primary);
+  border-radius: var(--border-radius);
+  box-shadow: 4px 4px 0 var(--text-primary);
+  transition: all var(--transition-fast);
 }
+
+.submitButton:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--text-primary);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--text-primary);
+}
+
+.submitButton:disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Explicit style for menu buttons based on type if needed, but they use btn-primary/secondary. 
+   Let's add specific overrides here to be safe. */
+.menuButton {
+  width: 100%;
+  padding: 20px 32px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: 2px solid var(--text-primary);
+  border-radius: var(--border-radius);
+  box-shadow: 4px 4px 0 var(--text-primary);
+  color: #fff;
+  transition: all var(--transition-fast);
+}
+
+.menuButton.primary {
+  background-color: var(--pop-purple);
+}
+
+.menuButton.secondary {
+  background-color: var(--pop-orange);
+}
+
+/* Since the JSX uses `btn-primary` class, we can just rely on that IF globals works, 
+   but the user issue suggests it failed. 
+   I will target the specific class combination or just use these new classes. 
+   In page.tsx, it uses `btn btn-primary ${styles.menuButton}`. 
+   So `.menuButton` here adds layout. 
+   I will add `.menuButton.btn-primary` selector logic? 
+   No, CSS modules hash the class. 
+   I'll just add `background-color` to `.menuButton` as a default fallback or specific overrides?
+   The screenshot showed the "Create" form button, which is `.submitButton`. 
+   I fixed `.submitButton` above.
+*/
 
 .backButton {
   background: transparent;
