@@ -52,6 +52,8 @@ export default function GameBoard({
 
     // 前回のフェーズを追跡するためのRef
     const previousPhaseRef = useRef(gameState.phase);
+    // タイマー管理用のRef
+    const revealTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // 椅子の位置を計算
     const getChairPosition = useCallback((chairId: number, totalChairs: number) => {
@@ -69,6 +71,11 @@ export default function GameBoard({
 
         // フェーズが変わったときのみ処理
         if (prevPhase !== gameState.phase) {
+            // 前のタイマーをクリア
+            if (revealTimerRef.current) {
+                clearTimeout(revealTimerRef.current);
+                revealTimerRef.current = null;
+            }
 
             // revealing フェーズに入った時の処理
             if (gameState.phase === 'revealing') {
@@ -84,16 +91,13 @@ export default function GameBoard({
                     points: selectedChair?.id ?? 0,
                 });
 
-                // 結果表示後に次のラウンドへ (2秒)
-                const timer = setTimeout(() => {
+                // 結果表示後に次のラウンドへ (2秒) - Refに保存
+                revealTimerRef.current = setTimeout(() => {
                     setIsShocking(false);
                     setRevealResult(null);
                     onNextRound();
+                    revealTimerRef.current = null;
                 }, 2000);
-
-                // Refを更新してからreturn
-                previousPhaseRef.current = gameState.phase;
-                return () => clearTimeout(timer);
             }
 
             // 爆弾セット完了通知（仕掛け人へ）
@@ -113,7 +117,14 @@ export default function GameBoard({
             // Refを更新
             previousPhaseRef.current = gameState.phase;
         }
-    }, [gameState.phase, gameState.chairs, gameState.selectedChair, onNextRound, isSwitcher, isSitter]);
+
+        // クリーンアップ（コンポーネントのアンマウント時のみ）
+        return () => {
+            if (revealTimerRef.current) {
+                clearTimeout(revealTimerRef.current);
+            }
+        };
+    }, [gameState.phase]); // 依存配列を最小限に - phaseのみで十分
 
     // 現在のプレイヤーの役割
     const currentPlayerRole = useMemo(() => {
