@@ -312,19 +312,15 @@ export default function GameBoard({
                 </div>
             </div>
 
-            {/* サイドバー: チャット */}
-            <div className={styles.sidebar}>
-                <div className={styles.chatWrapper}>
-                    <Chat
-                        messages={messages}
-                        currentPlayerId={currentPlayerId}
-                        onSendMessage={onSendMessage}
-                    />
-                </div>
-            </div>
-
             {/* 感電エフェクト */}
             <ElectricEffect isActive={isShocking} />
+
+            {/* チャット (Floating) */}
+            <Chat
+                messages={messages}
+                currentPlayerId={currentPlayerId}
+                onSendMessage={onSendMessage}
+            />
 
             {/* オーバーレイ（結果表示、ゲームオーバー） */}
             <GameOverlay
