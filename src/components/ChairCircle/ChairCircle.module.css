@@ -18,10 +18,10 @@
 }
 
 .chair.disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+    cursor: default;
+    /* opacity: 0.5; REMOVED per user request */
     pointer-events: none;
-    filter: grayscale(100%);
+    /* filter: grayscale(100%); REMOVED per user request */
 }
 
 .chair.removed {
