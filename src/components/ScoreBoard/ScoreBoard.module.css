@@ -14,15 +14,15 @@
     margin-bottom: 0;
     text-align: center;
     width: 100%;
-    padding: 16px;
+    padding: 24px 16px;
+    /* Taller header */
     background: var(--bg-secondary);
     border-bottom: var(--border-main);
     transition: background 0.3s ease;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    /* Top rounding only */
+    /* Removed sticky/radius to fix "floating pill" look */
+    /* position: sticky; top: 0; z-index: 100; */
+    border-radius: 0;
+    /* Square corners */
 }
 
 /* My Action (Colorful/Action) */
