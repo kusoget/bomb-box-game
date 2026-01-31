@@ -84,7 +84,7 @@ export default function Chat({
                         ) : (
                             messages.map((msg) => (
                                 <div
-                                    key={msg.id}
+                                    key={`${embedded ? 'e' : 'f'}-${msg.id}`}
                                     className={`
                 ${styles.message}
                 ${msg.playerId === currentPlayerId ? styles.own : ''}
