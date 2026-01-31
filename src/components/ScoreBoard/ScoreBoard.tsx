@@ -84,7 +84,20 @@ export default function ScoreBoard({
     const renderAvatar = (avatar: string | undefined) => {
         const { type, value } = getAvatarDisplay(avatar);
         if (type === 'image') {
-            return <img src={value} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />;
+            return (
+                <img
+                    src={value}
+                    alt={avatar || "Avatar"}
+                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                    onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        // Show text fallback instead
+                        const span = document.createElement('span');
+                        span.textContent = avatar?.substring(0, 1) || '?';
+                        e.currentTarget.parentElement?.appendChild(span);
+                    }}
+                />
+            );
         }
         return value;
     };

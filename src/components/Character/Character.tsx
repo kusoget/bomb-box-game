@@ -65,8 +65,26 @@ export default function Character({
             <div className={styles.characterBody}>
                 {(() => {
                     const { type, value } = getAvatarDisplay(avatar);
+                    // Use a simple error handler in the img tag for now as we are inside a map/render
+                    // Ideally we'd move this logic out, but inline onError is cleaner here for rapid fix
                     return type === 'image' ? (
-                        <img src={value} alt="Avatar" className={styles.avatarImage} />
+                        <>
+                            <img
+                                src={value}
+                                alt="Avatar"
+                                className={styles.avatarImage}
+                                onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                    const parent = e.currentTarget.parentElement;
+                                    if (parent) {
+                                        const span = document.createElement('span');
+                                        span.className = styles.avatarText || '';
+                                        span.textContent = avatar?.substring(0, 2) || '?';
+                                        parent.appendChild(span);
+                                    }
+                                }}
+                            />
+                        </>
                     ) : (
                         <span>{value}</span>
                     );

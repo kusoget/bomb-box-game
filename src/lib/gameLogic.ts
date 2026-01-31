@@ -196,23 +196,35 @@ export function getRandomAvatar(): string {
 export function getAvatarDisplay(avatarCode: string | undefined | null): { type: 'image' | 'text', value: string } {
     if (!avatarCode) return { type: 'text', value: '?' };
 
-    // 短いコードを画像パスにマッピング
+    // マッピング定義
     const imageMap: Record<string, string> = {
+        // Current Short Codes
         'ghost': '/images/pop_ghost.png',
         'fox': '/images/pop_fox.png',
         'bomb': '/images/pop_bomb.png',
-        // 旧コードの互換性（もしあれば）
+        // Legacy/Compat Codes
         'pop_ghost': '/images/pop_ghost.png',
         'pop_fox': '/images/pop_fox.png',
         'pop_bomb': '/images/pop_bomb.png',
+        // Handle potentially saved raw filenames or bad paths
+        'pop_ghost.png': '/images/pop_ghost.png',
+        'pop_fox.png': '/images/pop_fox.png',
+        'pop_bomb.png': '/images/pop_bomb.png',
+        '/pop_ghost.png': '/images/pop_ghost.png',
+        '/pop_fox.png': '/images/pop_fox.png',
+        '/pop_bomb.png': '/images/pop_bomb.png',
     };
 
     if (imageMap[avatarCode]) {
         return { type: 'image', value: imageMap[avatarCode] };
     }
 
-    // パスが直接保存されている場合（後方互換）
+    // パスが直接保存されている場合
     if (avatarCode.startsWith('/') || avatarCode.startsWith('http')) {
+        // If it looks like a legacy path at root, try to fix it
+        if (avatarCode.startsWith('/pop_') && !avatarCode.startsWith('/images/')) {
+            return { type: 'image', value: `/images${avatarCode}` };
+        }
         return { type: 'image', value: avatarCode };
     }
 
