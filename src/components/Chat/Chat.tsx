@@ -22,7 +22,7 @@ export default function Chat({
 
     // 新しいメッセージが来たらスクロール
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, [messages]);
 
     const handleSubmit = (e: React.FormEvent) => {
