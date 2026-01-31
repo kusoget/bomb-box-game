@@ -190,12 +190,24 @@
   transition: all var(--transition-fast);
 }
 
-.menuButton.primary {
+.menuButtonPrimary {
   background-color: var(--pop-purple);
+  color: #fff;
 }
 
-.menuButton.secondary {
+.menuButtonSecondary {
   background-color: var(--pop-orange);
+  color: #fff;
+}
+
+.menuButton:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--text-primary);
+}
+
+.menuButton:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--text-primary);
 }
 
 /* Since the JSX uses `btn-primary` class, we can just rely on that IF globals works, 

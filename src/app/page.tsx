@@ -151,13 +151,13 @@ function HomeContent() {
         {mode === 'menu' && (
           <div className={styles.menu}>
             <button
-              className={`btn btn-primary ${styles.menuButton}`}
+              className={`btn ${styles.menuButton} ${styles.menuButtonPrimary}`}
               onClick={() => setMode('create')}
             >
               ルームを作成
             </button>
             <button
-              className={`btn btn-secondary ${styles.menuButton}`}
+              className={`btn ${styles.menuButton} ${styles.menuButtonSecondary}`}
               onClick={() => setMode('join')}
             >
               ルームに参加
