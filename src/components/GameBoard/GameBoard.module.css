@@ -1,19 +1,15 @@
 .gameBoard {
     display: grid;
     grid-template-columns: 1fr 320px;
-    grid-template-rows: auto 1fr;
-    /* Header, Main/Side */
+    grid-template-rows: 1fr;
     gap: 0;
     height: 100vh;
     padding: 0;
-    /* Full bleed everywhere */
     background: var(--bg-primary);
-    /* Polka dot or cream */
+    overflow: hidden;
 }
 
-.header {
-    grid-column: 1 / -1;
-}
+/* Header is now part of mainArea, not a separate grid row */
 
 
 
@@ -128,13 +124,14 @@
     transform: none;
 }
 
-/* Sidebar (Desktop Only) */
+/* Sidebar (Desktop Only) - Full Height */
 .sidebar {
+    grid-row: 1 / -1;
+    /* Span from header to bottom */
     display: flex;
     flex-direction: column;
     background: var(--bg-secondary);
     border-left: 3px solid var(--text-primary);
-    height: 100%;
     overflow: hidden;
 }
 
@@ -143,10 +140,9 @@
     display: none;
 }
 
-/* Make space for footer in main content */
-.gameBoard {
-    padding-bottom: 140px;
-    /* Increased to ensure chairs aren't hidden */
+/* Make space for footer in main content (left column only) */
+.mainArea {
+    padding-bottom: 80px;
 }
 
 /* レスポンシブ */
