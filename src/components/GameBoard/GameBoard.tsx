@@ -283,14 +283,7 @@ export default function GameBoard({
                             isShocking={isShocking}
                             shockingChair={gameState.selectedChair}
                             onChairClick={handleChairClick}
-                            centerContent={
-                                ['revealing', 'round_end', 'game_over'].includes(gameState.phase)
-                                    ? {
-                                        mainText: <span>{getPhaseText()}</span>,
-                                        subText: undefined
-                                    }
-                                    : undefined
-                            }
+                            centerContent={undefined}
                         />
 
                         {/* キャラクター表示 */}
