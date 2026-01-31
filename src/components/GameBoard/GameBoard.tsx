@@ -87,11 +87,19 @@ export default function GameBoard({
             return () => clearTimeout(timer);
         }
 
-        // 爆弾セット完了通知
+        // 爆弾セット完了通知（仕掛け人へ）
         if (previousPhase === 'setting_trap' && gameState.phase === 'selecting_chair' && isSwitcher) {
             setToastMessage('爆弾をセットしました！');
             setShowToast(true);
             const timer = setTimeout(() => setShowToast(false), 2000);
+            return () => clearTimeout(timer);
+        }
+
+        // 爆弾セット完了通知（解除役へ）
+        if (previousPhase === 'setting_trap' && gameState.phase === 'selecting_chair' && isSitter) {
+            setToastMessage('爆弾がセットされました！箱を選択してください');
+            setShowToast(true);
+            const timer = setTimeout(() => setShowToast(false), 3000);
             return () => clearTimeout(timer);
         }
 
