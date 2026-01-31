@@ -201,14 +201,27 @@ export default function GameBoard({
     const showPlayer1 = useMemo(() => {
         // 爆弾セット中は表示しない
         if (gameState.phase === 'setting_trap') return false;
+
+        // アクション中（選択・結果）は、座る側（Sitter）のみ表示
+        if (['selecting_chair', 'confirming', 'revealing'].includes(gameState.phase)) {
+            return gameState.currentSitterId === player1?.id;
+        }
+
+        // それ以外（ゲーム終了など）は表示
         return true;
-    }, [gameState.phase]);
+    }, [gameState.phase, gameState.currentSitterId, player1?.id]);
 
     const showPlayer2 = useMemo(() => {
         // 爆弾セット中は表示しない
         if (gameState.phase === 'setting_trap') return false;
+
+        // アクション中（選択・結果）は、座る側（Sitter）のみ表示
+        if (['selecting_chair', 'confirming', 'revealing'].includes(gameState.phase)) {
+            return gameState.currentSitterId === player2?.id;
+        }
+
         return true;
-    }, [gameState.phase]);
+    }, [gameState.phase, gameState.currentSitterId, player2?.id]);
 
     // ルーレット表示ロジック
     const shouldShowRoulette =
