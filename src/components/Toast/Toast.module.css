@@ -1,19 +1,23 @@
+/* Retro Pop Style Toast */
 .toast {
     position: fixed;
-    top: 80px;
+    top: 100px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(10, 10, 30, 0.9);
-    border: 1px solid var(--neon-cyan);
+    background: var(--text-primary);
+    border: 3px solid var(--text-primary);
     padding: 12px 24px;
-    border-radius: 8px;
-    color: var(--neon-cyan);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
     z-index: 1000;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
     animation: slideDown 0.3s ease-out;
     pointer-events: none;
+    max-width: 90%;
+    text-align: center;
 }
 
 @keyframes slideDown {
