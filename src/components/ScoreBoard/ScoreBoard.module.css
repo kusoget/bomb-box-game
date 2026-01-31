@@ -30,11 +30,28 @@
     text-align: center;
     width: 100%;
     padding: 8px 16px 4px 16px;
-    /* Bottom padding reduced */
     background: transparent;
-    /* Transparent to show container bg */
     border: none;
     border-radius: 0;
+}
+
+/* アクション待ちの時のアニメーション */
+.phaseHeader.actionRequired {
+    animation: pulseText 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseText {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
 }
 
 /* ... middle ... */

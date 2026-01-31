@@ -344,24 +344,19 @@ export default function GameBoard({
                     >
                         {canSetTrap ? '爆弾をセットする' : 'この箱にする'}
                     </button>
-                ) : (
-                    /* アクションがない時はダミー要素で高さを確保するか、空にしておく（チャットは右寄せ） */
-                    <div />
-                )}
-
-                {/* チャット (Embedded) */}
-                <Chat
-                    messages={messages}
-                    currentPlayerId={currentPlayerId}
-                    onSendMessage={onSendMessage}
-                    embedded={true}
-                />
+                ) : null}
             </div>
 
             {/* 感電エフェクト */}
             <ElectricEffect isActive={isShocking} />
 
-            {/* チャット (Floating Removed) */}
+            {/* チャット (Floating - デスクトップ右固定、スマホはスライドアップ) */}
+            <Chat
+                messages={messages}
+                currentPlayerId={currentPlayerId}
+                onSendMessage={onSendMessage}
+                embedded={false}
+            />
 
             {/* オーバーレイ（結果表示、ゲームオーバー） */}
             <GameOverlay

@@ -1,4 +1,4 @@
-/* Floating Wrapper Position */
+/* Floating Wrapper Position - Desktop: Fixed Right */
 .floatingWrapper {
     position: fixed;
     bottom: 20px;
@@ -10,33 +10,33 @@
     gap: 12px;
 }
 
-/* Embedded Wrapper (inside Footer) */
+/* Embedded Wrapper (inside Footer) - for mobile integration */
 .embeddedWrapper {
     position: relative;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    /* Chat window aligns right */
     justify-content: flex-end;
     gap: 12px;
 }
 
 /* Toggle Button (FAB) */
 .toggleButton {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: var(--pop-blue);
     border: 3px solid var(--text-primary);
-    box-shadow: 4px 4px 0 var(--text-primary);
+    box-shadow: 3px 3px 0 var(--text-primary);
     color: #fff;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all var(--transition-bouncy);
+    position: relative;
 }
 
 .toggleButton:hover {
@@ -45,7 +45,7 @@
 
 .toggleButton:active {
     transform: scale(0.95);
-    box-shadow: 2px 2px 0 var(--text-primary);
+    box-shadow: 1px 1px 0 var(--text-primary);
 }
 
 .unreadBadge {
@@ -54,10 +54,10 @@
     right: -5px;
     background: var(--pop-red);
     color: #fff;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     border: 2px solid var(--text-primary);
     display: flex;
@@ -65,10 +65,10 @@
     justify-content: center;
 }
 
-/* Chat Window Overlay */
+/* Chat Window - Desktop */
 .chatContainer {
-    width: 300px;
-    height: 400px;
+    width: 320px;
+    height: 420px;
     display: flex;
     flex-direction: column;
     background: var(--bg-card);
@@ -77,7 +77,6 @@
     overflow: hidden;
     box-shadow: 6px 6px 0 var(--text-primary);
     animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    margin-bottom: 10px;
 }
 
 @keyframes slideUp {
@@ -247,13 +246,66 @@
     text-align: center;
 }
 
-/* Mobile Adjustments */
-@media (max-width: 480px) {
-    .chatContainer {
-        width: 90vw;
-        height: 50vh;
-        right: 10px;
-        bottom: 80px;
-        /* Above the button */
+/* Mobile - Full screen slide-up panel */
+@media (max-width: 768px) {
+    .floatingWrapper {
+        bottom: 16px;
+        right: 16px;
     }
+
+    .toggleButton {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    .chatContainer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 60vh;
+        max-height: 500px;
+        border-radius: 20px 20px 0 0;
+        border-bottom: none;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+        animation: slideUpMobile 0.3s ease-out;
+    }
+
+    @keyframes slideUpMobile {
+        from {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .chatHeader {
+        border-radius: 20px 20px 0 0;
+        padding: 16px 20px;
+    }
+
+    .messagesContainer {
+        padding: 16px;
+    }
+
+    .inputContainer {
+        padding: 12px 16px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+    }
+
+    .chatInput {
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+}
+
+/* Embedded mode adjustments for footer */
+.embeddedWrapper .chatContainer {
+    margin-bottom: 0;
 }

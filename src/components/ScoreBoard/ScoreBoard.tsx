@@ -80,6 +80,13 @@ export default function ScoreBoard({
         return '';
     };
 
+    // アクションが必要かどうか
+    const isActionRequired = gameState && (
+        (gameState.phase === 'setting_trap' && isSwitcher) ||
+        (gameState.phase === 'selecting_chair' && isSitter) ||
+        (gameState.phase === 'confirming' && isSitter)
+    );
+
     // アバター描画ヘルパー
     const renderAvatar = (avatar: string | undefined) => {
         const { type, value } = getAvatarDisplay(avatar);
@@ -105,7 +112,7 @@ export default function ScoreBoard({
     return (
         <div className={`${styles.container} ${getPhaseClass()}`}>
             {/* Phase Header */}
-            <div className={styles.phaseHeader}>
+            <div className={`${styles.phaseHeader} ${isActionRequired ? styles.actionRequired : ''}`}>
                 {getPhaseDisplayText()}
             </div>
 
