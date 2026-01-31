@@ -206,7 +206,11 @@ export default function GameBoard({
         lastClickTimeRef.current = now;
 
         if (canSetTrap) {
-            onSetTrap(chairId);
+            // 爆弾設置: 選択のみ（未選択または別の椅子を選択した場合）
+            // 同じ椅子をクリックしても確定しない（フッターボタンで確定）
+            if (gameState.trappedChair !== chairId) {
+                onSetTrap(chairId);
+            }
         } else if (canSelectChair) {
             onSelectChair(chairId);
         }
