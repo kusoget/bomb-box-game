@@ -1,0 +1,160 @@
+.scoreBoard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--bg-card);
+    border: var(--border-glow);
+    border-radius: var(--border-radius-lg);
+    gap: 20px;
+}
+
+.playerScore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.playerScore.active {
+    position: relative;
+}
+
+
+
+.playerInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    border: 2px solid var(--neon-cyan);
+}
+
+.playerScore.player2 .avatar {
+    border-color: var(--neon-magenta);
+}
+
+.playerName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scoreValue {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.playerScore.player2 .scoreValue {
+    color: var(--neon-magenta);
+    text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
+.lifeIndicator {
+    display: flex;
+    gap: 4px;
+}
+
+.lifeHeart {
+    font-size: 1.2rem;
+    transition: all var(--transition-normal);
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+    cursor: default;
+}
+
+.lifeHeart.lost {
+    opacity: 0.2;
+    filter: grayscale(100%);
+    transform: scale(0.8);
+}
+
+/* 中央のラウンド表示 */
+.roundInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.roundLabel {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+.roundValue {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.halfIndicator {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.vsText {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: var(--text-muted);
+
+    .vsText {
+        font-size: 0.8rem;
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    .scoreBoard {
+        padding: 10px 16px;
+        gap: 10px;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 1.2rem;
+    }
+
+    .playerName {
+        font-size: 0.8rem;
+        max-width: 60px;
+    }
+
+    .scoreValue {
+        font-size: 1.8rem;
+    }
+
+    .shockDot {
+        width: 8px;
+        height: 8px;
+    }
+
+    .roundValue {
+        font-size: 1rem;
+    }
+}

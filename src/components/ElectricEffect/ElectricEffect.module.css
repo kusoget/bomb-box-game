@@ -1,0 +1,207 @@
+.electricEffect {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    background: rgba(255, 50, 0, 0.2);
+    /* 全体を赤く */
+    mix-blend-mode: hard-light;
+}
+
+.electricEffect.active {
+    opacity: 1;
+}
+
+/* フラッシュ背景 */
+.flash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 100, 0, 0.9) 0%, rgba(255, 0, 0, 0) 80%);
+    animation: flashPulse 0.2s ease-out;
+}
+
+@keyframes flashPulse {
+    0% {
+        opacity: 1;
+        transform: scale(0.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+/* 電撃ライン（爆発の亀裂として再利用） */
+.bolts {
+    display: none;
+    /* 今回は非表示 */
+}
+
+/* 中央の衝撃 */
+.epicenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 200, 0, 1) 0%, rgba(255, 50, 0, 0.8) 40%, rgba(0, 0, 0, 0) 70%);
+    box-shadow: 0 0 100px rgba(255, 50, 0, 0.8);
+    animation: expandExplosion 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+@keyframes expandExplosion {
+    0% {
+        transform: translate(-50%, -50%) scale(0.1);
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+/* スパーク（火花） */
+.sparks {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.spark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ffaa00, 0 0 20px #ff4400;
+    animation: sparkFly 0.8s ease-out forwards;
+}
+
+/* 各スパークの飛び散り設定 (既存のanimationを流用) */
+.spark:nth-child(1) {
+    --angle: 0deg;
+    --distance: 300px;
+}
+
+.spark:nth-child(2) {
+    --angle: 45deg;
+    --distance: 350px;
+}
+
+.spark:nth-child(3) {
+    --angle: 90deg;
+    --distance: 280px;
+}
+
+.spark:nth-child(4) {
+    --angle: 135deg;
+    --distance: 400px;
+}
+
+.spark:nth-child(5) {
+    --angle: 180deg;
+    --distance: 320px;
+}
+
+.spark:nth-child(6) {
+    --angle: 225deg;
+    --distance: 300px;
+}
+
+.spark:nth-child(7) {
+    --angle: 270deg;
+    --distance: 380px;
+}
+
+.spark:nth-child(8) {
+    --angle: 315deg;
+    --distance: 290px;
+}
+
+@keyframes sparkFly {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(var(--angle)) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--distance))) scale(0);
+    }
+}
+
+/* 画面揺れ */
+.shake {
+    animation: screenShake 0.6s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes screenShake {
+
+    10%,
+    90% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(6px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-8px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(8px, 0, 0);
+    }
+}
+
+/* テキスト */
+.shockText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow:
+        0 0 10px #ff0000,
+        0 0 20px #ff4400,
+        0 0 40px #ffaa00;
+    animation: textPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    letter-spacing: 0.1em;
+    z-index: 100;
+}
+
+@keyframes textPop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}

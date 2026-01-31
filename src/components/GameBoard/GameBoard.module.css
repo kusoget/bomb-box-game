@@ -1,0 +1,172 @@
+.gameBoard {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: auto 1fr;
+    /* Header, Main/Side */
+    gap: 20px;
+    height: 100vh;
+    padding: 20px;
+    background: var(--bg-primary);
+}
+
+.header {
+    grid-column: 1 / -1;
+}
+
+
+
+.mainArea {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 0;
+    /* Flexbox内でのスクロール用 */
+}
+
+.gameArea {
+    flex: 1;
+    position: relative;
+    background: var(--bg-secondary);
+    border: var(--border-glow);
+    border-radius: var(--border-radius-lg);
+    padding: 20px;
+    min-height: 500px;
+    display: flex;
+    /* これによりgameContainerのmargin:autoが効く */
+    align-items: center;
+    /* 垂直中央配置 */
+    justify-content: center;
+    /* 水平中央配置 */
+    overflow: hidden;
+}
+
+.gameContainer {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1;
+    /* margin: 0 auto; flex配置するので不要だが念のため */
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chatWrapper {
+    flex: 1;
+    min-height: 300px;
+}
+
+.phaseLabel {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+}
+
+.phaseText {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--neon-cyan);
+    margin-bottom: 8px;
+    /* ラベル削除に伴い調整 */
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.textPlayer1 {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.textPlayer2 {
+    color: var(--neon-magenta);
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+}
+
+.actionButton {
+    width: 100%;
+}
+
+.instruction {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+.waitingMessage {
+    font-size: 1rem;
+    color: var(--text-muted);
+    animation: pulse 2s infinite;
+}
+
+/* ローディング */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    color: var(--neon-cyan);
+}
+
+.loadingSpinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--bg-tertiary);
+    border-top-color: var(--neon-cyan);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* レスポンシブ */
+@media (max-width: 900px) {
+    .gameBoard {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto auto;
+    }
+
+    .sidebar {
+        grid-row: auto;
+    }
+
+    .chatWrapper {
+        max-height: 250px;
+    }
+
+    .gameBoard {
+        padding: 10px;
+        gap: 16px;
+    }
+
+    .gameArea {
+        min-height: 320px;
+        padding: 10px;
+    }
+
+    .actionPanel {
+        padding: 16px;
+    }
+
+    .phaseText {
+        font-size: 1rem;
+    }
+
+    .instruction {
+        font-size: 0.8rem;
+    }
+}

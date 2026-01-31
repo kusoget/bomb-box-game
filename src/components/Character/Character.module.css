@@ -1,0 +1,163 @@
+.character {
+    position: absolute;
+    width: 80px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.characterBody {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    border: 3px solid var(--neon-cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.3),
+        inset 0 0 15px rgba(0, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.character.player2 .characterBody {
+    border-color: var(--neon-magenta);
+    box-shadow:
+        0 0 20px rgba(255, 0, 255, 0.3),
+        inset 0 0 15px rgba(255, 0, 255, 0.1);
+}
+
+.characterName {
+    margin-top: 8px;
+    padding: 4px 12px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.character.player2 .characterName {
+    border-color: rgba(255, 0, 255, 0.3);
+}
+
+/* 役割バッジ */
+.roleBadge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    padding: 2px 6px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+}
+
+.roleBadge.sitter {
+    background: var(--neon-green);
+    color: #000;
+}
+
+.roleBadge.switcher {
+    background: var(--neon-red);
+    color: #fff;
+}
+
+.bombIcon {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+    animation: bomb-pulse 1s infinite alternate;
+    z-index: 5;
+}
+
+@keyframes bomb-pulse {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.2);
+    }
+}
+
+/* 感電アニメーション */
+.character.shocking .characterBody {
+    animation: character-shock 0.5s ease-in-out;
+    border-color: var(--neon-yellow);
+}
+
+@keyframes character-shock {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        filter: brightness(1);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translate(-3px, 2px) scale(1.1);
+        filter: brightness(2) saturate(2);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translate(3px, -2px) scale(0.95);
+        filter: brightness(0.5);
+    }
+}
+
+/* 待機アニメーション */
+.character.idle .characterBody {
+    animation: idle-bounce 2s ease-in-out infinite;
+}
+
+@keyframes idle-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* 歩行アニメーション */
+.character.walking .characterBody {
+    animation: walk-bounce 0.3s ease-in-out infinite;
+}
+
+@keyframes walk-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-3deg);
+    }
+
+    50% {
+        transform: translateY(-3px) rotate(3deg);
+    }
+}

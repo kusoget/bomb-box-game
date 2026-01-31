@@ -1,141 +1,230 @@
-.page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
-  display: flex;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
-}
-
 .main {
-  display: flex;
   min-height: 100vh;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
-}
-
-.intro {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
-}
-
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
-}
-
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
-}
-
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ctas {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
-}
-
-.ctas a {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
+/* 背景エフェクト */
+.bgEffect {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.electricLine {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(0, 255, 255, 0.3) 50%,
+      transparent 100%);
+  animation: electricMove 3s ease-in-out infinite;
+}
+
+.electricLine:nth-child(1) {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.electricLine:nth-child(2) {
+  left: 50%;
+  animation-delay: 1s;
+}
+
+.electricLine:nth-child(3) {
+  left: 80%;
+  animation-delay: 2s;
+}
+
+@keyframes electricMove {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(100%);
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  z-index: 1;
+}
+
+/* ロゴ */
+.logo {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.bolt {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 30px rgba(255, 255, 0, 0.8);
+  animation: boltPulse 2s ease-in-out infinite;
+}
+
+@keyframes boltPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  letter-spacing: 0.2em;
+}
+
+/* メニュー */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.menuButton {
+  width: 100%;
+  padding: 20px 32px;
+  font-size: 1.2rem;
+}
+
+/* フォーム */
+.formCard {
+  margin-bottom: 48px;
+}
+
+.formTitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  color: var(--neon-cyan);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.input {
+  font-size: 1.1rem;
+}
+
+.roomCodeInput {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.3em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.error {
+  color: var(--neon-red);
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 16px;
+  padding: 8px;
+  background: rgba(255, 51, 102, 0.1);
+  border-radius: var(--border-radius);
+}
+
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+}
+
+.backButton {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 8px;
+  transition: color var(--transition-fast);
+}
+
+.backButton:hover {
+  color: var(--text-primary);
+}
+
+/* ルール */
+.rules {
+  background: var(--bg-card);
+  border: var(--border-glow);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+}
+
+.rulesTitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  color: var(--neon-cyan);
+  margin-bottom: 16px;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.rulesList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.rulesList li {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding-left: 24px;
+  position: relative;
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-}
-
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
-
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
-  }
+.rulesList li::before {
+  content: '⚡';
+  position: absolute;
+  left: 0;
+  color: var(--neon-yellow);
 }
