@@ -61,6 +61,25 @@
     color: #fff;
 }
 
+/* 非アクティブ時（自分のターンではない）の色 */
+.chair.inactivePurple .chairBody {
+    background: var(--pop-purple);
+    opacity: 0.7;
+}
+
+.chair.inactivePurple .chairNumber {
+    color: #fff;
+}
+
+.chair.inactiveOrange .chairBody {
+    background: var(--pop-orange);
+    opacity: 0.7;
+}
+
+.chair.inactiveOrange .chairNumber {
+    color: #fff;
+}
+
 .chair.trapped .chairBody {
     border-color: var(--text-primary);
     background: var(--pop-yellow);

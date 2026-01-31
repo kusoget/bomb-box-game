@@ -12,6 +12,7 @@ interface ChairCircleProps {
     isShocking: boolean;
     shockingChair: number | null;
     onChairClick: (chairId: number) => void;
+    inactiveColor?: 'purple' | 'orange';
     centerContent?: {
         mainText: React.ReactNode;
         subText?: string;
@@ -32,6 +33,7 @@ export default function ChairCircle({
     isShocking,
     shockingChair,
     onChairClick,
+    inactiveColor,
     centerContent,
 }: ChairCircleProps) {
     const remainingChairs = chairs.filter(c => !c.isRemoved);
@@ -92,6 +94,8 @@ export default function ChairCircle({
               ${isTrapped ? styles.trapped : ''}
               ${isCurrentlyShocking ? styles.shocking : ''}
               ${!canSelect || chair.isRemoved ? styles.disabled : ''}
+              ${inactiveColor === 'purple' ? styles.inactivePurple : ''}
+              ${inactiveColor === 'orange' ? styles.inactiveOrange : ''}
             `}
                         style={{
                             left: `${pos.x}%`,

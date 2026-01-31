@@ -300,11 +300,17 @@ export default function GameBoard({
                             isShocking={isShocking}
                             shockingChair={gameState.selectedChair}
                             onChairClick={handleChairClick}
+                            inactiveColor={
+                                // 自分のターンじゃない時は背景色に合わせる
+                                !canSelectChair && !canSetTrap && gameState.phase !== 'revealing' ? (
+                                    activePlayerId === player1?.id ? 'purple' : 'orange'
+                                ) : undefined
+                            }
                             centerContent={
                                 // 相手が爆弾設置中の時、中央に爆弾表示
                                 gameState.phase === 'setting_trap' && isSitter ? {
                                     mainText: <span style={{ fontSize: '4rem' }}>💣</span>,
-                                    subText: '爆弾設置中...',
+                                    subText: '相手が爆弾セット中',
                                 } : undefined
                             }
                         />
