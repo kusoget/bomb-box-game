@@ -10,6 +10,18 @@
     gap: 12px;
 }
 
+/* Embedded Wrapper (inside Footer) */
+.embeddedWrapper {
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    /* Chat window aligns right */
+    justify-content: flex-end;
+    gap: 12px;
+}
+
 /* Toggle Button (FAB) */
 .toggleButton {
     width: 60px;

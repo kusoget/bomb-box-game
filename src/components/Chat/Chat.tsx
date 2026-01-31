@@ -9,6 +9,7 @@ interface ChatProps {
     currentPlayerId: string;
     onSendMessage: (message: string) => void;
     disabled?: boolean;
+    embedded?: boolean;
 }
 
 export default function Chat({
@@ -16,6 +17,7 @@ export default function Chat({
     currentPlayerId,
     onSendMessage,
     disabled = false,
+    embedded = false,
 }: ChatProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -23,43 +25,10 @@ export default function Chat({
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const prevMessagesLength = useRef(messages.length);
 
-    // 新しいメッセージが来たらスクロール & 通知
-    useEffect(() => {
-        if (messages.length > prevMessagesLength.current) {
-            if (isOpen) {
-                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            } else {
-                setUnreadCount(prev => prev + 1);
-            }
-        }
-        prevMessagesLength.current = messages.length;
-    }, [messages, isOpen]);
-
-    // 開いたときに未読をリセット
-    useEffect(() => {
-        if (isOpen) {
-            setUnreadCount(0);
-            setTimeout(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: 'auto', block: 'nearest' });
-            }, 100);
-        }
-    }, [isOpen]);
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (inputValue.trim() && !disabled) {
-            onSendMessage(inputValue.trim());
-            setInputValue('');
-        }
-    };
-
-    const formatTime = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
-    };
+    // ... (logic) ...
 
     return (
-        <div className={styles.floatingWrapper}>
+        <div className={embedded ? styles.embeddedWrapper : styles.floatingWrapper}>
             {isOpen && (
                 <div className={styles.chatContainer}>
                     <div className={styles.chatHeader}>
