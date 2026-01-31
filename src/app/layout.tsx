@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,6 +17,13 @@ export const metadata: Metadata = {
     title: "💥 爆弾箱ゲーム",
     description: "その箱は安全か、爆発か？12個の箱を巡る命がけの心理戦。",
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
