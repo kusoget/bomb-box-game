@@ -102,46 +102,37 @@
 
 .playerName {
     font-family: 'Quicksand', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    /* Smaller text */
     font-weight: 700;
     color: var(--text-primary);
-    /* Ensure contrast on colored bg */
-    max-width: 80px;
+    max-width: 70px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 1.2;
 }
 
 .scoreValue {
     font-family: 'Fredoka', sans-serif;
-    font-size: 2rem;
+    font-size: 1.5rem;
+    /* Smaller score */
     font-weight: 700;
     color: var(--text-primary);
-    /* No shadow, just bold */
+    line-height: 1;
 }
 
-/* Override text color when background is dark/colored? 
-   Actually, Purple/Orange backgrounds (MainArea) might mess up black text visibility?
-   If MainArea is Purple, we need White text.
-   But ScoreBoard is inside MainArea.
-   Let's see: MainArea has `turnPlayer1` (Purple). 
-   ScoreBoard elements are `text-primary` (Black).
-   Black on Purple is bad? #8B5CF6 is medium.
-   Maybe we should force ScoreBoard to be White text if main area is colored?
-   OR, the ScoreBoard container creates a "White Card" to isolate itself?
-   Currently ScoreBoard is transparent.
-   The user wanted "Connect".
-   If I make MainArea Purple, ScoreBoard needs to adapt.
-   I will leave defaults solid black for now, and see. Maybe "Cream" (`#FFF8E7`) text?
-*/
+/* Override text color... (Removed comment) */
 
 .lifeIndicator {
     display: flex;
     gap: 2px;
+    margin-top: 2px;
 }
 
 .lifeHeart {
-    font-size: 1rem;
+    font-size: 0.8rem;
+    /* Smaller hearts */
     transition: all var(--transition-normal);
     filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.2));
 }
@@ -159,14 +150,15 @@
     align-items: center;
     justify-content: center;
     gap: 0;
-    padding: 6px 16px;
+    padding: 4px 12px;
     background: var(--bg-secondary);
     border: 2px solid var(--text-primary);
     border-radius: 999px;
-    /* Pill */
     box-shadow: 2px 2px 0 var(--text-primary);
     height: fit-content;
     align-self: center;
+    transform: scale(0.9);
+    /* Slightly smaller visually */
 }
 
 .roundLabel {
@@ -186,16 +178,23 @@
 
 @media (max-width: 600px) {
     .phaseHeader {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
+        padding: 8px 16px;
+        /* Even smaller header */
     }
 
     .scoreValue {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
     .avatar {
-        width: 36px;
-        height: 36px;
-        font-size: 1.2rem;
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .scoreBoard {
+        padding: 2px 8px;
+        /* Tighter padding on mobile */
     }
 }
