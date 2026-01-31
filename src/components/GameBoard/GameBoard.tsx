@@ -78,12 +78,12 @@ export default function GameBoard({
                 points: selectedChair?.id ?? 0,
             });
 
-            // 結果表示後に次のラウンドへ
+            // 結果表示後に次のラウンドへ (2秒)
             const timer = setTimeout(() => {
                 setIsShocking(false);
                 setRevealResult(null);
                 onNextRound();
-            }, 2500);
+            }, 2000);
 
             return () => clearTimeout(timer);
         }
