@@ -124,7 +124,8 @@ export default function GameBoard({
                 clearTimeout(revealTimerRef.current);
             }
         };
-    }, [gameState.phase]); // 依存配列を最小限に - phaseのみで十分
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [gameState.phase, gameState.chairs, gameState.selectedChair, onNextRound, isSwitcher, isSitter]);
 
     // 現在のプレイヤーの役割
     const currentPlayerRole = useMemo(() => {
