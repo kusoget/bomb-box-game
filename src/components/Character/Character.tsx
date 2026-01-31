@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { getAvatarDisplay } from '@/lib/gameLogic';
 import styles from './Character.module.css';
 
 interface CharacterProps {
@@ -62,11 +63,14 @@ export default function Character({
             }}
         >
             <div className={styles.characterBody}>
-                {(avatar.startsWith('/') || avatar.startsWith('http')) ? (
-                    <img src={avatar} alt="Avatar" className={styles.avatarImage} />
-                ) : (
-                    <span>{avatar}</span>
-                )}
+                {(() => {
+                    const { type, value } = getAvatarDisplay(avatar);
+                    return type === 'image' ? (
+                        <img src={value} alt="Avatar" className={styles.avatarImage} />
+                    ) : (
+                        <span>{value}</span>
+                    );
+                })()}
             </div>
             {role && (
                 <span className={`${styles.roleBadge} ${role === 'sitter' ? styles.sitter : styles.switcher}`}>

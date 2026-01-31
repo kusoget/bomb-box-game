@@ -1,6 +1,7 @@
 'use client';
 
 import { Player, GameState } from '@/types/game';
+import { getAvatarDisplay } from '@/lib/gameLogic';
 import styles from './ScoreBoard.module.css';
 
 interface ScoreBoardProps {
@@ -81,11 +82,11 @@ export default function ScoreBoard({
 
     // アバター描画ヘルパー
     const renderAvatar = (avatar: string | undefined) => {
-        if (!avatar) return '?';
-        if (avatar.startsWith('/') || avatar.startsWith('http')) {
-            return <img src={avatar} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />;
+        const { type, value } = getAvatarDisplay(avatar);
+        if (type === 'image') {
+            return <img src={value} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />;
         }
-        return avatar;
+        return value;
     };
 
     return (

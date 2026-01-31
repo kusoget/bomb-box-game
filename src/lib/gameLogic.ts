@@ -187,12 +187,35 @@ export function generateRoomCode(): string {
 
 // アバター生成
 export function getRandomAvatar(): string {
-    // ポップなキャラクター画像パス
-    const avatars = [
-        '/images/pop_bomb.png',
-        '/images/pop_ghost.png',
-        '/images/pop_fox.png'
-    ];
-    // ランダムで返す
+    // DBの制限(VARCHAR(10))に収まる短いコードを返す
+    const avatars = ['ghost', 'fox', 'bomb'];
     return avatars[Math.floor(Math.random() * avatars.length)];
+}
+
+// アバターコードから画像パスまたは表示文字を取得するヘルパー
+export function getAvatarDisplay(avatarCode: string | undefined | null): { type: 'image' | 'text', value: string } {
+    if (!avatarCode) return { type: 'text', value: '?' };
+
+    // 短いコードを画像パスにマッピング
+    const imageMap: Record<string, string> = {
+        'ghost': '/images/pop_ghost.png',
+        'fox': '/images/pop_fox.png',
+        'bomb': '/images/pop_bomb.png',
+        // 旧コードの互換性（もしあれば）
+        'pop_ghost': '/images/pop_ghost.png',
+        'pop_fox': '/images/pop_fox.png',
+        'pop_bomb': '/images/pop_bomb.png',
+    };
+
+    if (imageMap[avatarCode]) {
+        return { type: 'image', value: imageMap[avatarCode] };
+    }
+
+    // パスが直接保存されている場合（後方互換）
+    if (avatarCode.startsWith('/') || avatarCode.startsWith('http')) {
+        return { type: 'image', value: avatarCode };
+    }
+
+    // 絵文字やその他のテキスト
+    return { type: 'text', value: avatarCode };
 }
