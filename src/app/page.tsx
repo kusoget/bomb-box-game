@@ -129,13 +129,6 @@ function HomeContent() {
 
   return (
     <main className={styles.main}>
-      {/* 背景エフェクト */}
-      <div className={styles.bgEffect}>
-        <div className={styles.electricLine} />
-        <div className={styles.electricLine} />
-        <div className={styles.electricLine} />
-      </div>
-
       <div className={styles.container}>
         {/* ロゴ */}
         <div className={styles.logo}>

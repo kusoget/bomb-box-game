@@ -2,38 +2,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
 
 :root {
-  /* Pop Theme - Retro & Vibrant */
+  /* --- COLORS --- */
+  /* Backgrounds */
   --bg-primary: #FFF8E7;
-  /* Cream */
+  /* Cream (Main BG) */
   --bg-secondary: #FFFFFF;
-  /* White */
+  /* White (Cards/Inputs) */
   --bg-tertiary: #F3F4F6;
-  --bg-card: #FFFFFF;
-
-  /* Vibrant Accents */
-  --pop-purple: #8B5CF6;
-  /* Player 1? */
-  --pop-orange: #F97316;
-  /* Player 2? */
-  --pop-cyan: #06B6D4;
-  --pop-green: #10B981;
-  --pop-red: #EF4444;
-  --pop-yellow: #F59E0B;
-  --pop-dark: #1F2937;
-  /* Nearly Black */
+  /* Light Gray */
 
   /* Text */
-  --text-primary: #1F2937;
-  --text-secondary: #4B5563;
-  --text-muted: #9CA3AF;
+  --text-primary: #2D3436;
+  /* Soft Black */
+  --text-secondary: #636E72;
+  /* Gray */
+  --text-muted: #B2BEC3;
+  /* Light Gray */
   --text-inverse: #FFFFFF;
+  /* White Text on colored buttons */
 
-  /* UI Tokens */
-  --border-width: 2px;
-  --border-color: #1F2937;
+  /* Pop Accents */
+  --pop-purple: #9b59b6;
+  --pop-orange: #e67e22;
+  --pop-cyan: #00cec9;
+  --pop-green: #00b894;
+  --pop-red: #d63031;
+  --pop-yellow: #fdcb6e;
+  --pop-dark: #2d3436;
+  --pop-blue: #0984e3;
+
+  /* --- UI TOKENS --- */
+  /* Borders */
+  --border-width: 3px;
   --border-style: solid;
+  --border-color: #2D3436;
   --border-main: var(--border-width) var(--border-style) var(--border-color);
-
   --border-radius: 12px;
   --border-radius-lg: 24px;
   --border-radius-full: 9999px;
