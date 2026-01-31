@@ -13,19 +13,20 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all var(--transition-normal);
+    transition: all var(--transition-bouncy);
     transform-origin: center center;
 }
 
 .chair.disabled {
     cursor: not-allowed;
-    opacity: 0.3;
+    opacity: 0.5;
     pointer-events: none;
+    filter: grayscale(100%);
 }
 
 .chair.removed {
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0.5) rotate(180deg);
     pointer-events: none;
 }
 
@@ -33,90 +34,78 @@
     position: relative;
     width: 60px;
     height: 60px;
-    background: linear-gradient(180deg, #2a2a4a 0%, #1a1a3a 100%);
-    border: 2px solid rgba(0, 255, 255, 0.3);
-    border-radius: 4px;
-    /* ボックス感出すために少し丸み減らす */
+    background: #FFFFFF;
+    border: 3px solid var(--text-primary);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all var(--transition-normal);
-    box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-bouncy);
+    box-shadow: 4px 4px 0px 0px var(--text-primary);
 }
 
 .chair:hover:not(.disabled):not(.removed) .chairBody {
-    border-color: var(--neon-cyan);
-    box-shadow:
-        0 4px 20px rgba(0, 255, 255, 0.3),
-        inset 0 0 20px rgba(0, 255, 255, 0.1);
-    transform: translateY(-5px);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--text-primary);
+    background: var(--bg-tertiary);
 }
 
 .chair.selected .chairBody {
-    border-color: var(--neon-magenta);
-    box-shadow:
-        0 0 30px rgba(255, 0, 255, 0.5),
-        inset 0 0 20px rgba(255, 0, 255, 0.2);
-    animation: glow-pulse 1.5s infinite;
+    border-color: var(--text-primary);
+    background: var(--pop-purple);
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 6px 6px 0px 0px var(--text-primary);
+}
+
+.chair.selected .chairNumber {
+    color: #fff;
 }
 
 .chair.trapped .chairBody {
-    border-color: var(--neon-yellow);
-    background: rgba(255, 255, 0, 0.2);
-    /* 背景色を少し追加 */
-    border-width: 3px;
-    box-shadow:
-        0 0 40px rgba(255, 255, 0, 0.6),
-        inset 0 0 30px rgba(255, 255, 0, 0.3);
+    border-color: var(--text-primary);
+    background: var(--pop-yellow);
+    /* Warning color */
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px var(--text-primary);
+}
+
+.chair.trapped .chairNumber {
+    color: var(--text-primary);
 }
 
 .chairNumber {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.4rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.8rem;
     font-weight: 700;
     color: var(--text-primary);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    /* No shadow */
 }
 
-/* .chairLegs {
-    display: flex;
-    justify-content: space-between;
-    width: 50px;
-    margin-top: 2px;
-}
-
-.chairLeg {
-    width: 8px;
-    height: 16px;
-    background: linear-gradient(180deg, #333355 0%, #222244 100%);
-    border-radius: 0 0 2px 2px;
-} */
-
-/* 電気エフェクト用のワイヤー */
+/* Electric Effect Wire -> Replaced with simple "fuse" or removed */
 .electricWire {
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 8px;
-    background: var(--neon-yellow);
-    border-radius: 2px;
-    opacity: 0;
-    transition: opacity var(--transition-fast);
+    display: none;
 }
 
-.chair.trapped .electricWire {
-    opacity: 1;
-    box-shadow: 0 0 10px var(--neon-yellow);
-}
-
-/* 感電アニメーション */
+/* Shock Animation -> Wiggle */
 .chair.shocking .chairBody {
-    animation: electric-shock 0.5s ease-in-out;
-    background: linear-gradient(180deg, #ffff00 0%, #ff8800 100%);
+    animation: wiggle 0.5s ease-in-out;
+    background: var(--pop-red);
+}
+
+@keyframes wiggle {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-10deg);
+    }
+
+    75% {
+        transform: rotate(10deg);
+    }
 }
 
 .bombIcon {
@@ -126,52 +115,27 @@
     transform: translate(-50%, -50%);
     font-size: 2rem;
     z-index: 5;
-    animation: bomb-pulse 1s infinite alternate;
-    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+    /* Use the new bomb image if possible, but Icon for now needs to be clear */
+    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.2));
 }
 
-@keyframes bomb-pulse {
-    from {
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    to {
-        transform: translate(-50%, -50%) scale(1.1);
-    }
-}
-
-@keyframes glow-pulse {
-
-    0%,
-    100% {
-        box-shadow:
-            0 0 20px rgba(255, 0, 255, 0.5),
-            inset 0 0 15px rgba(255, 0, 255, 0.2);
-    }
-
-    50% {
-        box-shadow:
-            0 0 40px rgba(255, 0, 255, 0.7),
-            inset 0 0 25px rgba(255, 0, 255, 0.3);
-    }
-}
-
-/* センターエリア */
+/* Center Area */
 .centerArea {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 240px;
-    /* 少し広げる */
     height: 240px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 20, 40, 0.8) 0%, rgba(0, 0, 0, 0) 70%);
+    /* No dark gradient */
+    background: transparent;
     z-index: 5;
-    /* キャラクターの後ろ、椅子の手前？いや、最前面でいいか */
+    pointer-events: none;
+    /* Let clicks pass through if empty */
 }
 
 .centerContent {
@@ -179,82 +143,54 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 12px;
     text-align: center;
     pointer-events: auto;
-    /* ボタンクリック用 */
 }
 
 .centerMainText {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #ffffff;
-    /* 白に変更 */
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    line-height: 1.4;
-    white-space: pre-wrap;
-    animation: text-pulse 2s infinite ease-in-out;
-}
-
-@keyframes text-pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.7;
-        transform: scale(0.95);
-    }
-}
-
-.centerSubText {
-    font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--text-primary);
+    /* White stroke for visibility over boxes? */
+    text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff;
+    line-height: 1.2;
 }
 
 .centerButton {
     margin-top: 8px;
-    padding: 8px 24px;
-    border-radius: 20px;
-    font-family: 'Orbitron', sans-serif;
+    padding: 12px 32px;
+    border-radius: 999px;
+    font-family: 'Fredoka', sans-serif;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
+    border: 3px solid var(--text-primary);
+    transition: all 0.2s var(--transition-bouncy);
     text-transform: uppercase;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 4px 0 var(--text-primary);
+    color: var(--text-primary);
+    background: #fff;
 }
 
 .centerButton:hover {
-    transform: scale(1.05);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--text-primary);
 }
 
 .centerButton:active {
-    transform: scale(0.95);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--text-primary);
 }
 
 .centerButton.primary {
-    background: var(--neon-cyan);
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    background: var(--pop-red);
+    /* Decision button usually Red or Green */
+    color: #fff;
 }
 
 .centerButton.danger {
-    background: var(--neon-red);
+    background: var(--pop-red);
     color: #fff;
-    box-shadow: 0 0 15px rgba(255, 0, 50, 0.4);
-}
-
-.centerText {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
 }
