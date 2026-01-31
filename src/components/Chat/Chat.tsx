@@ -10,6 +10,7 @@ interface ChatProps {
     onSendMessage: (message: string) => void;
     disabled?: boolean;
     embedded?: boolean;
+    onOpenChange?: (isOpen: boolean) => void;
 }
 
 export default function Chat({
@@ -18,6 +19,7 @@ export default function Chat({
     onSendMessage,
     disabled = false,
     embedded = false,
+    onOpenChange,
 }: ChatProps) {
     // embedded mode starts open, floating mode starts closed
     const [isOpen, setIsOpen] = useState(embedded);
@@ -25,6 +27,11 @@ export default function Chat({
     const [inputValue, setInputValue] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const prevMessagesLength = useRef(messages.length);
+
+    // 親コンポーネントにopen状態を通知
+    useEffect(() => {
+        onOpenChange?.(isOpen);
+    }, [isOpen, onOpenChange]);
 
     // 新しいメッセージが来たらスクロール & 通知
     useEffect(() => {

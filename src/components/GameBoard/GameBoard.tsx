@@ -47,6 +47,9 @@ export default function GameBoard({
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
+    // モバイルチャットの開閉状態
+    const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
+
     const isSitter = gameState.currentSitterId === currentPlayerId;
     const isSwitcher = gameState.currentSwitcherId === currentPlayerId;
 
@@ -325,27 +328,29 @@ export default function GameBoard({
                 </div>
             </div>
 
-            {/* 固定フッター (アクション & チャット) */}
-            <div className={styles.gameFooter}>
-                {(canSetTrap || canSelectChair) ? (
-                    <button
-                        className={`${styles.footerButton} ${canSetTrap ? styles.danger : ''}`}
-                        disabled={
-                            (canSetTrap && !gameState.trappedChair) ||
-                            (canSelectChair && !gameState.selectedChair)
-                        }
-                        onClick={() => {
-                            if (canSetTrap && gameState.trappedChair) {
-                                onSetTrap(gameState.trappedChair);
-                            } else if (canSelectChair) {
-                                onConfirmSelection();
+            {/* 固定フッター (アクション) - モバイルチャット開いてる時は非表示 */}
+            {!isMobileChatOpen && (
+                <div className={styles.gameFooter}>
+                    {(canSetTrap || canSelectChair) ? (
+                        <button
+                            className={`${styles.footerButton} ${canSetTrap ? styles.danger : ''}`}
+                            disabled={
+                                (canSetTrap && !gameState.trappedChair) ||
+                                (canSelectChair && !gameState.selectedChair)
                             }
-                        }}
-                    >
-                        {canSetTrap ? '爆弾をセットする' : 'この箱にする'}
-                    </button>
-                ) : null}
-            </div>
+                            onClick={() => {
+                                if (canSetTrap && gameState.trappedChair) {
+                                    onSetTrap(gameState.trappedChair);
+                                } else if (canSelectChair) {
+                                    onConfirmSelection();
+                                }
+                            }}
+                        >
+                            {canSetTrap ? '爆弾をセットする' : 'この箱にする'}
+                        </button>
+                    ) : null}
+                </div>
+            )}
 
             {/* サイドバー (デスクトップのみ) - チャット常時表示 */}
             <aside className={styles.sidebar}>
@@ -367,6 +372,7 @@ export default function GameBoard({
                     currentPlayerId={currentPlayerId}
                     onSendMessage={onSendMessage}
                     embedded={false}
+                    onOpenChange={setIsMobileChatOpen}
                 />
             </div>
 
