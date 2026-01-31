@@ -2,10 +2,42 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { GameState, Player, ChatMessage, Chair } from '@/types/game';
-// ... imports
+import ChairCircle from '@/components/ChairCircle/ChairCircle';
+import Character from '@/components/Character/Character';
+import ScoreBoard from '@/components/ScoreBoard/ScoreBoard';
+import Chat from '@/components/Chat/Chat';
+import ElectricEffect from '@/components/ElectricEffect/ElectricEffect';
+import GameOverlay from '@/components/GameOverlay/GameOverlay';
+import RouletteOverlay from '@/components/RouletteOverlay/RouletteOverlay';
+import Toast from '@/components/Toast/Toast';
+import styles from './GameBoard.module.css';
+
+interface GameBoardProps {
+    gameState: GameState;
+    player1: Player | null;
+    player2: Player | null;
+    currentPlayerId: string;
+    messages: ChatMessage[];
+    onSetTrap: (chairId: number) => void;
+    onSelectChair: (chairId: number) => void;
+    onConfirmSelection: () => void;
+    onNextRound: () => void;
+    onSendMessage: (message: string) => void;
+    onBackToHome: () => void;
+}
 
 export default function GameBoard({
-    // ... props
+    gameState,
+    player1,
+    player2,
+    currentPlayerId,
+    messages,
+    onSetTrap,
+    onSelectChair,
+    onConfirmSelection,
+    onNextRound,
+    onSendMessage,
+    onBackToHome,
 }: GameBoardProps) {
     const [isShocking, setIsShocking] = useState(false);
 
@@ -220,17 +252,16 @@ export default function GameBoard({
                 />
             )}
 
-            {/* ヘッダー: スコアボード */}
-            <div className={styles.header}>
+            {/* メインエリア: スコアボード + ゲーム画面 */}
+            <div className={styles.mainArea}>
+                {/* スコアボードをここへ移動 */}
                 <ScoreBoard
                     player1={player1}
                     player2={player2}
                     gameState={gameState}
                     currentPlayerId={currentPlayerId}
                 />
-            </div>
-            {/* メインエリア: ゲーム画面 */}
-            <div className={styles.mainArea}>
+
                 <div className={styles.gameArea}>
                     <div className={styles.gameContainer}>
                         <ChairCircle

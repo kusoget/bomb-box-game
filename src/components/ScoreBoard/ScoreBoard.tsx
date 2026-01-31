@@ -23,8 +23,18 @@ export default function ScoreBoard({
     const round = gameState?.currentRound ?? 1;
     const isHalfFront = gameState?.isHalfFront ?? true;
 
-    const isPlayer1Active = gameState?.currentSitterId === player1?.id;
-    const isPlayer2Active = gameState?.currentSitterId === player2?.id;
+    // アクティブなプレイヤー（手番）を判定
+    let activePlayerId: string | null = null;
+    if (gameState) {
+        if (gameState.phase === 'setting_trap') {
+            activePlayerId = gameState.currentSwitcherId;
+        } else if (gameState.phase === 'selecting_chair' || gameState.phase === 'confirming') {
+            activePlayerId = gameState.currentSitterId;
+        }
+    }
+
+    const isPlayer1Active = activePlayerId === player1?.id;
+    const isPlayer2Active = activePlayerId === player2?.id;
 
     return (
         <div className={styles.scoreBoard}>

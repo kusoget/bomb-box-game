@@ -15,10 +15,29 @@
     align-items: center;
     gap: 8px;
     flex: 1;
+    padding: 12px;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
 }
 
+/* Active Player Styles */
 .playerScore.active {
-    position: relative;
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    transform: scale(1.02);
+}
+
+.playerScore.player2.active {
+    background: rgba(255, 0, 255, 0.1);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+    border: 1px solid rgba(255, 0, 255, 0.3);
+}
+
+/* Inactive Player Styles (Dimmed) */
+.playerScore:not(.active) {
+    opacity: 0.5;
+    background: transparent;
 }
 
 
