@@ -9,6 +9,7 @@ import Chat from '@/components/Chat/Chat';
 import ElectricEffect from '@/components/ElectricEffect/ElectricEffect';
 import GameOverlay from '@/components/GameOverlay/GameOverlay';
 import RouletteOverlay from '@/components/RouletteOverlay/RouletteOverlay';
+import Toast from '@/components/Toast/Toast';
 import styles from './GameBoard.module.css';
 
 interface GameBoardProps {
@@ -42,21 +43,17 @@ export default function GameBoard({
     const [revealResult, setRevealResult] = useState<{ safe: boolean; points: number } | null>(null);
     const [previousPhase, setPreviousPhase] = useState(gameState.phase);
 
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+
     const isSitter = gameState.currentSitterId === currentPlayerId;
     const isSwitcher = gameState.currentSwitcherId === currentPlayerId;
 
-    // 椅子の位置を計算
-    const getChairPosition = useCallback((chairId: number, totalChairs: number) => {
-        const index = chairId - 1;
-        const radius = 42;
-        const angle = (index / totalChairs) * 2 * Math.PI - Math.PI / 2;
-        const x = 50 + radius * Math.cos(angle);
-        const y = 50 + radius * Math.sin(angle);
-        return { x, y };
-    }, []);
+    // ... (existing code)
 
-    // 結果表示の処理
+    // 結果表示の処理 & トースト表示
     useEffect(() => {
+        // 結果表示
         if (gameState.phase === 'revealing' && previousPhase !== 'revealing') {
             const selectedChair = gameState.chairs.find(c => c.id === gameState.selectedChair);
             const isSafe = selectedChair && !selectedChair.isTrapped;
@@ -79,8 +76,17 @@ export default function GameBoard({
 
             return () => clearTimeout(timer);
         }
+
+        // 爆弾セット完了通知
+        if (previousPhase === 'setting_trap' && gameState.phase === 'selecting_chair' && isSwitcher) {
+            setToastMessage('爆弾をセットしました！');
+            setShowToast(true);
+            const timer = setTimeout(() => setShowToast(false), 2000);
+            return () => clearTimeout(timer);
+        }
+
         setPreviousPhase(gameState.phase);
-    }, [gameState.phase, gameState.chairs, gameState.selectedChair, previousPhase, onNextRound]);
+    }, [gameState.phase, gameState.chairs, gameState.selectedChair, previousPhase, onNextRound, isSwitcher]);
 
     // 現在のプレイヤーの役割
     const currentPlayerRole = useMemo(() => {
@@ -311,6 +317,9 @@ export default function GameBoard({
                 onContinue={onNextRound}
                 onBackToHome={onBackToHome}
             />
+
+            {/* トースト通知 */}
+            <Toast message={toastMessage} isVisible={showToast} />
         </div>
     );
 }
