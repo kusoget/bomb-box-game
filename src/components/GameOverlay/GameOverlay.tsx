@@ -82,14 +82,40 @@ export default function GameOverlay({
 
     // 結果表示画面
     if (gameState.phase === 'revealing' && revealResult) {
+        // 現在のプレイヤーが「開けた人(Sitter)」かどうか
+        const isOpener = gameState.currentSitterId === currentPlayerId;
+
+        let titleText = '';
+        let titleStyle = '';
+
+        if (revealResult.safe) {
+            // セーフの場合
+            if (isOpener) {
+                titleText = 'セーフ！'; // 自分目線：成功
+                titleStyle = styles.safe;
+            } else {
+                titleText = '解除された...'; // 相手目線：失敗（かわされた）
+                titleStyle = styles.shock; // ネガティブな色
+            }
+        } else {
+            // アウト（爆発）の場合
+            if (isOpener) {
+                titleText = '爆発！'; // 自分目線：失敗
+                titleStyle = styles.shock;
+            } else {
+                titleText = '爆破成功！'; // 相手目線：成功（ハメた）
+                titleStyle = styles.safe; // ポジティブな色（実際はsafeクラス=青系ならOK、赤系なら別途定義必要かもだが一旦safeで）
+            }
+        }
+
         return (
             <div className={styles.resultOverlay}>
                 <div className={styles.resultContent}>
                     <div className={styles.resultIcon}>
                         {revealResult.safe ? '✅' : '⚡'}
                     </div>
-                    <div className={`${styles.resultTitle} ${revealResult.safe ? styles.safe : styles.shock}`}>
-                        {revealResult.safe ? 'セーフ！' : '爆発！'}
+                    <div className={`${styles.resultTitle} ${titleStyle}`}>
+                        {titleText}
                     </div>
                     {revealResult.safe ? (
                         <div className={styles.pointsGained}>+{revealResult.points} Points</div>
