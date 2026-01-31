@@ -25,7 +25,8 @@ function HomeContent() {
   const fetchHostInfo = async (code: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/rooms?code=${code}`);
+      const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+      const res = await fetch(`${apiPath}/api/rooms?code=${code}`);
       if (res.ok) {
         const data = await res.json();
 
@@ -59,7 +60,9 @@ function HomeContent() {
     setError('');
 
     try {
-      const res = await fetch('/api/rooms', {
+      // APIコールのパスを修正（basePath対応）
+      const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+      const res = await fetch(`${apiPath}/api/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playerName: playerName.trim() }),
@@ -96,7 +99,9 @@ function HomeContent() {
     setError('');
 
     try {
-      const res = await fetch('/api/rooms', {
+      // APIコールのパスを修正（basePath対応）
+      const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+      const res = await fetch(`${apiPath}/api/rooms`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
