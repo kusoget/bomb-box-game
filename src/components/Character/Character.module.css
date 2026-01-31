@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.5s ease-in-out;
     z-index: 10;
     pointer-events: none;
 }
@@ -14,141 +14,115 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
-    border: 3px solid var(--neon-cyan);
+    background: #fff;
+    border: 3px solid var(--text-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    box-shadow:
-        0 0 20px rgba(0, 255, 255, 0.3),
-        inset 0 0 15px rgba(0, 255, 255, 0.1);
+    box-shadow: 2px 2px 0 var(--text-primary);
     position: relative;
     overflow: hidden;
 }
 
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .character.player2 .characterBody {
-    border-color: var(--neon-magenta);
-    box-shadow:
-        0 0 20px rgba(255, 0, 255, 0.3),
-        inset 0 0 15px rgba(255, 0, 255, 0.1);
+    border-color: var(--text-primary);
+    /* Consistent black border */
+    /* maybe accent ring inside? handled by default border width */
 }
 
 .characterName {
     margin-top: -12px;
-    /* 少し重ねる */
     padding: 2px 10px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 12px;
-    font-size: 0.6rem;
-    /* 小さくして重なり防止 */
-    font-weight: 600;
+    background: #fff;
+    border-radius: 999px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
     color: var(--text-primary);
     white-space: nowrap;
     max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
-    border: 1px solid rgba(0, 255, 255, 0.3);
+    border: 2px solid var(--text-primary);
     position: relative;
-    /* z-indexを効かせるため */
     z-index: 5;
-}
-
-.character.player2 .characterName {
-    border-color: rgba(255, 0, 255, 0.3);
+    box-shadow: 1px 1px 0 var(--text-primary);
 }
 
 /* 役割バッジ */
 .roleBadge {
     display: none;
-    /* 一旦非表示にする */
 }
 
-.bombIcon {
-    .bombIcon {
-        position: absolute;
-        bottom: 25px;
-        /* 名前の上あたり */
-        right: 5px;
-        /* 右端 */
-        font-size: 1.5rem;
-        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
-        animation: bomb-pulse 1s infinite alternate;
-        z-index: 5;
+/* 感電アニメーション */
+.character.shocking .characterBody {
+    animation: character-shock 0.5s ease-in-out;
+    background: var(--pop-yellow);
+}
+
+@keyframes character-shock {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        filter: brightness(1);
     }
 
-    @keyframes bomb-pulse {
-        from {
-            transform: scale(1);
-        }
-
-        to {
-            transform: scale(1.2);
-        }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translate(-3px, 2px) scale(1.1);
+        filter: invert(1);
     }
 
-    /* 感電アニメーション */
-    .character.shocking .characterBody {
-        animation: character-shock 0.5s ease-in-out;
-        border-color: var(--neon-yellow);
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translate(3px, -2px) scale(0.95);
+        filter: contrast(1.5);
+    }
+}
+
+/* 待機アニメーション */
+.character.idle .characterBody {
+    animation: idle-bounce 2s ease-in-out infinite;
+}
+
+@keyframes idle-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
     }
 
-    @keyframes character-shock {
+    50% {
+        transform: translateY(-3px);
+    }
+}
 
-        0%,
-        100% {
-            transform: translate(0, 0) scale(1);
-            filter: brightness(1);
-        }
+/* 歩行アニメーション */
+.character.walking .characterBody {
+    animation: walk-bounce 0.3s ease-in-out infinite;
+}
 
-        10%,
-        30%,
-        50%,
-        70%,
-        90% {
-            transform: translate(-3px, 2px) scale(1.1);
-            filter: brightness(2) saturate(2);
-        }
+@keyframes walk-bounce {
 
-        20%,
-        40%,
-        60%,
-        80% {
-            transform: translate(3px, -2px) scale(0.95);
-            filter: brightness(0.5);
-        }
+    0%,
+    100% {
+        transform: translateY(0) rotate(-3deg);
     }
 
-    /* 待機アニメーション */
-    .character.idle .characterBody {
-        animation: idle-bounce 2s ease-in-out infinite;
+    50% {
+        transform: translateY(-3px) rotate(3deg);
     }
-
-    @keyframes idle-bounce {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-5px);
-        }
-    }
-
-    /* 歩行アニメーション */
-    .character.walking .characterBody {
-        animation: walk-bounce 0.3s ease-in-out infinite;
-    }
-
-    @keyframes walk-bounce {
-
-        0%,
-        100% {
-            transform: translateY(0) rotate(-3deg);
-        }
-
-        50% {
-            transform: translateY(-3px) rotate(3deg);
-        }
-    }
+}

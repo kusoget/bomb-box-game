@@ -62,7 +62,11 @@ export default function Character({
             }}
         >
             <div className={styles.characterBody}>
-                <span>{avatar}</span>
+                {(avatar.startsWith('/') || avatar.startsWith('http')) ? (
+                    <img src={avatar} alt="Avatar" className={styles.avatarImage} />
+                ) : (
+                    <span>{avatar}</span>
+                )}
             </div>
             {role && (
                 <span className={`${styles.roleBadge} ${role === 'sitter' ? styles.sitter : styles.switcher}`}>
