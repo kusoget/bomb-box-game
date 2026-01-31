@@ -19,7 +19,8 @@ export default function Chat({
     disabled = false,
     embedded = false,
 }: ChatProps) {
-    const [isOpen, setIsOpen] = useState(false);
+    // embedded mode starts open, floating mode starts closed
+    const [isOpen, setIsOpen] = useState(embedded);
     const [unreadCount, setUnreadCount] = useState(0);
     const [inputValue, setInputValue] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -124,16 +125,19 @@ export default function Chat({
                 </div>
             )}
 
-            <button
-                className={styles.toggleButton}
-                onClick={() => setIsOpen(!isOpen)}
-                aria-label="Toggle Chat"
-            >
-                {isOpen ? '✕' : '💬'}
-                {!isOpen && unreadCount > 0 && (
-                    <span className={styles.unreadBadge}>{unreadCount}</span>
-                )}
-            </button>
+            {/* Toggle button only for floating mode (not embedded) */}
+            {!embedded && (
+                <button
+                    className={styles.toggleButton}
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-label="Toggle Chat"
+                >
+                    {isOpen ? '✕' : '💬'}
+                    {!isOpen && unreadCount > 0 && (
+                        <span className={styles.unreadBadge}>{unreadCount}</span>
+                    )}
+                </button>
+            )}
         </div>
     );
 }

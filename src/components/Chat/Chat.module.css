@@ -10,15 +10,12 @@
     gap: 12px;
 }
 
-/* Embedded Wrapper (inside Footer) - for mobile integration */
+/* Embedded Wrapper - For sidebar display (full height) */
 .embeddedWrapper {
-    position: relative;
-    z-index: 1000;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    gap: 12px;
+    width: 100%;
+    height: 100%;
 }
 
 /* Toggle Button (FAB) */
@@ -77,6 +74,16 @@
     overflow: hidden;
     box-shadow: 6px 6px 0 var(--text-primary);
     animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Embedded chat container fills parent */
+.embeddedWrapper .chatContainer {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
 }
 
 @keyframes slideUp {

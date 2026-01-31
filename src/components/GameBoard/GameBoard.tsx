@@ -347,16 +347,28 @@ export default function GameBoard({
                 ) : null}
             </div>
 
+            {/* サイドバー (デスクトップのみ) - チャット常時表示 */}
+            <aside className={styles.sidebar}>
+                <Chat
+                    messages={messages}
+                    currentPlayerId={currentPlayerId}
+                    onSendMessage={onSendMessage}
+                    embedded={true}
+                />
+            </aside>
+
             {/* 感電エフェクト */}
             <ElectricEffect isActive={isShocking} />
 
-            {/* チャット (Floating - デスクトップ右固定、スマホはスライドアップ) */}
-            <Chat
-                messages={messages}
-                currentPlayerId={currentPlayerId}
-                onSendMessage={onSendMessage}
-                embedded={false}
-            />
+            {/* チャット (スマホのみ - Floatingボタン) */}
+            <div className={styles.mobileChatWrapper}>
+                <Chat
+                    messages={messages}
+                    currentPlayerId={currentPlayerId}
+                    onSendMessage={onSendMessage}
+                    embedded={false}
+                />
+            </div>
 
             {/* オーバーレイ（結果表示、ゲームオーバー） */}
             <GameOverlay

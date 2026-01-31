@@ -128,6 +128,21 @@
     transform: none;
 }
 
+/* Sidebar (Desktop Only) */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    border-left: 3px solid var(--text-primary);
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Mobile Chat Wrapper - Hidden on Desktop */
+.mobileChatWrapper {
+    display: none;
+}
+
 /* Make space for footer in main content */
 .gameBoard {
     padding-bottom: 140px;
@@ -147,8 +162,14 @@
         gap: 0;
     }
 
+    /* Hide sidebar on mobile */
     .sidebar {
-        grid-row: auto;
+        display: none;
+    }
+
+    /* Show floating chat on mobile */
+    .mobileChatWrapper {
+        display: block;
     }
 
     .chatWrapper {
