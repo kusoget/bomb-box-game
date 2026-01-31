@@ -14,6 +14,7 @@
 
 
 .mainArea {
+    grid-column: 1;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -124,10 +125,10 @@
     transform: none;
 }
 
-/* Sidebar (Desktop Only) - Full Height */
+/* Sidebar (Desktop Only) - Full Height, Right Column */
 .sidebar {
+    grid-column: 2;
     grid-row: 1 / -1;
-    /* Span from header to bottom */
     display: flex;
     flex-direction: column;
     background: var(--bg-secondary);
