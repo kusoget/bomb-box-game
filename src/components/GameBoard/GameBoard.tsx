@@ -54,6 +54,8 @@ export default function GameBoard({
     const previousPhaseRef = useRef(gameState.phase);
     // タイマー管理用のRef
     const revealTimerRef = useRef<NodeJS.Timeout | null>(null);
+    // revealing処理済みフラグ
+    const revealingHandledRef = useRef(false);
 
     // 椅子の位置を計算
     const getChairPosition = useCallback((chairId: number, totalChairs: number) => {
@@ -65,41 +67,49 @@ export default function GameBoard({
         return { x, y };
     }, []);
 
-    // フェーズ変化の処理（結果表示 + トースト通知）
+    // 結果表示の処理（revealing フェーズ専用）
+    useEffect(() => {
+        // revealingフェーズに入った時、まだ処理していない場合のみ
+        if (gameState.phase === 'revealing' && !revealingHandledRef.current) {
+            revealingHandledRef.current = true;
+
+            const selectedChair = gameState.chairs.find(c => c.id === gameState.selectedChair);
+            const isSafe = selectedChair && !selectedChair.isTrapped;
+
+            if (!isSafe) {
+                setIsShocking(true);
+            }
+
+            setRevealResult({
+                safe: !!isSafe,
+                points: selectedChair?.id ?? 0,
+            });
+
+            // 結果表示後に次のラウンドへ (2秒)
+            revealTimerRef.current = setTimeout(() => {
+                setIsShocking(false);
+                setRevealResult(null);
+                onNextRound();
+                revealTimerRef.current = null;
+            }, 2000);
+        }
+
+        // revealingフェーズから抜けたらフラグをリセット
+        if (gameState.phase !== 'revealing') {
+            revealingHandledRef.current = false;
+            if (revealTimerRef.current) {
+                clearTimeout(revealTimerRef.current);
+                revealTimerRef.current = null;
+            }
+        }
+    }, [gameState.phase, gameState.chairs, gameState.selectedChair, onNextRound]);
+
+    // トースト通知の処理（フェーズ変化を検知）
     useEffect(() => {
         const prevPhase = previousPhaseRef.current;
 
         // フェーズが変わったときのみ処理
         if (prevPhase !== gameState.phase) {
-            // 前のタイマーをクリア
-            if (revealTimerRef.current) {
-                clearTimeout(revealTimerRef.current);
-                revealTimerRef.current = null;
-            }
-
-            // revealing フェーズに入った時の処理
-            if (gameState.phase === 'revealing') {
-                const selectedChair = gameState.chairs.find(c => c.id === gameState.selectedChair);
-                const isSafe = selectedChair && !selectedChair.isTrapped;
-
-                if (!isSafe) {
-                    setIsShocking(true);
-                }
-
-                setRevealResult({
-                    safe: !!isSafe,
-                    points: selectedChair?.id ?? 0,
-                });
-
-                // 結果表示後に次のラウンドへ (2秒) - Refに保存
-                revealTimerRef.current = setTimeout(() => {
-                    setIsShocking(false);
-                    setRevealResult(null);
-                    onNextRound();
-                    revealTimerRef.current = null;
-                }, 2000);
-            }
-
             // 爆弾セット完了通知（仕掛け人へ）
             if (prevPhase === 'setting_trap' && gameState.phase === 'selecting_chair' && isSwitcher) {
                 setToastMessage('爆弾をセットしました！');
@@ -117,15 +127,7 @@ export default function GameBoard({
             // Refを更新
             previousPhaseRef.current = gameState.phase;
         }
-
-        // クリーンアップ（コンポーネントのアンマウント時のみ）
-        return () => {
-            if (revealTimerRef.current) {
-                clearTimeout(revealTimerRef.current);
-            }
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gameState.phase, gameState.chairs, gameState.selectedChair, onNextRound, isSwitcher, isSitter]);
+    }, [gameState.phase, isSwitcher, isSitter]);
 
     // 現在のプレイヤーの役割
     const currentPlayerRole = useMemo(() => {
