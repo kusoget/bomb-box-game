@@ -69,12 +69,13 @@
 
 /* ... skipped sidebar ... */
 
-/* Fixed Footer for Actions */
+/* Fixed Footer for Actions - Desktop: Left column only */
 .gameFooter {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: calc(100% - 320px);
+    /* Exclude sidebar width */
     padding: 10px 16px;
     padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     background: var(--bg-secondary);
@@ -167,6 +168,11 @@
     /* Show floating chat on mobile */
     .mobileChatWrapper {
         display: block;
+    }
+
+    /* Footer full width on mobile */
+    .gameFooter {
+        width: 100%;
     }
 
     .chatWrapper {
