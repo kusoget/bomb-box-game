@@ -36,31 +36,53 @@ export default function ScoreBoard({
     const isPlayer1Active = activePlayerId === player1?.id;
     const isPlayer2Active = activePlayerId === player2?.id;
 
+    // 自分の役割判定
+    const isSwitcher = gameState?.currentSwitcherId === currentPlayerId;
+    const isSitter = gameState?.currentSitterId === currentPlayerId;
+
     // フェーズ表示用テキスト
     const getPhaseDisplayText = () => {
         if (!gameState) return 'LOADING...';
         switch (gameState.phase) {
             case 'setting_trap':
-                return 'SETTING TRAP';
+                return isSwitcher ? '爆弾をセットしてください' : '相手が爆弾をセット中';
             case 'selecting_chair':
-                return 'SELECT BOX';
+                return isSitter ? '箱をえらんでください' : '相手が箱を選んでいます';
             case 'confirming':
-                return 'CONFIRMING...';
+                return isSitter ? '決定しますか？' : '相手が確認中...';
             case 'revealing':
-                return 'RESULT';
+                return '結果発表';
             case 'round_end':
-                return 'NEXT ROUND';
+                return '次のラウンドへ';
             case 'game_over':
-                return 'GAME OVER';
+                return 'ゲーム終了';
             default:
                 return '';
         }
     };
 
+    // フェーズヘッダーのスタイル判定
+    const getPhaseClass = () => {
+        if (!gameState) return '';
+        // 自分のアクションが必要なフェーズ（目立たせる）
+        if ((gameState.phase === 'setting_trap' && isSwitcher) ||
+            (gameState.phase === 'selecting_chair' && isSitter) ||
+            (gameState.phase === 'confirming' && isSitter)) {
+            return styles.phaseAction; // 青/赤など明るい色
+        }
+        // 待機フェーズ（暗めにする、または警告色）
+        if ((gameState.phase === 'setting_trap' && !isSwitcher) ||
+            (gameState.phase === 'selecting_chair' && !isSitter) ||
+            (gameState.phase === 'confirming' && !isSitter)) {
+            return styles.phaseWait;
+        }
+        return '';
+    };
+
     return (
         <div className={styles.container}>
             {/* Phase Header */}
-            <div className={styles.phaseHeader}>
+            <div className={`${styles.phaseHeader} ${getPhaseClass()}`}>
                 {getPhaseDisplayText()}
             </div>
 
