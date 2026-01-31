@@ -300,7 +300,13 @@ export default function GameBoard({
                             isShocking={isShocking}
                             shockingChair={gameState.selectedChair}
                             onChairClick={handleChairClick}
-                            centerContent={undefined}
+                            centerContent={
+                                // 相手が爆弾設置中の時、中央に爆弾表示
+                                gameState.phase === 'setting_trap' && isSitter ? {
+                                    mainText: <span style={{ fontSize: '4rem' }}>💣</span>,
+                                    subText: '爆弾設置中...',
+                                } : undefined
+                            }
                         />
 
                         {/* キャラクター表示 */}
