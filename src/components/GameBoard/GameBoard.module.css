@@ -49,11 +49,15 @@
     position: relative;
     background: transparent;
     padding: 0;
-    /* Removed vertical padding */
+    padding-top: 20px;
+    /* Slight top gap */
     display: flex;
+    flex-direction: column;
+    /* Ensure column layout */
     align-items: center;
-    /* Vertically center the circle? */
-    justify-content: center;
+    /* Center horizontally */
+    justify-content: flex-start;
+    /* Push to TOP vertically */
     /* Removed overflow: hidden to allow natural scroll if content is long */
 }
 
@@ -66,96 +70,7 @@
     margin: 0 auto;
 }
 
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    pointer-events: none;
-    /* Let clicks pass through, chat has pointer-events: auto */
-}
-
-/* Chat is now floating, managed by Chat component itself */
-.chatWrapper {
-    display: none;
-    /* Hide legacy wrapper if it exists in DOM */
-}
-
-.phaseLabel {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 8px;
-}
-
-.phaseText {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--neon-cyan);
-    margin-bottom: 8px;
-    /* ラベル削除に伴い調整 */
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-}
-
-/* Text Colors needs adjusting for dark backgrounds in Turn modes? 
-   No, PhaseHeader handles text. GameArea content handles itself. 
-   We might need to pass context to children if text needs to flip to white. */
-
-.textPlayer1 {
-    color: var(--pop-purple);
-    font-weight: 800;
-}
-
-.textPlayer2 {
-    color: var(--pop-orange);
-    font-weight: 800;
-}
-
-.actionButton {
-    width: 100%;
-}
-
-.instruction {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-top: 12px;
-    line-height: 1.5;
-}
-
-.waitingMessage {
-    font-size: 1rem;
-    color: var(--text-muted);
-    animation: pulse 2s infinite;
-}
-
-/* ローディング */
-.loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    color: var(--neon-cyan);
-}
-
-.loadingSpinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--bg-tertiary);
-    border-top-color: var(--neon-cyan);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 16px;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
+/* ... skipped sidebar ... */
 
 /* Fixed Footer for Actions */
 .gameFooter {
@@ -163,27 +78,32 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 16px;
+    padding: 10px 16px;
+    /* Tighter container */
     background: var(--bg-secondary);
     border-top: 3px solid var(--text-primary);
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     z-index: 900;
-    /* Above chat FAB but below overlays */
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .footerButton {
-    width: 100%;
-    max-width: 400px;
-    /* Limit width on tablets */
-    padding: 18px 24px;
-    font-size: 1.2rem;
+    flex: 1;
+    width: auto;
+    max-width: none;
+    padding: 12px 20px;
+    /* Smaller padding */
+    font-size: 1rem;
+    /* Smaller font */
     font-weight: 700;
     text-transform: uppercase;
-    border-radius: var(--border-radius);
+    border-radius: 999px;
     border: 3px solid var(--text-primary);
-    box-shadow: 4px 4px 0 var(--text-primary);
+    box-shadow: 3px 3px 0 var(--text-primary);
+    /* Smaller shadow */
     background: var(--pop-purple);
     color: #fff;
     cursor: pointer;
@@ -192,7 +112,7 @@
 
 .footerButton:active:not(:disabled) {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--text-primary);
+    box-shadow: 1px 1px 0 var(--text-primary);
 }
 
 .footerButton.danger {
@@ -210,7 +130,8 @@
 
 /* Make space for footer in main content */
 .gameBoard {
-    padding-bottom: 90px;
+    padding-bottom: 140px;
+    /* Increased to ensure chairs aren't hidden */
 }
 
 /* レスポンシブ */

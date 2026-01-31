@@ -39,87 +39,85 @@
     gap: 12px;
 }
 
+/* Compact Player Layout */
 .playerScore {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
     flex: 1;
-    padding: 8px;
-    border-radius: var(--border-radius);
-    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
     background: transparent;
-    /* Removed background */
-    border: none;
+    padding: 2px;
 }
 
-/* Active Player Styles - Highlight removed as requested */
-.playerScore.active {
-    /* No minimal highlight as main background indicates turn */
-}
-
-.playerScore.player2.active {
-    /* No minimal highlight */
-}
-
-/* Inactive Player Styles (Dimmed rule removed) */
-.playerScore:not(.active) {
-    /* opacity: 0.5; REMOVED */
-}
-
-.playerTopRow {
+.playerContent {
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: 100%;
-    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    /* Slight pill background for readability */
+    padding: 6px 12px;
+    border-radius: 999px;
+    /* Pill */
+    border: 2px solid var(--text-primary);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
-.playerBottomRow {
+.playerInfo {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    line-height: 1;
+}
+
+.statsRow {
+    display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+/* Player 2 Mirrored */
+.playerScore.player2 .playerContent {
+    flex-direction: row-reverse;
+}
+
+.playerScore.player2 .playerInfo {
+    align-items: flex-end;
+}
+
+.playerScore.player2 .statsRow {
+    flex-direction: row-reverse;
 }
 
 .avatar {
-    font-size: 1.5rem;
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--bg-secondary);
     border-radius: 50%;
     border: 2px solid var(--text-primary);
-    box-shadow: 2px 2px 0 var(--text-primary);
-}
-
-.playerScore.player2 .avatar {
-    border-color: var(--text-primary);
+    flex-shrink: 0;
 }
 
 .playerName {
     font-family: 'Quicksand', sans-serif;
-    font-size: 0.8rem;
-    /* Smaller text */
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-primary);
-    max-width: 70px;
+    max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    line-height: 1.2;
 }
 
 .scoreValue {
     font-family: 'Fredoka', sans-serif;
-    font-size: 1.5rem;
-    /* Smaller score */
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--text-primary);
-    line-height: 1;
 }
 
 /* Override text color... (Removed comment) */

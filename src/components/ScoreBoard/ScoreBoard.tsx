@@ -113,21 +113,18 @@ export default function ScoreBoard({
             <div className={styles.scoreBoard}>
                 {/* Player 1 */}
                 <div className={`${styles.playerScore} ${isPlayer1Active ? styles.active : ''}`}>
-                    <div className={styles.playerTopRow}>
+                    <div className={styles.playerContent}>
                         <div className={styles.avatar}>{renderAvatar(player1?.avatar)}</div>
-                        <div className={styles.scoreValue}>{p1Score}</div>
-                    </div>
-                    <div className={styles.playerBottomRow}>
-                        <span className={styles.playerName}>{player1?.name ?? '待機中...'}</span>
-                        <div className={styles.lifeIndicator}>
-                            {[0, 1, 2].map(i => (
-                                <div
-                                    key={i}
-                                    className={`${styles.lifeHeart} ${i >= (3 - p1Shocks) ? styles.lost : ''}`}
-                                >
-                                    ❤️
+                        <div className={styles.playerInfo}>
+                            <span className={styles.playerName}>{player1?.name ?? '待機中'}</span>
+                            <div className={styles.statsRow}>
+                                <span className={styles.scoreValue}>{p1Score}</span>
+                                <div className={styles.lifeIndicator}>
+                                    {[0, 1, 2].map(i => (
+                                        <div key={i} className={`${styles.lifeHeart} ${i >= (3 - p1Shocks) ? styles.lost : ''}`}>❤️</div>
+                                    ))}
                                 </div>
-                            ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -140,22 +137,19 @@ export default function ScoreBoard({
 
                 {/* Player 2 */}
                 <div className={`${styles.playerScore} ${styles.player2} ${isPlayer2Active ? styles.active : ''}`}>
-                    <div className={styles.playerTopRow}>
-                        <div className={styles.scoreValue}>{p2Score}</div>
+                    <div className={styles.playerContent}>
                         <div className={styles.avatar}>{renderAvatar(player2?.avatar)}</div>
-                    </div>
-                    <div className={styles.playerBottomRow}>
-                        <div className={styles.lifeIndicator}>
-                            {[0, 1, 2].map(i => (
-                                <div
-                                    key={i}
-                                    className={`${styles.lifeHeart} ${i >= (3 - p2Shocks) ? styles.lost : ''}`}
-                                >
-                                    ❤️
+                        <div className={styles.playerInfo}>
+                            <span className={styles.playerName}>{player2?.name ?? '待機中'}</span>
+                            <div className={styles.statsRow}>
+                                <span className={styles.scoreValue}>{p2Score}</span>
+                                <div className={styles.lifeIndicator}>
+                                    {[0, 1, 2].map(i => (
+                                        <div key={i} className={`${styles.lifeHeart} ${i >= (3 - p2Shocks) ? styles.lost : ''}`}>❤️</div>
+                                    ))}
                                 </div>
-                            ))}
+                            </div>
                         </div>
-                        <span className={styles.playerName}>{player2?.name ?? '待機中...'}</span>
                     </div>
                 </div>
             </div>
