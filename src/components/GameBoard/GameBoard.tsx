@@ -295,7 +295,7 @@ export default function GameBoard({
                             chairs={gameState.chairs}
                             selectedChair={gameState.selectedChair}
                             trappedChair={gameState.trappedChair}
-                            showTrapped={isSwitcher}
+                            showTrapped={isSwitcher || gameState.phase === 'revealing'}
                             canSelect={canSelectChair || canSetTrap}
                             isShocking={isShocking}
                             shockingChair={gameState.selectedChair}

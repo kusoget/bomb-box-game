@@ -1,6 +1,7 @@
 'use client';
 
 import { GameState, Player } from '@/types/game';
+import { getAvatarDisplay } from '@/lib/gameLogic';
 import styles from './GameOverlay.module.css';
 
 interface GameOverlayProps {
@@ -32,24 +33,25 @@ export default function GameOverlay({
                 case 'score':
                     return '40点達成！';
                 case 'shock':
-                    return '3回感電...';
+                    return '感電でKO...';
                 case 'last_chair':
-                    return '残り1脚 - 最終判定';
+                    return '最終判定';
                 default:
                     return '';
             }
         };
 
         const winnerPlayer = gameState.winner === player1?.id ? player1 : gameState.winner === player2?.id ? player2 : null;
+        const winnerAvatarDisplay = winnerPlayer ? getAvatarDisplay(winnerPlayer.avatar) : null;
         const resultClass = isDraw ? styles.draw : isWinner ? styles.win : styles.lose;
 
         return (
             <div className={styles.gameOverOverlay}>
                 <div className={styles.resultContainer}>
                     <div className={styles.resultHeader}>
-                        {winnerPlayer && (
+                        {winnerAvatarDisplay && (
                             <div className={styles.winnerAvatar}>
-                                {winnerPlayer.avatar}
+                                {winnerAvatarDisplay.value}
                             </div>
                         )}
                         <h1 className={`${styles.resultTitle} ${resultClass}`}>
