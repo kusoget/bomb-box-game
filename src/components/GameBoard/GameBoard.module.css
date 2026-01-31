@@ -20,69 +20,62 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    flex: 1;
+    /* Maximizes height */
     gap: 0;
-    min-height: 0;
-    border-radius: var(--border-radius-lg);
-    /* Sticky header needs visible overflow usually, ensuring sticky context works */
-    border: var(--border-main);
-    box-shadow: var(--shadow-pop);
-    transition: all 0.5s var(--transition-bouncy);
-    background: var(--bg-card);
+    width: 100%;
+
+    /* Removed Card Styling for Full Width */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    transition: background-color 0.5s ease;
 }
 
-/* Player 1 Turn Theme (Purple) */
+/* Player 1 Turn Theme (Purple Background) */
 .mainArea.turnPlayer1 {
-    background: var(--pop-purple);
-    border-color: var(--text-primary);
-    box-shadow: 8px 8px 0px 0px var(--text-primary);
+    background-color: var(--pop-purple);
 }
 
-/* Player 2 Turn Theme (Orange) */
+/* Player 2 Turn Theme (Orange Background) */
 .mainArea.turnPlayer2 {
-    background: var(--pop-orange);
-    border-color: var(--text-primary);
-    box-shadow: 8px 8px 0px 0px var(--text-primary);
+    background-color: var(--pop-orange);
 }
 
 .gameArea {
     flex: 1;
     position: relative;
     background: transparent;
-    /* Transparent to show mainArea theme */
-    padding: 20px;
-    min-height: 500px;
+    padding: 20px 0;
+    /* Reduced horizontal padding */
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    /* Border removed as it's now on mainArea */
-    border: none;
-    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    /* Removed overflow: hidden to allow natural scroll if content is long */
 }
 
 .gameContainer {
     position: relative;
     width: 100%;
-    max-width: 380px;
-    /* スマートフォンサイズに合わせて固定 */
+    max-width: 400px;
+    /* Slightly wider */
     aspect-ratio: 1;
-    /* margin: 0 auto; flex配置するので不要だが念のため */
+    margin: 0 auto;
 }
 
 .sidebar {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    pointer-events: none;
+    /* Let clicks pass through, chat has pointer-events: auto */
 }
 
+/* Chat is now floating, managed by Chat component itself */
 .chatWrapper {
-    flex: 1;
-    min-height: 300px;
-    border: var(--border-main);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-pop);
-    background: var(--bg-card);
-    overflow: hidden;
+    display: none;
+    /* Hide legacy wrapper if it exists in DOM */
 }
 
 .phaseLabel {
