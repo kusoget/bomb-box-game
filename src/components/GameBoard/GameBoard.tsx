@@ -240,6 +240,13 @@ export default function GameBoard({
         setShowRoulette(false);
     }, []);
 
+    // アクティブなプレイヤーに応じた背景クラス
+    const mainAreaClass = useMemo(() => {
+        if (activePlayerId === player1?.id) return `${styles.mainArea} ${styles.turnPlayer1}`;
+        if (activePlayerId === player2?.id) return `${styles.mainArea} ${styles.turnPlayer2}`;
+        return styles.mainArea;
+    }, [activePlayerId, player1?.id, player2?.id]);
+
     return (
         <div className={styles.gameBoard}>
             {/* ルーレット（先行決め） */}
@@ -253,7 +260,7 @@ export default function GameBoard({
             )}
 
             {/* メインエリア: スコアボード + ゲーム画面 */}
-            <div className={styles.mainArea}>
+            <div className={mainAreaClass}>
                 {/* スコアボードをここへ移動 */}
                 <ScoreBoard
                     player1={player1}

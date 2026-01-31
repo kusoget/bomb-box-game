@@ -3,9 +3,14 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
-    background: var(--bg-card);
-    border: var(--border-glow);
-    border-radius: var(--border-radius-lg);
+    background: transparent;
+    /* Changed from bg-card to transparent */
+    border: none;
+    /* Removed border to merge */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Optional separator */
+    border-radius: 0;
+    /* Removed radius since it's top part of MainArea */
     gap: 20px;
 }
 

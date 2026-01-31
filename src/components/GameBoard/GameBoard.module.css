@@ -19,26 +19,44 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 0;
+    /* Gap removed to connect ScoreBoard and GameArea visually */
     min-height: 0;
-    /* Flexbox内でのスクロール用 */
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    transition: background 0.5s ease;
+    background: var(--bg-secondary);
+    border: var(--border-glow);
+}
+
+/* Player 1 Turn Theme (Cyan) */
+.mainArea.turnPlayer1 {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.15) 0%, rgba(10, 20, 40, 0.9) 100%);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.3);
+}
+
+/* Player 2 Turn Theme (Magenta) */
+.mainArea.turnPlayer2 {
+    background: linear-gradient(135deg, rgba(255, 0, 255, 0.15) 0%, rgba(30, 10, 30, 0.9) 100%);
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.1);
+    border-color: rgba(255, 0, 255, 0.3);
 }
 
 .gameArea {
     flex: 1;
     position: relative;
-    background: var(--bg-secondary);
-    border: var(--border-glow);
-    border-radius: var(--border-radius-lg);
+    background: transparent;
+    /* Transparent to show mainArea theme */
     padding: 20px;
     min-height: 500px;
     display: flex;
-    /* これによりgameContainerのmargin:autoが効く */
     align-items: center;
-    /* 垂直中央配置 */
     justify-content: center;
-    /* 水平中央配置 */
     overflow: hidden;
+    /* Border removed as it's now on mainArea */
+    border: none;
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
 }
 
 .gameContainer {
