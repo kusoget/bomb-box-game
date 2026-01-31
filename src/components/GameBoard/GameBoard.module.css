@@ -23,7 +23,7 @@
     /* Gap removed to connect ScoreBoard and GameArea visually */
     min-height: 0;
     border-radius: var(--border-radius-lg);
-    overflow: hidden;
+    /* overflow: hidden; Removed to allow sticky header */
     transition: background 0.5s ease;
     background: var(--bg-secondary);
     border: var(--border-glow);
