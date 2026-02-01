@@ -108,7 +108,7 @@ export default function RoomPage() {
             <div className={styles.error}>
                 <h2>エラー</h2>
                 <p>{error}</p>
-                <button className="btn btn-primary" onClick={() => router.push('/')}>
+                <button className={styles.homeButton} onClick={() => router.push('/')}>
                     ホームに戻る
                 </button>
             </div>
@@ -119,7 +119,7 @@ export default function RoomPage() {
         return (
             <div className={styles.error}>
                 <h2>ルームが見つかりません</h2>
-                <button className="btn btn-primary" onClick={() => router.push('/')}>
+                <button className={styles.homeButton} onClick={() => router.push('/')}>
                     ホームに戻る
                 </button>
             </div>
@@ -137,7 +137,7 @@ export default function RoomPage() {
                         現在ゲームが進行中のため、途中参加はできません。<br />
                         （ブラウザを閉じたりリロードすると復帰できない場合があります）
                     </p>
-                    <button className="btn btn-primary" onClick={() => router.push('/')}>
+                    <button className={styles.homeButton} onClick={() => router.push('/')}>
                         ホームに戻る
                     </button>
                 </div>
