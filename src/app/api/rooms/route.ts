@@ -89,15 +89,15 @@ export async function POST(request: NextRequest) {
             attempts++;
         }
 
-        // [Cleanup] 古いルーム（24時間以上前）を削除
+        // [Cleanup] 古いルーム（3時間以上前）を削除
         try {
-            const yesterday = new Date();
-            yesterday.setHours(yesterday.getHours() - 24);
+            const threshold = new Date();
+            threshold.setHours(threshold.getHours() - 3);
 
             await supabase
                 .from('rooms')
                 .delete()
-                .lt('created_at', yesterday.toISOString());
+                .lt('created_at', threshold.toISOString());
         } catch (e) {
             // クリーンアップ失敗は無視
             console.error('Cleanup error:', e);
