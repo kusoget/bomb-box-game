@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     title: "💥 爆弾箱ゲーム",
     description: "その箱は安全か、爆発か？12個の箱を巡る命がけの心理戦。",
   },
+  other: {
+    "google-adsense-account": "ca-pub-7579337045676242",
+  },
 };
 
 export const viewport = {
