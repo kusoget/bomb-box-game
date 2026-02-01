@@ -3,10 +3,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  padding: 40px 20px;
   overflow-y: auto;
-  /* Allow scroll */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Background Effects - Removed Cyber Lines, kept simple or could add pop pattern */
@@ -22,34 +21,32 @@
 /* Logo */
 .logo {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .title {
   font-family: 'Fredoka', sans-serif;
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  /* Text Shadow for pop header */
-  text-shadow: 2px 2px 0 #fff;
+  gap: 12px;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
 }
 
 .bolt {
-  font-size: 2rem;
-  animation: bounce 2s infinite;
+  font-size: 1.5rem;
 }
 
 .subtitle {
   font-family: 'Quicksand', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  letter-spacing: 0.1em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--pop-purple);
+  letter-spacing: 0.05em;
 }
 
 /* Menu */
@@ -241,19 +238,20 @@
 
 /* Rules */
 .rules {
-  background: var(--bg-card);
+  background: #fff;
   border: var(--border-main);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-pop);
-  padding: 24px;
+  padding: 28px 24px;
+  margin-top: 24px;
 }
 
 .rulesTitle {
   font-family: 'Fredoka', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 16px;
+  color: var(--pop-purple);
+  margin-bottom: 20px;
   text-align: center;
 }
 
@@ -261,20 +259,21 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .rulesList li {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  padding-left: 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+  padding-left: 28px;
   position: relative;
 }
 
 .rulesList li::before {
-  content: '⚡';
+  content: '💣';
   position: absolute;
   left: 0;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }

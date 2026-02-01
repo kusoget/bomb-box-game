@@ -3,9 +3,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px 10px;
-    /* Reduced padding for mobile */
+    padding: 40px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .lobbyCard {
@@ -22,11 +22,11 @@
 
 .title {
     font-family: 'Fredoka', sans-serif;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 8px;
-    text-shadow: 2px 2px 0 #fff;
+    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -35,9 +35,10 @@
 
 .subtitle {
     font-family: 'Quicksand', sans-serif;
-    color: var(--text-secondary);
-    margin-bottom: 32px;
+    color: var(--pop-purple);
+    margin-bottom: 24px;
     font-weight: 600;
+    font-size: 0.95rem;
 }
 
 .roomCode {

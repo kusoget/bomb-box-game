@@ -5,13 +5,11 @@
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 50;
-    padding: 24px 48px;
-    background: rgba(10, 10, 30, 0.95);
-    border: 2px solid var(--neon-cyan);
+    padding: 32px 48px;
+    background: var(--bg-secondary);
+    border: 4px solid var(--text-primary);
     border-radius: var(--border-radius-lg);
-    box-shadow:
-        0 0 40px rgba(0, 255, 255, 0.3),
-        inset 0 0 30px rgba(0, 255, 255, 0.1);
+    box-shadow: var(--shadow-pop-lg);
     animation: fadeInScale 0.3s ease;
 }
 
@@ -28,19 +26,20 @@
 }
 
 .phaseTitle {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    color: var(--pop-purple);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
     margin-bottom: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.05em;
 }
 
 .phaseDescription {
     font-size: 1.1rem;
-    color: var(--text-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
     margin-bottom: 20px;
 }
 
@@ -51,8 +50,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    /* backdrop-filter: blur(5px); 削除 - ぼやけを無くす */
+    background: rgba(255, 255, 255, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -103,17 +101,13 @@
 }
 
 .resultTitle.safe {
-    color: #fff;
-    text-shadow:
-        0 2px 0 #2d8f2d,
-        0 4px 10px rgba(0, 0, 0, 0.5);
+    color: var(--pop-green);
+    text-shadow: 3px 3px 0 var(--text-primary);
 }
 
 .resultTitle.shock {
-    color: #fff;
-    text-shadow:
-        0 2px 0 #cc3333,
-        0 4px 10px rgba(0, 0, 0, 0.5);
+    color: var(--pop-red);
+    text-shadow: 3px 3px 0 var(--text-primary);
     animation: shockPulse 0.2s ease-in-out infinite;
 }
 
@@ -131,23 +125,24 @@
 
 .resultDetails {
     font-size: 1.3rem;
-    color: var(--text-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 
 .pointsGained {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 2rem;
     font-weight: 700;
-    color: var(--neon-cyan);
+    color: var(--pop-cyan);
     margin-top: 12px;
 }
 
 .pointsLost {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 2rem;
     font-weight: 700;
-    color: var(--neon-red);
+    color: var(--pop-red);
     margin-top: 12px;
 }
 
