@@ -89,6 +89,20 @@ export async function POST(request: NextRequest) {
             attempts++;
         }
 
+        // [Cleanup] 古いルーム（24時間以上前）を削除
+        try {
+            const yesterday = new Date();
+            yesterday.setHours(yesterday.getHours() - 24);
+
+            await supabase
+                .from('rooms')
+                .delete()
+                .lt('created_at', yesterday.toISOString());
+        } catch (e) {
+            // クリーンアップ失敗は無視
+            console.error('Cleanup error:', e);
+        }
+
         const playerId = uuidv4();
         const roomId = uuidv4();
 
