@@ -1,6 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { Chair } from '@/types/game';
+import { asset } from '@/lib/assets';
 import styles from './ChairCircle.module.css';
 
 interface ChairCircleProps {
@@ -13,9 +15,13 @@ interface ChairCircleProps {
     shockingChair: number | null;
     onChairClick: (chairId: number) => void;
     inactiveColor?: 'purple' | 'orange';
+    selectedByName?: string | null;
+    selectedByAvatar?: string | null;
     centerContent?: {
-        mainText: React.ReactNode;
+        mainText?: React.ReactNode;
         subText?: string;
+        characterImage?: string;
+        characterName?: string | null;
         button?: {
             label: string;
             onClick: () => void;
@@ -33,70 +39,105 @@ export default function ChairCircle({
     isShocking,
     shockingChair,
     onChairClick,
-    inactiveColor,
     centerContent,
+    selectedByName,
+    selectedByAvatar,
 }: ChairCircleProps) {
-    const remainingChairs = chairs.filter(c => !c.isRemoved);
     const totalChairs = chairs.length;
-    const radius = 36; // パーセント（狭い画面でも収まるように調整）
 
-    // 椅子の位置を計算（円形配置）
+    // スタジアム配置：chair 16cqw対応で位置を少し広げて重なり回避
+    const STADIUM_POSITIONS_12: { x: number; y: number }[] = [
+        { x: 59, y: 18 },   // 1: top-right
+        { x: 79, y: 29 },   // 2
+        { x: 87, y: 47 },   // 3
+        { x: 87, y: 63 },   // 4
+        { x: 79, y: 80 },   // 5
+        { x: 59, y: 90 },   // 6: bottom-right
+        { x: 41, y: 90 },   // 7: bottom-left
+        { x: 21, y: 80 },   // 8
+        { x: 13, y: 63 },   // 9
+        { x: 13, y: 47 },   // 10
+        { x: 21, y: 29 },   // 11
+        { x: 41, y: 18 },   // 12: top-left
+    ];
+
     const getChairPosition = (index: number, total: number) => {
-        const angle = (index / total) * 2 * Math.PI - Math.PI / 2; // 上から開始
-        const x = 50 + radius * Math.cos(angle);
-        const y = 50 + radius * Math.sin(angle);
-        return { x, y };
+        if (total === 12) return STADIUM_POSITIONS_12[index];
+        const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
+        return { x: 50 + 38 * Math.cos(angle), y: 50 + 38 * Math.sin(angle) };
     };
+
+    // 選択中の番号（中央表示用）
+    const selectedNumber =
+        selectedChair && chairs.some(c => c.id === selectedChair && !c.isRemoved)
+            ? selectedChair
+            : null;
 
     return (
         <div className={styles.chairCircle}>
             {/* 中央エリア */}
             <div className={styles.centerArea}>
                 {centerContent ? (
-                    (centerContent.mainText || centerContent.subText || centerContent.button) ? (
-                        <div className={styles.centerContent}>
-                            {centerContent.mainText && (
-                                <div className={styles.centerMainText}>{centerContent.mainText}</div>
-                            )}
-                            {centerContent.subText && (
-                                <div className={styles.centerSubText}>{centerContent.subText}</div>
-                            )}
-                            {centerContent.button && (
-                                <button
-                                    className={`${styles.centerButton} ${styles[centerContent.button.variant]}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        centerContent.button!.onClick();
-                                    }}
-                                >
-                                    {centerContent.button.label}
-                                </button>
-                            )}
-                        </div>
-                    ) : null
+                    <div className={styles.centerContent}>
+                        {centerContent.characterImage && (
+                            <div className={styles.centerCharacter}>
+                                <Image
+                                    src={centerContent.characterImage}
+                                    alt={centerContent.characterName ?? 'character'}
+                                    width={140}
+                                    height={140}
+                                    unoptimized
+                                    priority
+                                />
+                                {centerContent.characterName && (
+                                    <div className={styles.centerCharacterTag}>
+                                        {centerContent.characterName}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {centerContent.mainText && (
+                            <div className={styles.centerMainText}>{centerContent.mainText}</div>
+                        )}
+                        {centerContent.subText && (
+                            <div className={styles.centerSubText}>{centerContent.subText}</div>
+                        )}
+                        {centerContent.button && (
+                            <button
+                                className={`${styles.centerButton} ${styles[centerContent.button.variant]}`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    centerContent.button!.onClick();
+                                }}
+                            >
+                                {centerContent.button.label}
+                            </button>
+                        )}
+                    </div>
+                ) : selectedNumber !== null ? (
+                    <div className={styles.centerNumber}>{selectedNumber}</div>
                 ) : null}
             </div>
 
-            {/* 椅子 */}
+            {/* 箱を円形配置 */}
             {chairs.map((chair, index) => {
                 const pos = getChairPosition(index, totalChairs);
                 const isSelected = selectedChair === chair.id;
                 const isTrapped = showTrapped && trappedChair === chair.id;
                 const isCurrentlyShocking = isShocking && shockingChair === chair.id;
+                const showAsOn = isSelected || isTrapped;
 
                 return (
                     <div
                         key={chair.id}
                         className={`
-              ${styles.chair}
-              ${chair.isRemoved ? styles.removed : ''}
-              ${isSelected ? styles.selected : ''}
-              ${isTrapped ? styles.trapped : ''}
-              ${isCurrentlyShocking ? styles.shocking : ''}
-              ${!canSelect || chair.isRemoved ? styles.disabled : ''}
-              ${inactiveColor === 'purple' ? styles.inactivePurple : ''}
-              ${inactiveColor === 'orange' ? styles.inactiveOrange : ''}
-            `}
+                            ${styles.chair}
+                            ${chair.isRemoved ? styles.removed : ''}
+                            ${isSelected ? styles.selected : ''}
+                            ${isTrapped ? styles.trapped : ''}
+                            ${isCurrentlyShocking ? styles.shocking : ''}
+                            ${!canSelect || chair.isRemoved ? styles.disabled : ''}
+                        `}
                         style={{
                             left: `${pos.x}%`,
                             top: `${pos.y}%`,
@@ -108,18 +149,37 @@ export default function ChairCircle({
                             }
                         }}
                     >
-                        <div className={styles.chairBody}>
+                        <div className={styles.boxImageWrapper}>
+                            <Image
+                                src={showAsOn ? asset('/images/boxbom/box_on.png') : asset('/images/boxbom/box_off.png')}
+                                alt={`box-${chair.id}`}
+                                fill
+                                sizes="80px"
+                                unoptimized
+                                draggable={false}
+                            />
                             <span className={styles.chairNumber}>{chair.id}</span>
-                            {/* トラップ表示（爆弾アイコン） */}
                             {isTrapped && (
                                 <div className={styles.bombIcon}>💣</div>
                             )}
-                            <div className={styles.electricWire} />
+                            {isSelected && selectedByName && (
+                                <div className={styles.selectedIndicator}>
+                                    {selectedByAvatar && (
+                                        <div className={styles.selectedAvatar}>
+                                            <Image
+                                                src={selectedByAvatar}
+                                                alt=""
+                                                fill
+                                                sizes="40px"
+                                                style={{ objectFit: 'cover' }}
+                                                unoptimized
+                                            />
+                                        </div>
+                                    )}
+                                    <div className={styles.selectedNameTag}>{selectedByName}</div>
+                                </div>
+                            )}
                         </div>
-                        {/* 箱なので足は不要 <div className={styles.chairLegs}>
-                            <div className={styles.chairLeg} />
-                            <div className={styles.chairLeg} />
-                        </div> */}
                     </div>
                 );
             })}

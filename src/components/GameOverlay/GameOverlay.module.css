@@ -1,158 +1,274 @@
-.phaseOverlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 50;
-    padding: 32px 48px;
-    background: var(--bg-secondary);
-    border: 4px solid var(--text-primary);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-pop-lg);
-    animation: fadeInScale 0.3s ease;
-}
-
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-.phaseTitle {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--pop-purple);
-    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
-    margin-bottom: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.phaseDescription {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 20px;
-}
-
-/* 結果表示 */
+/* ============================
+ *  Result Overlay (BOOM / SAFE)
+ * ============================ */
 .resultOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.95);
+    position: fixed;
+    inset: 0;
+    z-index: 200;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;
-    animation: fadeIn 0.3s ease;
+    overflow: hidden;
+    animation: fadeIn 0.25s ease;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-    to {
-        opacity: 1;
-    }
+.bgImage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bgImage img {
+    object-fit: cover;
+}
+
+.boomBg::after,
+.safeBg::after {
+    /* dark gradient on bottom for legibility */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.5) 100%);
+    z-index: 0;
+    pointer-events: none;
 }
 
 .resultContent {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 16px 28px;
+}
+
+.headerLogo {
+    width: 80%;
+    max-width: 360px;
+    display: flex;
+    justify-content: center;
+    animation: logoPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.headerLogo img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+@keyframes logoPop {
+    from { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* SAFE のオープン箱 */
+.openedBox {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.5));
+    animation: logoPop 0.45s 0.1s both cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.openedBox img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.openedBoxNumber {
+    position: absolute;
+    z-index: 2;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: #000;
+    text-shadow: 2px 2px 0 #fff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -58%);
+}
+
+.resultMessage {
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #fff;
+    border-radius: 12px;
+    padding: 8px 16px;
+    color: #fff;
     text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.6);
 }
 
-.resultIcon {
-    font-size: 5rem;
-    margin-bottom: 20px;
-    animation: iconBounce 0.5s ease;
+.resultRound {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 900;
+    background: #FFFF00;
+    color: #000;
+    border: 2px solid #000;
+    border-radius: 8px;
+    padding: 4px 8px;
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-@keyframes iconBounce {
-    0% {
-        transform: scale(0);
-    }
-
-    50% {
-        transform: scale(1.2);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+.resultRound::after {
+    content: attr(data-num);
 }
 
-.resultTitle {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    letter-spacing: 0.05em;
+.resultDetail {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    text-align: left;
 }
 
-.resultTitle.safe {
-    color: var(--pop-green);
-    text-shadow: 3px 3px 0 var(--text-primary);
+.resultHighlight {
+    color: #FFFF00;
+    font-size: 1.1rem;
+    text-shadow: 2px 2px 0 #000;
 }
 
-.resultTitle.shock {
-    color: var(--pop-red);
-    text-shadow: 3px 3px 0 var(--text-primary);
-    animation: shockPulse 0.2s ease-in-out infinite;
+.resultScoreRow {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+    padding: 0 16px;
 }
 
-@keyframes shockPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.02);
-    }
+.miniCard {
+    flex: 1;
+    max-width: 200px;
+    min-height: 160px;
+    border: 4px solid #000;
+    border-radius: 18px;
+    box-shadow: 5px 5px 0 #000;
+    padding: 8px 10px 0;
+    color: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    overflow: hidden;
 }
 
-.resultDetails {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 8px;
+.miniCardName {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 3px 12px;
+    line-height: 1.2;
+    box-shadow: 2px 2px 0 #000;
+    position: relative;
+    z-index: 2;
 }
 
-.pointsGained {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--pop-cyan);
-    margin-top: 12px;
+.miniCardScore {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow:
+        3px 3px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000;
+    line-height: 1;
+    margin-top: 4px;
+    position: relative;
+    z-index: 2;
 }
 
-.pointsLost {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--pop-red);
-    margin-top: 12px;
+.miniCardHearts {
+    display: flex;
+    gap: 3px;
+    position: relative;
+    z-index: 2;
 }
 
-/* Game Over / Result Screen - Retro Pop Style */
+.miniCardHearts img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.5));
+}
+
+.miniCardChar {
+    position: absolute;
+    bottom: -10px;
+    width: 90px;
+    height: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.miniCardChar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.4));
+}
+
+/* Next Button */
+.nextButton {
+    margin-top: 18px;
+    background: #FF2D55;
+    border: 3px solid #000;
+    border-radius: 999px;
+    box-shadow: 5px 5px 0 #000;
+    padding: 14px 60px;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+}
+
+.nextButton:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 #000;
+}
+
+.nextButton:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #000;
+}
+
+/* ============================
+ *  Game Over Screen
+ * ============================ */
 .gameOverOverlay {
     position: fixed;
     inset: 0;
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 9999;
@@ -161,102 +277,85 @@
 }
 
 .resultContainer {
-    background: var(--bg-secondary);
-    border: 4px solid var(--text-primary);
-    box-shadow: 8px 8px 0 var(--text-primary);
+    background: #fff;
+    border: 4px solid #000;
+    box-shadow: 8px 8px 0 #000;
     border-radius: 24px;
-    padding: 2.5rem 3rem;
+    padding: 2rem 2.4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     max-width: 90vw;
     width: 400px;
-    animation: slideUpScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideUpScale 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideUpScale {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(30px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .resultHeader {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.4rem;
 }
 
 .winnerAvatar {
-    font-size: 5rem;
-    margin-bottom: 0.5rem;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 0.5rem;
     animation: bounce 2s infinite ease-in-out;
 }
 
+.winnerAvatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 @keyframes bounce {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-10px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 .resultTitle {
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'LINE Seed JP', sans-serif;
     font-size: 3rem;
-    font-weight: 700;
+    font-weight: 900;
     line-height: 1;
-    margin: 0 0 12px;
+    margin: 0 0 10px;
     letter-spacing: 0.05em;
 }
 
-.resultTitle.win {
-    color: var(--pop-blue);
-    text-shadow: 3px 3px 0 var(--text-primary);
-}
-
-.resultTitle.lose {
-    color: var(--pop-red);
-    text-shadow: 3px 3px 0 var(--text-primary);
-}
-
-.resultTitle.draw {
-    color: var(--pop-yellow);
-    text-shadow: 3px 3px 0 var(--text-primary);
-}
+.resultTitle.win { color: #FF2D55; text-shadow: 3px 3px 0 #000; }
+.resultTitle.lose { color: #6b7280; text-shadow: 3px 3px 0 #000; }
+.resultTitle.draw { color: #FFFF00; text-shadow: 3px 3px 0 #000; }
 
 .winReason {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    font-weight: 600;
-    padding: 0.5rem 1.5rem;
-    background: var(--bg-primary);
-    border: 2px solid var(--text-primary);
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 1rem;
+    color: #000;
+    font-weight: 900;
+    padding: 0.4rem 1.2rem;
+    background: #FFFF00;
+    border: 3px solid #000;
     border-radius: 50px;
     display: inline-block;
+    box-shadow: 3px 3px 0 #000;
 }
 
 .scoreSummary {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 1.4rem;
     width: 100%;
-    margin-bottom: 2rem;
-    padding: 1.2rem;
-    background: var(--bg-primary);
-    border: 3px solid var(--text-primary);
+    margin-bottom: 1.6rem;
+    padding: 1rem;
+    background: #5EEAD4;
+    border: 3px solid #000;
     border-radius: 16px;
-    box-shadow: 4px 4px 0 var(--text-primary);
+    box-shadow: 4px 4px 0 #000;
 }
 
 .playerBlock {
@@ -267,29 +366,29 @@
 }
 
 .playerBlock .playerName {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1rem;
-    color: var(--text-secondary);
-    font-weight: 500;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 0.9rem;
+    color: #000;
+    font-weight: 700;
 }
 
 .playerBlock .scoreValue {
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'LINE Seed JP', sans-serif;
     font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-weight: 900;
+    color: #000;
 }
 
 .playerBlock.winner .scoreValue {
-    color: var(--pop-blue);
+    color: #FF2D55;
+    text-shadow: 2px 2px 0 #000;
 }
 
 .vsLabel {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    align-self: center;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #000;
 }
 
 .actionButtons {
@@ -298,25 +397,48 @@
 
 .homeButton {
     width: 100%;
-    padding: 16px;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
+    padding: 14px;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
     color: #fff;
-    background: var(--pop-blue);
-    border: 3px solid var(--text-primary);
-    border-radius: 12px;
+    background: #FF2D55;
+    border: 3px solid #000;
+    border-radius: 999px;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 4px 4px 0 var(--text-primary);
+    transition: all 0.15s;
+    box-shadow: 4px 4px 0 #000;
 }
 
 .homeButton:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--text-primary);
+    box-shadow: 6px 6px 0 #000;
 }
 
 .homeButton:active {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--text-primary);
+    box-shadow: 2px 2px 0 #000;
+}
+
+@media (max-width: 600px) {
+    .headerLogo {
+        max-width: 280px;
+    }
+
+    .resultDetail {
+        font-size: 0.85rem;
+    }
+
+    .nextButton {
+        padding: 12px 40px;
+        font-size: 1.3rem;
+    }
+
+    .miniCard {
+        max-width: 140px;
+    }
+
+    .miniCardScore {
+        font-size: 1.8rem;
+    }
 }

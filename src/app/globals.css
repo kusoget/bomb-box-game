@@ -1,57 +1,44 @@
 /* Electric Chair - Global Styles (Retro Pop Theme) */
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
-
 :root {
   /* --- COLORS --- */
   /* Backgrounds */
-  --bg-primary: #FFF8E7;
-  /* Cream (Main BG) */
+  --bg-primary: #5EEAD4;
+  /* Mint Green from Figma */
   --bg-secondary: #FFFFFF;
-  /* White (Cards/Inputs) */
   --bg-card: #FFFFFF;
-  /* Card Background */
-  --bg-tertiary: #F3F4F6;
-  /* Light Gray */
+  --bg-tertiary: #CCFBF1;
+  /* Lighter Mint */
 
   /* Text */
-  --text-primary: #2D3436;
-  /* Soft Black */
-  --text-secondary: #636E72;
-  /* Gray */
-  --text-muted: #B2BEC3;
-  /* Light Gray */
+  --text-primary: #000000;
+  /* Pure Black for impact */
+  --text-secondary: #1F2937;
   --text-inverse: #FFFFFF;
-  /* White Text on colored buttons */
 
   /* Pop Accents */
+  --pop-pink: #FF2D55;
+  /* Hot Pink */
+  --pop-yellow: #FFFF00;
+  /* Pure Yellow */
   --pop-purple: #9b59b6;
-  --pop-orange: #e67e22;
-  --pop-cyan: #00cec9;
-  --pop-green: #00b894;
-  --pop-red: #d63031;
-  --pop-yellow: #fdcb6e;
-  --pop-dark: #2d3436;
   --pop-blue: #0984e3;
+  --pop-red: #d63031;
 
   /* --- UI TOKENS --- */
   /* Borders */
   --border-width: 3px;
   --border-style: solid;
-  --border-color: #2D3436;
+  --border-color: #000000;
   --border-main: var(--border-width) var(--border-style) var(--border-color);
-  --border-radius: 12px;
+  --border-radius: 999px;
+  /* Rounded Pills */
   --border-radius-lg: 24px;
-  --border-radius-full: 9999px;
 
   /* Shadows (Hard/Pop) */
   --shadow-pop: 4px 4px 0px 0px var(--text-primary);
   --shadow-pop-sm: 2px 2px 0px 0px var(--text-primary);
   --shadow-pop-lg: 6px 6px 0px 0px var(--text-primary);
   --shadow-none: 0 0 0 0 transparent;
-
-  /* Sizing */
-  --header-height: 70px;
-  --chat-width: 320px;
 
   /* Transitions */
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -70,18 +57,19 @@ body {
   max-width: 100vw;
   min-height: 100vh;
   width: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 600;
+  font-family: 'LINE Seed JP', 'LINESeedJP_OTF', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+  font-weight: 700;
   color: var(--text-primary);
-  background: var(--bg-primary);
-  /* Polka dot pattern */
-  background-image: radial-gradient(var(--pop-purple) 1px, transparent 1px), radial-gradient(var(--pop-orange) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: 0 0, 20px 20px;
   background-color: var(--bg-primary);
+
+  /* Polka dot pattern matching Figma */
+  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -91,10 +79,11 @@ h2,
 h3,
 h4,
 h5,
-h6 {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+h6,
+button,
+input {
+  /* Inherit font from body (Dela Gothic One) */
+  font-family: inherit;
   color: var(--text-primary);
 }
 
@@ -104,67 +93,56 @@ a {
 }
 
 button {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 600;
   cursor: pointer;
   border: none;
   outline: none;
   background: none;
 }
 
-input {
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 500;
-}
-
 /* Common Components */
 
-/* Pop Button */
+/* Pop Button (Pink Pill) */
 .btn {
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  border-radius: var(--border-radius);
-  border: var(--border-main);
-  box-shadow: var(--shadow-pop);
+  padding: 16px 32px;
+  font-size: 1.5rem;
+  /* Larger font for mobile game feel */
+  font-weight: 400;
+  /* Regular weight for Dela Gothic */
+  border-radius: 999px;
+  border: none;
+  background: var(--pop-pink);
+  color: var(--text-inverse);
+  box-shadow: none;
+  /* Flat style based on image, or add shadow if needed */
   transition: all var(--transition-fast);
-  background: var(--bg-secondary);
-  color: var(--text-primary);
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
 }
 
-.btn:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-pop-lg);
+.btn:disabled {
+  background: #E5E7EB;
+  /* Gray for disabled */
+  color: #9CA3AF;
+  cursor: not-allowed;
 }
 
-.btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: var(--shadow-pop-sm);
+.btn:not(:disabled):hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
 }
 
-.btn-primary {
-  background: var(--pop-purple);
-  color: var(--text-inverse);
+.btn:not(:disabled):active {
+  transform: scale(0.98);
+  filter: brightness(0.9);
 }
 
-.btn-secondary {
-  background: var(--pop-orange);
-  color: var(--text-inverse);
-}
-
-.btn-danger {
-  background: var(--pop-red);
-  color: var(--text-inverse);
-}
-
-/* Card */
+/* Card - Transparent or Minimal */
 .card {
-  background: var(--bg-secondary);
-  border: var(--border-main);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-pop);
-  padding: 24px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 /* Input */
@@ -174,40 +152,15 @@ input {
   font-size: 1rem;
   color: var(--text-primary);
   background: #fff;
-  border: 2px solid var(--text-primary);
-  border-radius: var(--border-radius);
+  border: 3px solid var(--text-primary);
+  border-radius: 12px;
   transition: all var(--transition-fast);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--pop-purple);
+  border-color: var(--pop-pink);
   box-shadow: 4px 4px 0 var(--text-primary);
-  transform: translate(-2px, -2px);
-}
-
-.input::placeholder {
-  color: var(--text-muted);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--pop-purple);
-  border-radius: 5px;
-  border: 2px solid var(--bg-tertiary);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--pop-orange);
 }
 
 /* Animations */

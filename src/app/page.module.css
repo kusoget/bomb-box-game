@@ -25,7 +25,7 @@
 }
 
 .title {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'LINE Seed JP', sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -76,7 +76,7 @@
 }
 
 .formTitle {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'LINE Seed JP', sans-serif;
   font-size: 1.5rem;
   color: var(--text-primary);
   text-align: center;
@@ -118,7 +118,7 @@
 }
 
 .roomCodeInput {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'LINE Seed JP', sans-serif;
   font-size: 1.5rem;
   letter-spacing: 0.2em;
   text-align: center;
@@ -247,7 +247,7 @@
 }
 
 .rulesTitle {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'LINE Seed JP', sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--pop-purple);

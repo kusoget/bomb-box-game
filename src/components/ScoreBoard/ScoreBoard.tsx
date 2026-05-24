@@ -1,7 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import { Player, GameState } from '@/types/game';
-import { getAvatarDisplay } from '@/lib/gameLogic';
+import { getBoxbomCharacter } from '@/lib/gameLogic';
+import { asset } from '@/lib/assets';
 import styles from './ScoreBoard.module.css';
 
 interface ScoreBoardProps {
@@ -22,7 +24,6 @@ export default function ScoreBoard({
     const p1Shocks = gameState?.player1Shocks ?? 0;
     const p2Shocks = gameState?.player2Shocks ?? 0;
     const round = gameState?.currentRound ?? 1;
-    const isHalfFront = gameState?.isHalfFront ?? true;
 
     // アクティブなプレイヤー（手番）を判定
     let activePlayerId: string | null = null;
@@ -37,20 +38,29 @@ export default function ScoreBoard({
     const isPlayer1Active = activePlayerId === player1?.id;
     const isPlayer2Active = activePlayerId === player2?.id;
 
-    // 自分の役割判定
     const isSwitcher = gameState?.currentSwitcherId === currentPlayerId;
     const isSitter = gameState?.currentSitterId === currentPlayerId;
 
-    // フェーズ表示用テキスト
     const getPhaseDisplayText = () => {
         if (!gameState) return 'LOADING...';
+
+        const switcher =
+            gameState.currentSwitcherId === player1?.id ? player1 :
+                gameState.currentSwitcherId === player2?.id ? player2 : null;
+        const sitter =
+            gameState.currentSitterId === player1?.id ? player1 :
+                gameState.currentSitterId === player2?.id ? player2 : null;
+
+        const switcherName = switcher?.name ?? '相手';
+        const sitterName = sitter?.name ?? '相手';
+
         switch (gameState.phase) {
             case 'setting_trap':
-                return isSwitcher ? '爆弾をセットして！' : '相手が爆弾をセット中';
+                return `${switcherName}が爆弾セット中`;
             case 'selecting_chair':
-                return isSitter ? '箱からポイントをGET！' : '相手が箱を選択中';
+                return `${sitterName}が箱を選択中`;
             case 'confirming':
-                return isSitter ? '決定しますか？' : '相手が確認中...';
+                return isSitter ? '決定しますか？' : `${sitterName}が確認中...`;
             case 'revealing':
                 return '結果発表';
             case 'round_end':
@@ -62,103 +72,83 @@ export default function ScoreBoard({
         }
     };
 
-    // フェーズヘッダーのスタイル判定
-    const getPhaseClass = () => {
-        if (!gameState) return '';
-        // 自分のアクションが必要なフェーズ（目立たせる）
-        if ((gameState.phase === 'setting_trap' && isSwitcher) ||
-            (gameState.phase === 'selecting_chair' && isSitter) ||
-            (gameState.phase === 'confirming' && isSitter)) {
-            return styles.phaseAction; // 青/赤など明るい色
-        }
-        // 待機フェーズ（暗めにする、または警告色）
-        if ((gameState.phase === 'setting_trap' && !isSwitcher) ||
-            (gameState.phase === 'selecting_chair' && !isSitter) ||
-            (gameState.phase === 'confirming' && !isSitter)) {
-            return styles.phaseWait;
-        }
-        return '';
-    };
-
-    // アクションが必要かどうか
     const isActionRequired = gameState && (
         (gameState.phase === 'setting_trap' && isSwitcher) ||
         (gameState.phase === 'selecting_chair' && isSitter) ||
         (gameState.phase === 'confirming' && isSitter)
     );
 
-    // アバター描画ヘルパー
-    const renderAvatar = (avatar: string | undefined) => {
-        const { type, value } = getAvatarDisplay(avatar);
-        if (type === 'image') {
-            return (
-                <img
-                    src={value}
-                    alt={avatar || "Avatar"}
-                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
-                    onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        // Show text fallback instead
-                        const span = document.createElement('span');
-                        span.textContent = avatar?.substring(0, 1) || '?';
-                        e.currentTarget.parentElement?.appendChild(span);
-                    }}
-                />
-            );
-        }
-        return value;
+    // プレイヤーカード（縦長＋名前タグ＋巨大スコア＋キャラ右上）
+    const renderPlayerCard = (
+        player: Player | null,
+        score: number,
+        shocks: number,
+        isActive: boolean,
+        align: 'left' | 'right',
+    ) => {
+        const character = getBoxbomCharacter(player?.avatar);
+
+        return (
+            <div
+                className={`${styles.playerCard} ${align === 'right' ? styles.cardRight : styles.cardLeft} ${isActive ? styles.active : ''}`}
+            >
+                {/* 名前タグ */}
+                <div className={styles.nameTag}>
+                    {player?.name ?? '待機中'}
+                </div>
+
+                {/* キャラ立ち絵（円形アバター） */}
+                <div className={styles.characterIcon}>
+                    {character && (
+                        <div className={styles.characterImageWrap}>
+                            <Image
+                                src={character.image}
+                                alt={character.name}
+                                fill
+                                sizes="112px"
+                                style={{ objectFit: 'cover' }}
+                                unoptimized
+                            />
+                        </div>
+                    )}
+                </div>
+
+                {/* 巨大スコア */}
+                <div className={styles.scoreValue}>{score}</div>
+
+                {/* ハート行 */}
+                <div className={styles.lifeIndicator}>
+                    {[0, 1, 2].map(i => (
+                        <Image
+                            key={i}
+                            src={i < 3 - shocks ? asset('/images/boxbom/heart_on.png') : asset('/images/boxbom/heart_off.png')}
+                            alt={i < 3 - shocks ? 'life' : 'lost'}
+                            width={20}
+                            height={20}
+                            className={styles.lifeHeart}
+                            unoptimized
+                        />
+                    ))}
+                </div>
+            </div>
+        );
     };
 
     return (
-        <div className={`${styles.container} ${getPhaseClass()}`}>
-            {/* Phase Header */}
-            <div className={`${styles.phaseHeader} ${isActionRequired ? styles.actionRequired : ''}`}>
-                {getPhaseDisplayText()}
+        <div className={styles.container}>
+            <div className={styles.topRow}>
+                {renderPlayerCard(player1, p1Score, p1Shocks, isPlayer1Active, 'left')}
+
+                <div className={styles.roundBadge}>
+                    <span className={styles.roundLabel}>ROUND</span>
+                    <span className={styles.roundNumber}>{round}</span>
+                </div>
+
+                {renderPlayerCard(player2, p2Score, p2Shocks, isPlayer2Active, 'right')}
             </div>
 
-            {/* Scores */}
-            <div className={styles.scoreBoard}>
-                {/* Player 1 */}
-                <div className={`${styles.playerScore} ${isPlayer1Active ? styles.active : ''}`}>
-                    <div className={styles.playerContent}>
-                        <div className={styles.avatar}>{renderAvatar(player1?.avatar)}</div>
-                        <div className={styles.playerInfo}>
-                            <span className={styles.playerName}>{player1?.name ?? '待機中'}</span>
-                            <div className={styles.statsRow}>
-                                <span className={styles.scoreValue}>{p1Score}</span>
-                                <div className={styles.lifeIndicator}>
-                                    {[0, 1, 2].map(i => (
-                                        <div key={i} className={`${styles.lifeHeart} ${i >= (3 - p1Shocks) ? styles.lost : ''}`}>❤️</div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Round Info */}
-                <div className={styles.roundInfo}>
-                    <span className={styles.roundLabel}>ROUND</span>
-                    <span className={styles.roundValue}>{round}</span>
-                </div>
-
-                {/* Player 2 */}
-                <div className={`${styles.playerScore} ${styles.player2} ${isPlayer2Active ? styles.active : ''}`}>
-                    <div className={styles.playerContent}>
-                        <div className={styles.avatar}>{renderAvatar(player2?.avatar)}</div>
-                        <div className={styles.playerInfo}>
-                            <span className={styles.playerName}>{player2?.name ?? '待機中'}</span>
-                            <div className={styles.statsRow}>
-                                <span className={styles.scoreValue}>{p2Score}</span>
-                                <div className={styles.lifeIndicator}>
-                                    {[0, 1, 2].map(i => (
-                                        <div key={i} className={`${styles.lifeHeart} ${i >= (3 - p2Shocks) ? styles.lost : ''}`}>❤️</div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div className={`${styles.phaseHeader} ${isActionRequired ? styles.actionRequired : ''}`}>
+                {getPhaseDisplayText()}
             </div>
         </div>
     );

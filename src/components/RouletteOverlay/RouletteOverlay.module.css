@@ -16,7 +16,7 @@
 }
 
 .title {
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'LINE Seed JP', sans-serif;
     color: var(--text-primary);
     margin-bottom: 24px;
     font-size: 1.3rem;
@@ -44,7 +44,7 @@
 }
 
 .name {
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'LINE Seed JP', sans-serif;
     font-size: 2rem;
     font-weight: 700;
     color: var(--text-primary);

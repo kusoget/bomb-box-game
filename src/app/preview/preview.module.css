@@ -1,0 +1,123 @@
+.previewWrap {
+    position: relative;
+    min-height: 100vh;
+}
+
+.debugPanel {
+    position: fixed;
+    bottom: 8px;
+    right: 8px;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    border: 2px solid #FFFF00;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: monospace;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: calc(100vw - 16px);
+}
+
+.debugTitle {
+    font-weight: bold;
+    color: #FFFF00;
+}
+
+.debugRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.debugLabel {
+    opacity: 0.7;
+    font-size: 11px;
+}
+
+.debugSelect {
+    background: #222;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.debugBtn {
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.debugBtn.debugBtnOn {
+    background: #FF2D55;
+    border-color: #FFFF00;
+}
+
+.debugBackBtn {
+    background: #333;
+    color: #FFC72C;
+    border: 1px solid #FFC72C;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 11px;
+    text-decoration: none;
+    margin-left: 6px;
+}
+
+/* 最小化されたフローティングボタン（右下） */
+.debugMini {
+    position: fixed;
+    bottom: 8px;
+    right: 8px;
+    z-index: 9999;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #FFFF00;
+    border: 1px solid rgba(255, 255, 0, 0.6);
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+}
+
+.debugMini:hover {
+    opacity: 1;
+}
+
+/* 展開パネル内のコラプスボタン */
+.debugCollapseBtn {
+    background: transparent;
+    color: #FFFF00;
+    border: 1px solid #FFFF00;
+    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

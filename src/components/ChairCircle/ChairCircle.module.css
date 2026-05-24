@@ -1,141 +1,146 @@
+/* ChairCircle - BOXBOM Design */
 .chairCircle {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
+/* 箱: gameContainer基準のcqwでスケール（@480px max ≈ 86px、@375 ≈ 67px） */
 .chair {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 18cqw;
+    height: 18cqw;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all var(--transition-bouncy);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-origin: center center;
 }
 
 .chair.disabled {
     cursor: default;
-    /* opacity: 0.5; REMOVED per user request */
-    pointer-events: none;
-    /* filter: grayscale(100%); REMOVED per user request */
 }
 
+/* 取り終わった箱: 番号なし、薄暗くディスエーブル表示 */
 .chair.removed {
-    opacity: 0;
-    transform: scale(0.5) rotate(180deg);
     pointer-events: none;
+    opacity: 0.35;
+    filter: grayscale(0.7);
 }
 
-.chairBody {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    background: #FFFFFF;
-    border: 3px solid var(--text-primary);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-bouncy);
-    box-shadow: 4px 4px 0px 0px var(--text-primary);
-}
-
-.chair:hover:not(.disabled):not(.removed) .chairBody {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px 0px var(--text-primary);
-    background: var(--bg-tertiary);
-}
-
-.chair.selected .chairBody {
-    border-color: var(--text-primary);
-    background: var(--pop-purple);
-    transform: scale(1.1) rotate(-5deg);
-    box-shadow: 6px 6px 0px 0px var(--text-primary);
-}
-
-.chair.selected .chairNumber {
-    color: #fff;
-}
-
-/* 非アクティブ時（自分のターンではない）の色 */
-.chair.inactivePurple .chairBody {
-    background: var(--pop-purple);
-    opacity: 0.7;
-}
-
-.chair.inactivePurple .chairNumber {
-    color: #fff;
-}
-
-.chair.inactiveOrange .chairBody {
-    background: var(--pop-orange);
-    opacity: 0.7;
-}
-
-.chair.inactiveOrange .chairNumber {
-    color: #fff;
-}
-
-.chair.trapped .chairBody {
-    border-color: var(--text-primary);
-    background: var(--pop-yellow);
-    /* Warning color */
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0px 0px var(--text-primary);
-}
-
-.chair.trapped .chairNumber {
-    color: var(--text-primary);
-}
-
-.chairNumber {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    /* No shadow */
-}
-
-/* Electric Effect Wire -> Replaced with simple "fuse" or removed */
-.electricWire {
+.chair.removed .chairNumber,
+.chair.removed .selectedIndicator {
     display: none;
 }
 
-/* Shock Animation -> Wiggle */
-.chair.shocking .chairBody {
-    animation: wiggle 0.5s ease-in-out;
-    background: var(--pop-red);
+.boxImageWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.4));
 }
 
-@keyframes wiggle {
+.boxImageWrapper img {
+    object-fit: contain;
+}
 
-    0%,
-    100% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(-10deg);
-    }
-
-    75% {
-        transform: rotate(10deg);
-    }
+.chairNumber {
+    position: relative;
+    z-index: 2;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 6cqw;
+    font-weight: 900;
+    color: #000;
+    line-height: 1;
+    /* 番号は箱の中央上寄り */
+    margin-top: -1cqw;
+    pointer-events: none;
+    user-select: none;
 }
 
 .bombIcon {
     position: absolute;
+    z-index: 3;
+    font-size: 1.8rem;
+    pointer-events: none;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2rem;
+    transform: translate(-50%, -55%);
+}
+
+/* 選択者インジケータ（アバター + 名前を箱の右上に絶対配置） */
+.selectedIndicator {
+    position: absolute;
+    top: -72px;
+    right: -18px;
     z-index: 5;
-    /* Use the new bomb image if possible, but Icon for now needs to be clear */
-    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.2));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    pointer-events: none;
+}
+
+.selectedAvatar {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid #000;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* 選択者の名前タグ */
+.selectedNameTag {
+    background: #000;
+    color: #fff;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 2px solid #fff;
+    white-space: nowrap;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Hover */
+.chair:hover:not(.disabled):not(.removed) {
+    transform: translate(-50%, -50%) scale(1.08);
+}
+
+/* Selected */
+.chair.selected {
+    transform: translate(-50%, -50%) scale(1.15);
+    animation: selectedPulse 1s ease-in-out infinite alternate;
+    z-index: 10;
+}
+
+@keyframes selectedPulse {
+    from {
+        filter: drop-shadow(0 0 4px rgba(255, 255, 0, 0.5));
+    }
+
+    to {
+        filter: drop-shadow(0 0 16px rgba(255, 255, 0, 1));
+    }
+}
+
+/* Shocking (爆発時の揺れ) */
+.chair.shocking {
+    animation: shake 0.15s linear infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(-50%, -50%) translateX(-2px) rotate(-3deg); }
+    50% { transform: translate(-50%, -50%) translateX(2px) rotate(3deg); }
+    100% { transform: translate(-50%, -50%) translateX(-2px) rotate(-3deg); }
 }
 
 /* Center Area */
@@ -144,75 +149,101 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 280px;
-    /* Slightly larger area */
-    height: auto;
-    /* Allow auto height */
-    min-height: 100px;
+    width: 60%;
+    height: 60%;
+    pointer-events: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
-    /* Ensure above chairs */
-    pointer-events: none;
 }
 
 .centerContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-align: center;
     pointer-events: auto;
-    padding: 16px;
-    max-width: 90%;
+    text-align: center;
+    color: #fff;
 }
 
 .centerMainText {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.2rem;
-    /* Adjusted size */
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.4;
-    word-break: break-word;
-    /* Prevent overflow */
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
 }
 
-.centerButton {
+.centerSubText {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 1rem;
     margin-top: 8px;
-    padding: 12px 32px;
-    border-radius: 999px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    border: 3px solid var(--text-primary);
-    transition: all 0.2s var(--transition-bouncy);
-    text-transform: uppercase;
-    box-shadow: 4px 4px 0 var(--text-primary);
-    color: var(--text-primary);
-    background: #fff;
-}
-
-.centerButton:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--text-primary);
-}
-
-.centerButton:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--text-primary);
-}
-
-.centerButton.primary {
-    background: var(--pop-red);
-    /* Decision button usually Red or Green */
     color: #fff;
+    text-shadow: 2px 2px 0 #000;
 }
 
-.centerButton.danger {
-    background: var(--pop-red);
+/* 中央のキャラ立ち絵 + 名前タグ */
+.centerCharacter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.centerCharacter img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    filter: drop-shadow(3px 3px 0 #000);
+    animation: bounceY 1.4s ease-in-out infinite;
+}
+
+@keyframes bounceY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.centerCharacterTag {
+    background: #000;
     color: #fff;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 3px 12px;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* 選択中の巨大番号 */
+.centerNumber {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 8rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow:
+        4px 4px 0 #000,
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000;
+    line-height: 1;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    .centerNumber {
+        font-size: 6rem;
+    }
+
+    .centerMainText {
+        font-size: 2.2rem;
+    }
 }

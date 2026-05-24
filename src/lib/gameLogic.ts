@@ -198,9 +198,45 @@ export function getRandomAvatar(excludeAvatar?: string): string {
     return available[Math.floor(Math.random() * available.length)];
 }
 
-// アバターコードから表示文字を取得するヘルパー（絵文字モード）
+// BOXBOM キャラクター定義
+export interface BoxbomCharacter {
+    id: string;
+    name: string;
+    image: string;       // 通常時の立ち絵
+    themeColor: string;  // スコアカード背景色
+}
+
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
+export const BOXBOM_CHARACTERS: BoxbomCharacter[] = [
+    {
+        id: 'kirarin',
+        name: 'キラリン',
+        image: `${BASE_PATH}/images/boxbom/kirarin.png`,
+        themeColor: '#9b59b6', // 紫
+    },
+    {
+        id: 'ponyu',
+        name: 'ボニュ',
+        image: `${BASE_PATH}/images/boxbom/ponyu.png`,
+        themeColor: '#FF2D55', // ピンク
+    },
+];
+
+export function getBoxbomCharacter(id: string | undefined | null): BoxbomCharacter | null {
+    if (!id) return null;
+    return BOXBOM_CHARACTERS.find(c => c.id === id) ?? null;
+}
+
+// アバターコードから表示文字を取得するヘルパー（絵文字モード + BOXBOM画像対応）
 export function getAvatarDisplay(avatarCode: string | undefined | null): { type: 'image' | 'text', value: string } {
     if (!avatarCode) return { type: 'text', value: '?' };
+
+    // BOXBOM キャラ
+    const boxbomChar = getBoxbomCharacter(avatarCode);
+    if (boxbomChar) {
+        return { type: 'image', value: boxbomChar.image };
+    }
 
     // 絵文字マッピング
     const emojiMap: Record<string, string> = {

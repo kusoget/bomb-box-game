@@ -52,8 +52,6 @@ export default function ElectricEffect({
                 ))}
             </div>
 
-            {/* テキスト */}
-            <div className={styles.shockText}>💥 BOOM! 💥</div>
         </div>
     );
 }

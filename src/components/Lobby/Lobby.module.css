@@ -21,7 +21,7 @@
 }
 
 .title {
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'LINE Seed JP', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -60,7 +60,7 @@
 }
 
 .roomCodeValue {
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'LINE Seed JP', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);

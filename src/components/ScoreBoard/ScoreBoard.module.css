@@ -1,223 +1,288 @@
+/* ScoreBoard - BOXBOM v6: 375px設計をcqwで全体スケール */
+/* 375px超ではmax-widthで止まる、それ以下はcqwで全体比例スケール */
 .container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     width: 100%;
-    /* Default background for unified block */
-    background: var(--bg-secondary);
-    border-bottom: 3px solid var(--text-primary);
-    transition: background 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 375px;
+    margin: 0 auto;
+    z-index: 50;
+    position: relative;
+    container-type: inline-size;
 }
 
-/* Phase specifics applied to container */
-.phaseAction {
-    /* Example: light accent color when action needed */
-    background: #fff;
-}
-
-.phaseWait {
-    /* Dimmed or default */
-    background: var(--bg-secondary);
-}
-
-.phaseHeader {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
-    text-align: center;
-    width: 100%;
-    padding: 8px 16px 4px 16px;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-}
-
-/* アクション待ちの時のアニメーション - ゆっくり点滅 + 青色 */
-.phaseHeader.actionRequired {
-    color: var(--pop-blue);
-    animation: blinkText 1.2s ease-in-out infinite;
-}
-
-@keyframes blinkText {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.4;
-    }
-}
-
-/* ... middle ... */
-
-.scoreBoard {
+.topRow {
+    position: relative;
     display: flex;
+    align-items: stretch;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 0 16px 8px 16px;
-    /* Top padding 0 to merge, Bottom padding added */
-    background: transparent;
-    border: none;
-    width: 100%;
-    gap: 8px;
+    padding: 2.13cqw 2.13cqw 0;
+    gap: 17cqw;
 }
 
-/* Compact Player Layout */
-.playerScore {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    background: transparent;
-    padding: 2px;
-}
-
-/* Compact Player Layout: Transparent & Header-Attached */
-.playerContent {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
+/* Player Card - 159x109 / 角丸20 / 黒border3 / 左右±2deg */
+.playerCard {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 29.07cqw;
+    border: 0.8cqw solid #000;
+    border-radius: 5.33cqw;
+    box-shadow: 0.8cqw 0.8cqw 0 #000;
     padding: 0;
+    background: #FA568B;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cardLeft {
+    transform: rotate(-2deg);
+}
+
+.cardRight {
+    background: #703BAC;
+    transform: rotate(2deg);
+}
+
+.cardLeft.active {
+    transform: rotate(-2deg);
+    box-shadow: 1.2cqw 1.2cqw 0 #000;
+}
+
+.cardRight.active {
+    transform: rotate(2deg);
+    box-shadow: 1.2cqw 1.2cqw 0 #000;
+}
+
+/* 名前タグ：18px / 白文字+8方向黒ストローク */
+.nameTag {
+    position: absolute;
+    top: 2.13cqw;
+    z-index: 5;
+    background: transparent;
+    color: #fff;
     border: none;
-    box-shadow: none;
-    border-radius: 0;
-}
-
-.playerInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
+    padding: 0;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 4.8cqw;
+    font-weight: 900;
     line-height: 1;
-}
-
-.statsRow {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 2px;
-}
-
-/* Player 2 Mirrored */
-.playerScore.player2 .playerContent {
-    flex-direction: row-reverse;
-}
-
-.playerScore.player2 .playerInfo {
-    align-items: flex-end;
-}
-
-.playerScore.player2 .statsRow {
-    flex-direction: row-reverse;
-}
-
-.avatar {
-    width: 36px;
-    height: 36px;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-secondary);
-    border-radius: 50%;
-    border: 2px solid var(--text-primary);
-    flex-shrink: 0;
-}
-
-.playerName {
-    font-family: 'Quicksand', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    max-width: 80px;
+    letter-spacing: 0.02em;
+    text-shadow:
+        0.53cqw 0.53cqw 0 #000,
+        -0.53cqw -0.53cqw 0 #000,
+        0.53cqw -0.53cqw 0 #000,
+        -0.53cqw 0.53cqw 0 #000,
+        0 0.53cqw 0 #000,
+        0.53cqw 0 0 #000,
+        0 -0.53cqw 0 #000,
+        -0.53cqw 0 0 #000;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: 60%;
+    box-shadow: none;
 }
 
+.cardLeft .nameTag {
+    right: 3.2cqw;
+    text-align: right;
+}
+
+.cardRight .nameTag {
+    left: 3.2cqw;
+    text-align: left;
+}
+
+/* キャラ装飾円: 88x88 / 黒外枠 + 白内リング + ベースカラー塗り。カード下寄せ */
+.characterIcon {
+    position: absolute;
+    bottom: 0;
+    width: 23.47cqw;
+    height: 23.47cqw;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: 50%;
+    border: 0.8cqw solid #000;
+    background: #FC78A2;
+    box-shadow:
+        inset 0 0 0 0.8cqw #fff,
+        0.53cqw 0.53cqw 0 rgba(0, 0, 0, 0.4);
+}
+
+.cardRight .characterIcon {
+    background: #A969DC;
+}
+
+.cardLeft .characterIcon {
+    left: -2.13cqw;
+}
+
+.cardRight .characterIcon {
+    right: -2.13cqw;
+}
+
+/* シャープな（ぼかしなし）インナーシャドー */
+.characterIcon::after {
+    content: '';
+    position: absolute;
+    inset: 0.8cqw;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 3;
+    box-shadow: inset 0 -5.6cqw 0 #F45084;
+}
+
+.cardRight .characterIcon::after {
+    box-shadow: inset 0 -5.6cqw 0 #984ECA;
+}
+
+/* キャラ画像: 背景円と同じサイズで円形マスク、シャドーの上に重ねる */
+.characterImageWrap {
+    position: absolute;
+    inset: 0.8cqw;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 4;
+}
+
+.characterImageWrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* スコア: 40px / 白文字+太い黒縁+黒影 */
 .scoreValue {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    position: absolute;
+    top: 7.5cqw;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 10.67cqw;
+    font-weight: 900;
+    line-height: 1;
+    color: #fff;
+    text-shadow:
+        0.8cqw 0.8cqw 0 #000,
+        -0.6cqw -0.6cqw 0 #000,
+        0.6cqw -0.6cqw 0 #000,
+        -0.6cqw 0.6cqw 0 #000,
+        0 0.6cqw 0 #000,
+        0.6cqw 0 0 #000,
+        0 -0.6cqw 0 #000,
+        -0.6cqw 0 0 #000;
+    z-index: 5;
 }
 
-/* Override text color... (Removed comment) */
+.cardLeft .scoreValue {
+    right: 3.2cqw;
+}
 
+.cardRight .scoreValue {
+    left: 3.2cqw;
+}
+
+/* Hearts: 26px / カード下部、キャラと反対側 */
 .lifeIndicator {
+    position: absolute;
+    bottom: 1.6cqw;
     display: flex;
-    gap: 2px;
-    margin-top: 2px;
+    gap: 0.8cqw;
+    z-index: 5;
+}
+
+.cardLeft .lifeIndicator {
+    right: 2.67cqw;
+}
+
+.cardRight .lifeIndicator {
+    left: 2.67cqw;
 }
 
 .lifeHeart {
-    font-size: 0.8rem;
-    /* Smaller hearts */
-    transition: all var(--transition-normal);
-    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.2));
+    width: 6.93cqw !important;
+    height: 6.93cqw !important;
+    object-fit: contain;
+    filter: drop-shadow(0.3cqw 0.3cqw 0 rgba(0, 0, 0, 0.6));
 }
 
-.lifeHeart.lost {
-    opacity: 0.2;
-    filter: grayscale(100%);
-    transform: scale(0.8);
-}
-
-/* Round Info (Center) */
-.roundInfo {
+/* Round Display: カードの後ろに重なる位置（角丸の角はカードに隠れる） */
+.roundBadge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    flex-shrink: 0;
-    min-width: 60px;
+    background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.05) 1.4px, transparent 1.6px) 0 0 / 6px 6px,
+        #111;
+    border: 0.8cqw solid #000;
+    border-radius: 3.2cqw;
+    padding: 1.2cqw 0.4cqw;
+    width: 22cqw;
+    height: 22cqw;
+    z-index: 1;
 }
 
 .roundLabel {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
-}
-
-.roundValue {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 2.93cqw;
+    font-weight: 900;
+    color: #FFEB3B;
     line-height: 1;
+    letter-spacing: 0.03em;
 }
 
-@media (max-width: 600px) {
-    .phaseHeader {
-        font-size: 1.2rem;
-        padding: 8px 16px;
-        /* Even smaller header */
+.roundNumber {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 9.6cqw;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    margin-top: 1.6cqw;
+}
+
+/* Phase Header (Yellow Bar) - 傾いたスタンプ風、巨大テキスト */
+.phaseHeader {
+    width: 120%;
+    margin-left: -10%;
+    background: #FFE600;
+    border-top: 0.8cqw solid #000;
+    border-bottom: 0.8cqw solid #000;
+    padding: 4.27cqw 0;
+    margin-top: 3.2cqw;
+    text-align: center;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 6.4cqw;
+    font-weight: 900;
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    transform: rotate(-3.5deg);
+    box-shadow: 0 1.2cqw 0 rgba(0, 0, 0, 0.25);
+    letter-spacing: 0.02em;
+}
+
+.phaseHeader.actionRequired {
+    animation: phasePulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes phasePulse {
+    from {
+        background: #FFE600;
+        transform: rotate(-3.5deg);
     }
 
-    .scoreValue {
-        font-size: 1.2rem;
-    }
-
-    .avatar {
-        width: 32px;
-        height: 32px;
-        font-size: 1rem;
-    }
-
-    .scoreBoard {
-        padding: 2px 8px;
-        /* Tighter padding on mobile */
+    to {
+        background: #FFD700;
+        transform: rotate(-3.5deg) scale(1.02);
     }
 }
