@@ -132,7 +132,7 @@ export default function RoomPage() {
         if (!playerId) {
             return (
                 <div className={styles.error}>
-                    <h2 style={{ color: 'var(--neon-orange)' }}>ゲーム進行中</h2>
+                    <h2>ゲーム進行中</h2>
                     <p>
                         現在ゲームが進行中のため、途中参加はできません。<br />
                         （ブラウザを閉じたりリロードすると復帰できない場合があります）

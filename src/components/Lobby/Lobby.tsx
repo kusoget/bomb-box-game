@@ -22,14 +22,6 @@ export default function Lobby({
     onStartGame,
     onLeaveRoom,
 }: LobbyProps) {
-    console.log('[Lobby] Render:', {
-        roomId: room.id,
-        hostId: room.hostId,
-        playerId: currentPlayerId,
-        isHost,
-        playersCount: players.length
-    });
-
     const [copied, setCopied] = useState(false);
     const [urlCopied, setUrlCopied] = useState(false);
 

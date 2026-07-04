@@ -4,12 +4,21 @@
 .resultOverlay {
     position: fixed;
     inset: 0;
-    z-index: 200;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     animation: fadeIn 0.25s ease;
+}
+
+/* 不透明な下地（explosion.png / bg_safe.png は透過のため背景色を敷く） */
+.boomBg {
+    background: radial-gradient(circle at 50% 38%, #3a0f1a 0%, #14060a 70%, #000 100%);
+}
+
+.safeBg {
+    background: radial-gradient(circle at 50% 40%, #4ef0a0 0%, #16c98a 60%, #0c9d6b 100%);
 }
 
 @keyframes fadeIn {

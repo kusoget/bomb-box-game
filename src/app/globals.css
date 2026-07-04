@@ -23,6 +23,12 @@
   --pop-purple: #9b59b6;
   --pop-blue: #0984e3;
   --pop-red: #d63031;
+  --pop-orange: #FF8C42;
+  /* P2 turn / warm accent */
+  --pop-green: #2BB673;
+  --pop-cyan: #5EEAD4;
+  --pop-dark: #1A1A1A;
+  --text-muted: #6B7280;
 
   /* --- UI TOKENS --- */
   /* Borders */

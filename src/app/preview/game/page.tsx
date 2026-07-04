@@ -165,10 +165,12 @@ function GamePreviewInner() {
             )}
 
             <GameBoard
+                key={`${scenario}-${viewer}`}
                 gameState={baseState}
                 player1={PLAYER1}
                 player2={PLAYER2}
                 currentPlayerId={currentPlayerId}
+                autoAdvanceReveal={false}
                 messages={messages}
                 onSetTrap={() => { /* noop */ }}
                 onSelectChair={() => { /* noop */ }}

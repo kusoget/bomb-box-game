@@ -25,6 +25,8 @@ interface GameBoardProps {
     onNextRound: () => void;
     onSendMessage: (message: string) => void;
     onBackToHome: () => void;
+    // プレビュー用: false にすると結果演出(revealing)を自動で送らず保持する
+    autoAdvanceReveal?: boolean;
 }
 
 export default function GameBoard({
@@ -38,9 +40,17 @@ export default function GameBoard({
     onNextRound,
     onSendMessage,
     onBackToHome,
+    autoAdvanceReveal = true,
 }: GameBoardProps) {
     const [isShocking, setIsShocking] = useState(false);
-    const [revealResult, setRevealResult] = useState<{ safe: boolean; points: number } | null>(null);
+    // 初期マウント時に既に revealing なら結果を即時算出（SSR/プレビューでも表示できるように）
+    const [revealResult, setRevealResult] = useState<{ safe: boolean; points: number } | null>(() => {
+        if (gameState.phase === 'revealing') {
+            const sel = gameState.chairs.find(c => c.id === gameState.selectedChair);
+            return { safe: !!(sel && !sel.isTrapped), points: sel?.id ?? 0 };
+        }
+        return null;
+    });
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
@@ -70,12 +80,15 @@ export default function GameBoard({
                 points: selectedChair?.id ?? 0,
             });
 
-            revealTimerRef.current = setTimeout(() => {
-                setIsShocking(false);
-                setRevealResult(null);
-                onNextRound();
-                revealTimerRef.current = null;
-            }, 2000);
+            // プレビューでは自動送りせず演出を保持する
+            if (autoAdvanceReveal) {
+                revealTimerRef.current = setTimeout(() => {
+                    setIsShocking(false);
+                    setRevealResult(null);
+                    onNextRound();
+                    revealTimerRef.current = null;
+                }, 2000);
+            }
         }
 
         if (gameState.phase !== 'revealing') {
@@ -85,7 +98,7 @@ export default function GameBoard({
                 revealTimerRef.current = null;
             }
         }
-    }, [gameState.phase, gameState.chairs, gameState.selectedChair, onNextRound]);
+    }, [gameState.phase, gameState.chairs, gameState.selectedChair, onNextRound, autoAdvanceReveal]);
 
     // フェーズ遷移トースト
     useEffect(() => {
