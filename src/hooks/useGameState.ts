@@ -147,7 +147,7 @@ export function useGameState({ roomCode, playerId }: UseGameStateProps): UseGame
         if (!room || !gameState) return;
 
         try {
-            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '';
             const res = await fetch(`${apiPath}/api/game`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -310,7 +310,7 @@ export function useGameState({ roomCode, playerId }: UseGameStateProps): UseGame
         const initialState = createInitialGameState(room.id, players[0].id, players[1].id);
 
         try {
-            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '';
             await fetch(`${apiPath}/api/game`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -399,7 +399,7 @@ export function useGameState({ roomCode, playerId }: UseGameStateProps): UseGame
         if (!player) return;
 
         try {
-            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '';
             await fetch(`${apiPath}/api/game`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -419,7 +419,7 @@ export function useGameState({ roomCode, playerId }: UseGameStateProps): UseGame
         if (!room) return;
 
         try {
-            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '/bomb-box-game';
+            const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '';
             await fetch(`${apiPath}/api/game`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
