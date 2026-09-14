@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BOXBOM 💥
 
-## Getting Started
+12個の箱から爆弾を避けろ！ 2人対戦のオンライン心理戦ゲーム。
 
-First, run the development server:
+Cloudflare Workers + Durable Objects の上で完結しているので、外部のデータベースも
+常時起動のサーバーも不要。無料プランのまま放置しても遊べなくならない。
+
+## セットアップ
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 開発
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+UI だけ触る場合（HMR あり）:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev:api   # ターミナル1: API / WebSocket (wrangler dev, :8787)
+npm run dev       # ターミナル2: UI (next dev, :3000)
+```
 
-## Learn More
+本番と同じ構成をまとめて確認する場合:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run preview   # next build → wrangler dev。http://localhost:8787
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## デプロイ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+初回のみ Cloudflare にログインする:
 
-## Deploy on Vercel
+```bash
+npx wrangler login
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+あとは:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run deploy
+```
+
+`https://boxbom.<アカウント名>.workers.dev` で公開される。
+独自ドメインを使う場合は `wrangler.jsonc` に `routes` を追加する。
+
+## 構成
+
+- `src/` … Next.js（静的書き出し）。画面とゲームUI
+- `worker/` … Cloudflare Worker。API・WebSocket・静的アセット配信
+- `worker/room.ts` … ルーム1つ = Durable Object 1つ。ゲームの正本となる状態はここにだけ存在する
+
+詳しい設計方針は [CLAUDE.md](./CLAUDE.md) を参照。

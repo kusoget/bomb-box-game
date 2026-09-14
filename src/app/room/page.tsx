@@ -1,32 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useGameState } from '@/hooks/useGameState';
 import Lobby from '@/components/Lobby/Lobby';
 import GameBoard from '@/components/GameBoard/GameBoard';
 import styles from './page.module.css';
 
-export default function RoomPage() {
-    const params = useParams();
+function RoomContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const roomCode = params.code as string;
+    const roomCode = (searchParams.get('code') ?? '').toUpperCase();
 
     const [playerId, setPlayerId] = useState<string>('');
     const [isClient, setIsClient] = useState(false);
 
-
-
-
     useEffect(() => {
-        setIsClient(true);
-
         // 再参加フラグがある場合はセッションを無視（クリア）して選択画面へ
         const isRejoin = searchParams.get('rejoin');
         if (isRejoin) {
             sessionStorage.removeItem('playerId');
             sessionStorage.removeItem('playerName');
+            setIsClient(true);
             return;
         }
 
@@ -34,6 +29,7 @@ export default function RoomPage() {
         if (storedPlayerId) {
             setPlayerId(storedPlayerId);
         }
+        setIsClient(true);
     }, [searchParams]);
 
     const {
@@ -51,17 +47,16 @@ export default function RoomPage() {
         nextRound,
         sendMessage,
         leaveRoom,
-    } = useGameState({ roomCode, playerId });
+    } = useGameState({ roomCode, playerId, ready: isClient });
 
     // プレイヤー検証 & リダイレクト制御
     useEffect(() => {
-        // ロード完了後
         if (!loading && room) {
             // 1. セッション切れのプレイヤーIDが残っている場合は削除
             if (playerId && players.length > 0 && !players.some(p => p.id === playerId)) {
                 sessionStorage.removeItem('playerId');
                 sessionStorage.removeItem('playerName');
-                setPlayerId(''); // stateもクリア
+                setPlayerId('');
                 return;
             }
 
@@ -71,14 +66,12 @@ export default function RoomPage() {
                 return;
             }
 
-            // 3. ゲーム中だがセッションがない場合 -> 参加不可（観戦モード的なものがないならエラー）
-            // "Strict Mode": 再入場不可
-            // リダイレクト等はしないが、レンダリング側で弾く
+            // 3. ゲーム中だがセッションがない場合は下のレンダリング側で弾く
         }
     }, [loading, room, players, playerId, roomCode, router]);
 
-    const handleLeaveRoom = async () => {
-        await leaveRoom();
+    const handleLeaveRoom = () => {
+        leaveRoom();
         sessionStorage.removeItem('playerId');
         sessionStorage.removeItem('playerName');
         router.push('/');
@@ -92,6 +85,17 @@ export default function RoomPage() {
 
     if (!isClient) {
         return null;
+    }
+
+    if (!roomCode) {
+        return (
+            <div className={styles.error}>
+                <h2>ルームコードがありません</h2>
+                <button className={styles.homeButton} onClick={() => router.push('/')}>
+                    ホームに戻る
+                </button>
+            </div>
+        );
     }
 
     if (loading) {
@@ -119,6 +123,7 @@ export default function RoomPage() {
         return (
             <div className={styles.error}>
                 <h2>ルームが見つかりません</h2>
+                <p>ルームの有効期限が切れたか、ホストが退出した可能性があります。</p>
                 <button className={styles.homeButton} onClick={() => router.push('/')}>
                     ホームに戻る
                 </button>
@@ -174,5 +179,13 @@ export default function RoomPage() {
             onStartGame={startGame}
             onLeaveRoom={handleLeaveRoom}
         />
+    );
+}
+
+export default function RoomPage() {
+    return (
+        <Suspense fallback={null}>
+            <RoomContent />
+        </Suspense>
     );
 }

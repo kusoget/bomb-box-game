@@ -1,29 +1,30 @@
 {
-  "name": "bomb-box-game",
+  "name": "boxbom",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:api": "wrangler dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "preview": "next build && wrangler dev",
+    "deploy": "next build && wrangler deploy",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p worker"
   },
   "dependencies": {
     "@fontsource/line-seed-jp": "^5.2.2",
-    "@supabase/supabase-js": "^2.93.3",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "uuid": "^13.0.0"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260911.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "typescript": "^5",
-    "vercel": "^50.9.6"
+    "wrangler": "^4.131.1"
   }
 }

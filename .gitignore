@@ -32,9 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.development
 
-# vercel
-.vercel
+# cloudflare
+.wrangler
+
+# claude code (ローカル設定)
+.claude/settings.local.json
 
 # typescript
 *.tsbuildinfo

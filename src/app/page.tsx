@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { apiUrl, roomPath } from '@/lib/api';
 import styles from './page.module.css';
 
 function HomeContent() {
@@ -25,15 +26,14 @@ function HomeContent() {
   const fetchHostInfo = async (code: string) => {
     try {
       setLoading(true);
-      const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-      const res = await fetch(`${apiPath}/api/rooms?code=${code}`);
+      const res = await fetch(apiUrl(`/api/rooms?code=${code}`));
       if (res.ok) {
         const data = await res.json();
 
         // すでにゲーム中または終了している場合は、
         // 復帰（Reconnection）画面を表示するために直接ルームへ飛ばす
         if (data.status === 'playing' || data.status === 'finished') {
-          router.push(`/room/${data.roomCode}`);
+          router.push(roomPath(data.roomCode));
           return;
         }
 
@@ -60,9 +60,7 @@ function HomeContent() {
     setError('');
 
     try {
-      // APIコールのパスを修正（basePath対応）
-      const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-      const res = await fetch(`${apiPath}/api/rooms`, {
+      const res = await fetch(apiUrl('/api/rooms'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playerName: playerName.trim() }),
@@ -78,7 +76,7 @@ function HomeContent() {
       sessionStorage.setItem('playerId', data.playerId);
       sessionStorage.setItem('playerName', playerName.trim());
 
-      router.push(`/room/${data.roomCode}`);
+      router.push(roomPath(data.roomCode));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'エラーが発生しました');
       setLoading(false);
@@ -99,9 +97,7 @@ function HomeContent() {
     setError('');
 
     try {
-      // APIコールのパスを修正（basePath対応）
-      const apiPath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-      const res = await fetch(`${apiPath}/api/rooms`, {
+      const res = await fetch(apiUrl('/api/rooms'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -120,7 +116,7 @@ function HomeContent() {
       sessionStorage.setItem('playerId', data.playerId);
       sessionStorage.setItem('playerName', playerName.trim());
 
-      router.push(`/room/${data.roomCode}`);
+      router.push(roomPath(data.roomCode));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'エラーが発生しました');
       setLoading(false);
