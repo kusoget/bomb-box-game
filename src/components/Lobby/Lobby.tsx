@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { Player, Room } from '@/types/game';
 import { getAvatarDisplay } from '@/lib/gameLogic';
-import { asset } from '@/lib/assets';
 import { roomPath, shareUrl } from '@/lib/api';
 import { copyText } from '@/lib/clipboard';
 import WatchShare from '@/components/WatchShare/WatchShare';
@@ -57,17 +55,44 @@ export default function Lobby({
         return <span className={styles.avatarText}>{value}</span>;
     };
 
+    const renderSlot = (player: Player | undefined) => (
+        <div className={`${styles.playerSlot} ${player ? styles.filled : styles.empty}`}>
+            {player ? (
+                <>
+                    <div className={styles.playerAvatar}>{renderAvatar(player.avatar)}</div>
+                    <div className={styles.playerInfo}>
+                        <div className={styles.playerName}>{player.name}</div>
+                        <div className={styles.playerBadges}>
+                            {player.id === room.hostId && <span className={styles.hostBadge}>ホスト</span>}
+                            {player.id === currentPlayerId && <span className={styles.youBadge}>あなた</span>}
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className={`${styles.playerAvatar} ${styles.waitingAvatar}`}>?</div>
+                    <div className={styles.playerInfo}>
+                        <div className={styles.waitingText}>待機中...</div>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+
     return (
         <div className={`${styles.lobby} boxbom-lobby-screen`}>
             <div className={`card ${styles.lobbyCard}`}>
-                <h1 className={styles.title}>
-                    <Image src={asset('/images/boxbom/logo-v3.png')} alt="BOXBOM" width={515} height={191} className={styles.titleLogo} priority unoptimized />
-                </h1>
-                <p className={styles.subtitle}>
-                    {spectator ? '👀 観戦モード：対戦開始を待っています...' : '対戦相手を待っています...'}
-                </p>
+                {/* 対戦カード（いちばん上） */}
+                <div className={styles.playersList}>
+                    {renderSlot(players[0])}
+                    <span className={styles.vs}>VS</span>
+                    {renderSlot(players[1])}
+                </div>
 
-                <div className={styles.ruleBadges}>
+                <div className={styles.statusRow}>
+                    <span className={styles.subtitle}>
+                        {spectator ? '👀 観戦モード：開始待ち' : canStart ? '対戦相手がそろいました！' : '対戦相手を待っています...'}
+                    </span>
                     <span className={styles.ruleBadge}>🎯 {room.rules?.targetScore ?? 40}点先取</span>
                     {room.rules?.maxShocks === 1 && (
                         <span className={`${styles.ruleBadge} ${styles.ruleBadgeDanger}`}>💀 一撃必殺</span>
@@ -75,79 +100,23 @@ export default function Lobby({
                 </div>
 
                 {!spectator && (
-                <div className={styles.roomCode}>
-                    <div className={styles.roomCodeLabel}>ルームコード</div>
-                    <div className={styles.roomCodeValue}>{room.roomCode}</div>
-
-                    <div className={styles.copyButtons}>
-                        <button
-                            className={`${styles.copyButton} ${styles.codeButton}`}
-                            onClick={copyRoomCode}
-                        >
-                            {copied ? '✓ コードをコピー' : 'コードをコピー'}
-                        </button>
-                        <button
-                            className={`${styles.copyButton} ${styles.urlButton}`}
-                            onClick={copyInviteUrl}
-                        >
-                            {urlCopied ? '✓ URLをコピー' : '招待URLをコピー'}
-                        </button>
+                    <div className={styles.roomCode}>
+                        <div className={styles.roomCodeLabel}>ルームコード</div>
+                        <div className={styles.roomCodeValue}>{room.roomCode}</div>
+                        <div className={styles.copyButtons}>
+                            <button className={`${styles.copyButton} ${styles.codeButton}`} onClick={copyRoomCode}>
+                                {copied ? '✓ コピーしました' : 'コードをコピー'}
+                            </button>
+                            <button className={`${styles.copyButton} ${styles.urlButton}`} onClick={copyInviteUrl}>
+                                {urlCopied ? '✓ コピーしました' : '招待URLをコピー'}
+                            </button>
+                        </div>
                     </div>
-                    {(copied || urlCopied) && <div className={styles.copySuccess}>クリップボードにコピーしました</div>}
-                </div>
                 )}
 
                 {room.watchTokens && (
-                    <WatchShare roomCode={room.roomCode} tokens={room.watchTokens} spectatorCount={spectatorCount} />
+                    <WatchShare roomCode={room.roomCode} tokens={room.watchTokens} spectatorCount={spectatorCount} compact />
                 )}
-
-                {/* プレイヤー一覧 */}
-                <div className={styles.playersSection}>
-                    <div className={styles.sectionTitle}>プレイヤー</div>
-                    <div className={styles.playersList}>
-                        {/* Player 1 */}
-                        <div className={`${styles.playerSlot} ${players[0] ? styles.filled : styles.empty}`}>
-                            {players[0] ? (
-                                <>
-                                    <div className={styles.playerAvatar}>{renderAvatar(players[0].avatar)}</div>
-                                    <div className={styles.playerName}>{players[0].name}</div>
-                                    {players[0].id === room.hostId && (
-                                        <span className={styles.hostBadge}>ホスト</span>
-                                    )}
-                                    {players[0].id === currentPlayerId && (
-                                        <span className={styles.youBadge}>あなた</span>
-                                    )}
-                                </>
-                            ) : (
-                                <>
-                                    <div className={styles.waitingDots}>...</div>
-                                    <div className={styles.waitingText}>待機中</div>
-                                </>
-                            )}
-                        </div>
-
-                        {/* Player 2 */}
-                        <div className={`${styles.playerSlot} ${players[1] ? styles.filled : styles.empty}`}>
-                            {players[1] ? (
-                                <>
-                                    <div className={styles.playerAvatar}>{renderAvatar(players[1].avatar)}</div>
-                                    <div className={styles.playerName}>{players[1].name}</div>
-                                    {players[1].id === room.hostId && (
-                                        <span className={styles.hostBadge}>ホスト</span>
-                                    )}
-                                    {players[1].id === currentPlayerId && (
-                                        <span className={styles.youBadge}>あなた</span>
-                                    )}
-                                </>
-                            ) : (
-                                <>
-                                    <div className={styles.waitingDots}>...</div>
-                                    <div className={styles.waitingText}>待機中</div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
 
                 {/* アクション */}
                 <div className={styles.actions}>

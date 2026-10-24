@@ -69,3 +69,37 @@
     font-weight: 700;
     opacity: 0.85;
 }
+
+/* ロビー用: 横3列でコンパクトに */
+.compact {
+    margin-top: 0;
+    padding: 8px 10px 10px;
+}
+
+.compact .title {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+}
+
+.compact .modes {
+    flex-direction: row;
+    gap: 6px;
+}
+
+.compact .mode {
+    flex: 1;
+    min-width: 0;
+    align-items: center;
+    padding: 6px 4px;
+    text-align: center;
+}
+
+.compact .label {
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.compact .note {
+    font-size: 0.62rem;
+    white-space: nowrap;
+}

@@ -1,214 +1,79 @@
 .lobby {
-    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    /* globals の safe-area padding を上書きしないよう、上下は env() 込みで指定する */
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
 }
 
 .lobbyCard {
     width: 100%;
-    max-width: 500px;
-    /* Keep max-width for PC but allow full width on mobile */
+    max-width: 460px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     text-align: center;
-    /* Removed Card Styling (Background, Border, Shadow) */
     background: transparent;
     border: none;
     box-shadow: none;
     padding: 0;
 }
 
-.title {
-    font-family: 'LINE Seed JP', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.titleLogo {
-    display: block;
-    width: min(94%, 328px);
-    height: auto;
-}
-
-.subtitle {
-    font-family: 'Quicksand', sans-serif;
-    color: var(--pop-purple);
-    margin-bottom: 24px;
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-.ruleBadges {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.ruleBadge {
-    font-weight: 800;
-    font-size: 0.85rem;
-    color: var(--text-primary);
-    background: var(--pop-yellow);
-    border: 2px solid var(--text-primary);
-    border-radius: var(--border-radius);
-    box-shadow: 2px 2px 0 var(--text-primary);
-    padding: 6px 12px;
-    white-space: nowrap;
-}
-
-.ruleBadgeDanger {
-    background: var(--pop-red);
-    color: #fff;
-}
-
-.roomCode {
-    background: #fff;
-    border: 3px dashed var(--text-primary);
-    border-radius: var(--border-radius-lg);
-    padding: 20px;
-    margin-bottom: 32px;
-    box-shadow: inset 4px 4px 0 rgba(0, 0, 0, 0.05);
-}
-
-.roomCodeLabel {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
-}
-
-.roomCodeValue {
-    font-family: 'LINE Seed JP', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: 0.2em;
-}
-
-.copyButtons {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    width: 100%;
-    margin-top: 24px;
-}
-
-/* Base button style override within lobby */
-.copyButton {
-    min-width: 140px;
-    font-size: 0.85rem;
-    padding: 10px 16px;
-    border: 2px solid var(--text-primary);
-    box-shadow: 2px 2px 0 var(--text-primary);
-    border-radius: var(--border-radius);
-    color: var(--text-primary);
-    background: #fff;
-    font-weight: 700;
-    transition: all var(--transition-fast);
-}
-
-.copyButton:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 3px 3px 0 var(--text-primary);
-}
-
-.copyButton:active {
-    transform: translate(1px, 1px);
-    box-shadow: 1px 1px 0 var(--text-primary);
-}
-
-.urlButton {
-    background: var(--pop-purple);
-    color: #fff;
-}
-
-.copyButton.codeButton {
-    /* Assuming I might add a class or just override here if needed, 
-       but for now standard copy button defaults to white or specific color */
-    background: var(--pop-cyan);
-    color: var(--text-primary);
-}
-
-.copySuccess {
-    color: var(--pop-green);
-    font-weight: 700;
-    font-size: 0.85rem;
-    margin-top: 12px;
-}
-
-.playersSection {
-    margin-bottom: 32px;
-}
-
-.sectionTitle {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 16px;
-}
-
+/* ---- 対戦カード（いちばん上） ---- */
 .playersList {
     display: flex;
-    justify-content: center;
-    gap: 24px;
+    align-items: center;
+    gap: 6px;
+}
+
+.vs {
+    flex: none;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--pop-red);
+    text-shadow: 1px 1px 0 var(--text-primary);
 }
 
 .playerSlot {
+    flex: 1;
+    min-width: 0;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 20px 24px;
+    gap: 8px;
+    padding: 8px;
     background: #fff;
     border: 3px solid var(--text-primary);
-    border-radius: var(--border-radius);
-    min-width: 130px;
-    box-shadow: 4px 4px 0 var(--text-primary);
-    transition: all 0.3s ease;
-}
-
-.playerSlot.filled {
-    /* Pop style filled state */
-    transform: rotate(-2deg);
-}
-
-.playerSlot.filled:last-child {
-    transform: rotate(2deg);
+    border-radius: 16px;
+    box-shadow: 3px 3px 0 var(--text-primary);
 }
 
 .playerSlot.empty {
     border-style: dashed;
     background: rgba(255, 255, 255, 0.5);
-    opacity: 0.7;
     box-shadow: none;
 }
 
 .playerAvatar {
-    width: 60px;
-    height: 60px;
+    flex: none;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Image handling */
     overflow: hidden;
     border-radius: 50%;
     border: 2px solid var(--text-primary);
     background: var(--bg-primary);
+}
+
+.waitingAvatar {
+    border-style: dashed;
+    color: var(--text-muted);
+    font-weight: 900;
+    animation: pulse 2s infinite;
 }
 
 .avatarImage {
@@ -218,72 +83,170 @@
 }
 
 .avatarText {
-    font-size: 2rem;
+    font-size: 1.5rem;
+}
+
+.playerInfo {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
 }
 
 .playerName {
-    font-weight: 700;
-    font-family: 'Quicksand', sans-serif;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 800;
     color: var(--text-primary);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+}
+
+.playerBadges {
+    display: flex;
+    gap: 4px;
+}
+
+.hostBadge,
+.youBadge {
+    font-size: 0.62rem;
+    padding: 1px 6px;
+    border-radius: 999px;
+    border: 1px solid var(--text-primary);
+    font-weight: 800;
 }
 
 .hostBadge {
-    font-size: 0.7rem;
-    padding: 4px 8px;
     background: var(--pop-orange);
-    color: white;
-    border-radius: 999px;
-    border: 1px solid var(--text-primary);
-    font-weight: 700;
+    color: #fff;
 }
 
 .youBadge {
-    font-size: 0.7rem;
-    padding: 4px 8px;
     background: var(--pop-cyan);
     color: var(--text-primary);
-    border-radius: 999px;
-    border: 1px solid var(--text-primary);
-    font-weight: 700;
-}
-
-.waitingDots {
-    font-size: 1.5rem;
-    color: var(--text-muted);
 }
 
 .waitingText {
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-size: 0.85rem;
+    font-weight: 800;
     color: var(--text-muted);
 }
 
+/* ---- 状態 + ルール ---- */
+.statusRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px 8px;
+}
+
+.subtitle {
+    width: 100%;
+    color: var(--pop-purple);
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.ruleBadge {
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    background: var(--pop-yellow);
+    border: 2px solid var(--text-primary);
+    border-radius: 999px;
+    box-shadow: 2px 2px 0 var(--text-primary);
+    padding: 3px 10px;
+    white-space: nowrap;
+}
+
+.ruleBadgeDanger {
+    background: var(--pop-red);
+    color: #fff;
+}
+
+/* ---- ルームコード ---- */
+.roomCode {
+    background: #fff;
+    border: 3px dashed var(--text-primary);
+    border-radius: 16px;
+    padding: 10px 12px 12px;
+}
+
+.roomCodeLabel {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+}
+
+.roomCodeValue {
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.2em;
+}
+
+.copyButtons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.copyButton {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.78rem;
+    padding: 8px 4px;
+    border: 2px solid var(--text-primary);
+    box-shadow: 2px 2px 0 var(--text-primary);
+    border-radius: 999px;
+    color: var(--text-primary);
+    background: #fff;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.copyButton:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--text-primary);
+}
+
+.copyButton.codeButton {
+    background: var(--pop-cyan);
+}
+
+.copyButton.urlButton {
+    background: var(--pop-purple);
+    color: #fff;
+}
+
+/* ---- アクション ---- */
 .actions {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
+    /* ボタンは画面下（親指の届く位置）に寄せる */
+    margin-top: auto;
+    padding-top: 12px;
 }
 
 .startButton {
     width: 100%;
     max-width: none;
-    min-height: 58px;
-    font-size: 1.2rem;
-    padding: 16px 40px;
+    min-height: 54px;
+    font-size: 1.15rem;
+    padding: 12px 24px;
     background: var(--pop-yellow);
     color: var(--text-primary);
     border: 3px solid var(--text-primary);
     box-shadow: 4px 4px 0 var(--text-primary);
     font-weight: 800;
-}
-
-.startButton:hover:not(:disabled) {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--text-primary);
-    background: #FFD700;
-    /* slightly brighter */
 }
 
 .startButton:disabled {
@@ -295,52 +258,36 @@
 
 .waitingForHost {
     color: var(--text-primary);
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 16px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 12px;
     background: #fff;
     border: 2px dashed var(--text-primary);
-    border-radius: var(--border-radius);
+    border-radius: 16px;
     animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.7;
-    }
-
-    100% {
-        opacity: 1;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
 .leaveButton {
     width: 100%;
-    min-height: 50px;
+    min-height: 44px;
     background: rgba(19, 10, 31, 0.9);
     color: #fff;
-    font-size: 1rem;
-    padding: 11px 24px;
+    font-size: 0.95rem;
+    padding: 8px 24px;
     font-weight: 800;
     border: 2px solid #fff;
     border-radius: 999px;
-    box-shadow: 4px 4px 0 #09060d;
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-}
-
-.leaveButton:hover {
-    background: #35204f;
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #09060d;
+    box-shadow: 3px 3px 0 #09060d;
 }
 
 .leaveButton:active {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 #09060d;
+    box-shadow: 1px 1px 0 #09060d;
 }
 
 @media (min-width: 700px) {
@@ -375,57 +322,13 @@
         min-height: 100%;
         overflow-y: auto;
         border-radius: 51px;
-        padding: 54px 22px 28px;
+        padding: 44px 18px 24px;
         background:
             linear-gradient(180deg, rgba(20, 7, 24, 0.72), rgba(20, 7, 24, 0.38) 46%, rgba(20, 7, 24, 0.78)),
             url('/images/boxbom/bg_split.png') center / cover;
     }
 
-    .title,
-    .sectionTitle {
-        color: #fff;
-        text-shadow: 2px 2px 0 #000;
-    }
-
     .subtitle {
         color: #ffe746;
-    }
-
-    .roomCode {
-        margin-bottom: 24px;
-        padding: 18px 12px;
-    }
-
-    .roomCodeValue {
-        font-size: 2rem;
-    }
-
-    .copyButtons {
-        gap: 8px;
-    }
-
-    .copyButton {
-        min-width: 0;
-        flex: 1;
-        padding: 10px 5px;
-        font-size: 0.75rem;
-    }
-
-    .playersSection {
-        margin-bottom: 24px;
-    }
-
-    .playersList {
-        gap: 12px;
-    }
-
-    .playerSlot {
-        min-width: 0;
-        flex: 1;
-        padding: 18px 10px;
-    }
-
-    .leaveButton {
-        color: #fff;
     }
 }
