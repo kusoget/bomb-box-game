@@ -128,8 +128,12 @@ export default function ChairCircle({
                 const showAsOn = isSelected || isTrapped;
 
                 return (
-                    <div
+                    <button
+                        type="button"
                         key={chair.id}
+                        aria-label={`${chair.id}番の箱${chair.isRemoved ? '、開封済み' : isTrapped ? '、爆弾をセット中' : isSelected ? '、選択中' : ''}`}
+                        aria-pressed={canSelect && !chair.isRemoved ? showAsOn : undefined}
+                        disabled={!canSelect || chair.isRemoved}
                         className={`
                             ${styles.chair}
                             ${chair.isRemoved ? styles.removed : ''}
@@ -160,7 +164,16 @@ export default function ChairCircle({
                             />
                             <span className={styles.chairNumber}>{chair.id}</span>
                             {isTrapped && (
-                                <div className={styles.bombIcon}>💣</div>
+                                <div className={styles.bombIcon}>
+                                    <Image
+                                        src={asset('/images/boxbom/bomb-mark.png')}
+                                        alt="爆弾"
+                                        fill
+                                        sizes="56px"
+                                        unoptimized
+                                        draggable={false}
+                                    />
+                                </div>
                             )}
                             {isSelected && selectedByName && (
                                 <div className={styles.selectedIndicator}>
@@ -180,7 +193,7 @@ export default function ChairCircle({
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </button>
                 );
             })}
         </div>

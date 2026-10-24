@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import NativeBoot from "@/components/NativeBoot/NativeBoot";
+
+// Capacitor ネイティブビルドでは広告を読み込まない（WebView内AdSenseはポリシー/審査リスク）
+const IS_NATIVE = process.env.NEXT_PUBLIC_IS_NATIVE === "1";
 import "@fontsource/line-seed-jp/japanese-400.css";
 import "@fontsource/line-seed-jp/japanese-700.css";
 import "@fontsource/line-seed-jp/japanese-800.css";
@@ -29,11 +33,14 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  // ノッチ/ホームインジケータ領域まで描画 → safe-area-inset で余白を取る
+  viewportFit: "cover",
+  themeColor: "#2a1a3e",
 };
 
 export default function RootLayout({
@@ -44,12 +51,15 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <body>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7579337045676242"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <NativeBoot />
+        {!IS_NATIVE && (
+          <Script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7579337045676242"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
         {children}
       </body>
     </html>

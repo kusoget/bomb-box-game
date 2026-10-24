@@ -1,12 +1,14 @@
 import { DurableObject } from 'cloudflare:workers';
 
-import type { ChatMessage, GameState, Player } from '../src/types/game';
+import type { ChatMessage, GameRules, GameState, Player, WatchMode } from '../src/types/game';
 import type { ClientMessage, RoomSnapshot, ServerMessage } from '../src/types/realtime';
 import {
     advanceToNextRound,
     avatarForPlayerNumber,
     createInitialGameState,
+    normalizeRules,
     processReveal,
+    WATCH_DELAY_MS,
 } from '../src/lib/rules';
 import type { Env } from './env';
 
@@ -22,13 +24,18 @@ interface RoomData {
     status: 'waiting' | 'playing' | 'finished';
     hostId: string;
     createdAt: string;
+    rules: GameRules;
     players: Player[];
     gameState: GameState | null;
     messages: ChatMessage[];
+    /** 観戦URL用のトークン（ルームコードだけでは観戦できないようにする）。モードごとに別 */
+    watchTokens?: Record<WatchMode, string>;
 }
 
 interface SocketMeta {
     playerId: string;
+    /** 観戦者の接続ならそのモード。観戦者の操作は受け付けない */
+    spectator?: WatchMode;
 }
 
 export type JoinResult =
@@ -51,6 +58,11 @@ export class RoomDO extends DurableObject<Env> {
         if (!this.#loaded) {
             this.#data = (await this.ctx.storage.get<RoomData>('room')) ?? null;
             this.#loaded = true;
+            // 観戦機能より前に作られたルームにもトークンを振っておく
+            if (this.#data && !this.#data.watchTokens) {
+                this.#data.watchTokens = makeWatchTokens();
+                await this.ctx.storage.put('room', this.#data);
+            }
         }
         return this.#data;
     }
@@ -83,7 +95,7 @@ export class RoomDO extends DurableObject<Env> {
     // ---- RPC（Worker のルーターから呼ばれる） ----
 
     /** ルーム作成。すでにそのコードが使われていれば ok:false を返す */
-    async createRoom(roomCode: string, playerName: string): Promise<{ ok: boolean; playerId?: string }> {
+    async createRoom(roomCode: string, playerName: string, rules?: GameRules): Promise<{ ok: boolean; playerId?: string }> {
         if (await this.#load()) return { ok: false };
 
         const playerId = crypto.randomUUID();
@@ -92,9 +104,11 @@ export class RoomDO extends DurableObject<Env> {
             status: 'waiting',
             hostId: playerId,
             createdAt: new Date().toISOString(),
+            rules: normalizeRules(rules),
             players: [makePlayer(playerId, playerName, 1)],
             gameState: null,
             messages: [],
+            watchTokens: makeWatchTokens(),
         };
         await this.#persist();
         return { ok: true, playerId };
@@ -136,7 +150,10 @@ export class RoomDO extends DurableObject<Env> {
         }
 
         const data = await this.#load();
-        const playerId = new URL(request.url).searchParams.get('playerId') ?? '';
+        const params = new URL(request.url).searchParams;
+        const watch = params.get('watch');
+        const spectator = watch !== null ? watchModeOf(data, watch) : undefined;
+        const playerId = watch !== null ? '' : params.get('playerId') ?? '';
 
         const pair = new WebSocketPair();
         const client = pair[0];
@@ -144,10 +161,25 @@ export class RoomDO extends DurableObject<Env> {
 
         // hibernation API: DO が眠っても接続は維持される
         this.ctx.acceptWebSocket(server);
-        server.serializeAttachment({ playerId } satisfies SocketMeta);
+        const meta: SocketMeta = { playerId, spectator };
+        server.serializeAttachment(meta);
 
-        // ルームが無い場合も payload:null を返す（クライアント側で「見つかりません」表示）
-        send(server, { t: 'STATE', payload: data ? this.#viewFor(data, playerId) : null });
+        // ルームが無い / 観戦トークン違いの場合は payload:null を返す（クライアント側で「見つかりません」表示）
+        const allowed = data !== null && (watch === null || spectator !== undefined);
+        if (!allowed) {
+            send(server, { t: 'STATE', payload: null });
+            server.close(1000, 'not found');
+        } else if (spectator) {
+            // 遅延観戦は「今」を全部見せられないので、入った瞬間だけ爆弾を伏せた盤面を出しておく
+            if (spectator === 'delay') {
+                const masked = this.#viewFor(data, { playerId: '', spectator: 'safe' });
+                send(server, { t: 'STATE', payload: { ...masked, spectatorMode: 'delay' } });
+            }
+            // 観戦者が増えたことをプレイヤーにも知らせる（自分宛ても含む）
+            this.#broadcast();
+        } else {
+            send(server, { t: 'STATE', payload: this.#viewFor(data, meta) });
+        }
 
         return new Response(null, { status: 101, webSocket: client });
     }
@@ -168,6 +200,8 @@ export class RoomDO extends DurableObject<Env> {
         }
 
         const meta = ws.deserializeAttachment() as SocketMeta | null;
+        // 観戦者は見るだけ
+        if (meta?.spectator) return;
         const playerId = meta?.playerId ?? '';
 
         const data = await this.#load();
@@ -186,6 +220,9 @@ export class RoomDO extends DurableObject<Env> {
         } catch {
             // already closed
         }
+        // 観戦者が抜けたら人数表示を更新
+        const meta = ws.deserializeAttachment() as SocketMeta | null;
+        if (meta?.spectator) this.#broadcast(ws);
     }
 
     // ---- ゲーム進行 ----
@@ -292,24 +329,46 @@ export class RoomDO extends DurableObject<Env> {
 
     #startGame(data: RoomData): void {
         const [p1, p2] = playerIds(data);
-        data.gameState = createInitialGameState(data.roomCode, p1, p2);
+        data.gameState = createInitialGameState(data.roomCode, p1, p2, data.rules);
         data.status = 'playing';
     }
 
     // ---- 配信 ----
 
-    #broadcast(): void {
-        for (const ws of this.ctx.getWebSockets()) {
-            const meta = ws.deserializeAttachment() as SocketMeta | null;
-            send(ws, {
+    /** exclude: 閉じかけの接続（人数に数えず、送信もしない） */
+    #broadcast(exclude?: WebSocket): void {
+        const sockets = this.ctx.getWebSockets().filter(ws => ws !== exclude);
+        const spectatorCount = sockets.filter(ws => (ws.deserializeAttachment() as SocketMeta | null)?.spectator).length;
+        for (const ws of sockets) {
+            const meta = (ws.deserializeAttachment() as SocketMeta | null) ?? { playerId: '' };
+            const message: ServerMessage = {
                 t: 'STATE',
-                payload: this.#data ? this.#viewFor(this.#data, meta?.playerId ?? '') : null,
-            });
+                payload: this.#data ? this.#viewFor(this.#data, meta, spectatorCount) : null,
+            };
+            if (meta.spectator === 'delay' && message.payload) {
+                // 送る中身は今この瞬間のもので確定させ、届けるのだけ遅らせる
+                const frozen = JSON.stringify(message);
+                setTimeout(() => sendRaw(ws, frozen), WATCH_DELAY_MS);
+            } else {
+                send(ws, message);
+            }
         }
     }
 
-    /** 受け取る人に応じて爆弾の位置を隠したスナップショットを作る */
-    #viewFor(data: RoomData, playerId: string): RoomSnapshot {
+    #spectatorCount(): number {
+        return this.ctx.getWebSockets()
+            .filter(ws => (ws.deserializeAttachment() as SocketMeta | null)?.spectator)
+            .length;
+    }
+
+    /** 受け取る人に応じて爆弾の位置を隠したスナップショットを作る（観戦者には全部見せる） */
+    #viewFor(data: RoomData, meta: SocketMeta, spectatorCount = this.#spectatorCount()): RoomSnapshot {
+        const spectator = meta.spectator ?? null;
+        const isPlayer = !spectator && data.players.some(p => p.id === meta.playerId);
+        // safe 観戦は「誰でもない人」として見せる＝仕掛け役以外と同じく結果発表まで爆弾を伏せる
+        const gameState =
+            spectator === 'live' || spectator === 'delay' ? data.gameState :
+                maskGameState(data.gameState, spectator === 'safe' ? '' : meta.playerId);
         return {
             room: {
                 id: data.roomCode,
@@ -317,10 +376,15 @@ export class RoomDO extends DurableObject<Env> {
                 status: data.status,
                 hostId: data.hostId,
                 createdAt: data.createdAt,
+                rules: normalizeRules(data.rules),
+                // 観戦URLを発行できるのはプレイヤーだけ
+                watchTokens: isPlayer ? data.watchTokens : undefined,
             },
             players: data.players,
-            gameState: maskGameState(data.gameState, playerId),
+            gameState,
             messages: data.messages,
+            spectatorCount,
+            spectatorMode: spectator,
         };
     }
 }
@@ -336,6 +400,16 @@ function makePlayer(id: string, name: string, playerNumber: number): Player {
         score: 0,
         shockCount: 0,
     };
+}
+
+function makeWatchTokens(): Record<WatchMode, string> {
+    const token = () => crypto.randomUUID().replace(/-/g, '').slice(0, 12);
+    return { live: token(), delay: token(), safe: token() };
+}
+
+function watchModeOf(data: RoomData | null, token: string): WatchMode | undefined {
+    if (!data?.watchTokens || !token) return undefined;
+    return (Object.keys(data.watchTokens) as WatchMode[]).find(mode => data.watchTokens![mode] === token);
 }
 
 function playerIds(data: RoomData): [string, string] {
@@ -375,8 +449,12 @@ function maskGameState(gs: GameState | null, playerId: string): GameState | null
 }
 
 function send(ws: WebSocket, message: ServerMessage): void {
+    sendRaw(ws, JSON.stringify(message));
+}
+
+function sendRaw(ws: WebSocket, raw: string): void {
     try {
-        ws.send(JSON.stringify(message));
+        ws.send(raw);
     } catch {
         // 送信先がすでに閉じている
     }

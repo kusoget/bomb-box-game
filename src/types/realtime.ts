@@ -1,7 +1,7 @@
 // クライアント <-> Durable Object 間の WebSocket プロトコル定義
 // ブラウザと Worker の両方から参照される（相対 import のみ）
 
-import { ChatMessage, GameState, Player, Room } from './game';
+import { ChatMessage, GameState, Player, Room, WatchMode } from './game';
 
 // サーバーがクライアントに配るルームのスナップショット
 export interface RoomSnapshot {
@@ -9,6 +9,10 @@ export interface RoomSnapshot {
     players: Player[];
     gameState: GameState | null;
     messages: ChatMessage[];
+    /** いま観戦している人数 */
+    spectatorCount: number;
+    /** この接続が観戦者ならそのモード。プレイヤーは null */
+    spectatorMode: WatchMode | null;
 }
 
 // サーバー -> クライアント

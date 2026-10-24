@@ -8,16 +8,27 @@
     "build": "next build",
     "preview": "next build && wrangler dev",
     "deploy": "next build && wrangler deploy",
+    "build:ios": "NEXT_PUBLIC_IS_NATIVE=1 NEXT_PUBLIC_API_BASE=\"${BOXBOM_API_BASE:-https://boxbom.taminoe.workers.dev}\" next build && npx cap sync ios",
+    "ios": "npx cap open ios",
     "lint": "eslint",
     "typecheck": "tsc --noEmit && tsc --noEmit -p worker"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.3",
+    "@capacitor/keyboard": "^8.0.6",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@fontsource/line-seed-jp": "^5.2.2",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@cloudflare/workers-types": "^5.20260911.1",
     "@types/node": "^20",
     "@types/react": "^19",

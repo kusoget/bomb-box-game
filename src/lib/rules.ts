@@ -4,11 +4,39 @@
 // 両方から読み込まれる。React / Next / Node 固有の API は絶対に持ち込まないこと。
 // （import は相対パスのみ。Worker のバンドラは `@/` エイリアスを解決できない）
 
-import { Chair, GameState } from '../types/game';
+import { Chair, GameRules, GameState } from '../types/game';
 
 export const CHAIR_COUNT = 12;
 export const WIN_SCORE = 40;
 export const MAX_SHOCKS = 3;
+
+// ルーム作成時に選べる値
+export const TARGET_SCORE_OPTIONS = [20, 40, 60] as const;
+/** 一撃必殺モードの爆発上限（1回で負け） */
+export const SUDDEN_DEATH_SHOCKS = 1;
+
+export const DEFAULT_RULES: GameRules = {
+    targetScore: WIN_SCORE,
+    maxShocks: MAX_SHOCKS,
+};
+
+/**
+ * 外部（クライアント）から来たルール指定を安全な値に丸める。
+ * 未知の値はデフォルトへフォールバックする（改ざん・欠損対策）。
+ */
+export function normalizeRules(input: unknown): GameRules {
+    const raw = (input ?? {}) as Partial<Record<keyof GameRules, unknown>>;
+
+    const targetScore = TARGET_SCORE_OPTIONS.includes(raw.targetScore as never)
+        ? (raw.targetScore as number)
+        : DEFAULT_RULES.targetScore;
+
+    const maxShocks = raw.maxShocks === SUDDEN_DEATH_SHOCKS
+        ? SUDDEN_DEATH_SHOCKS
+        : DEFAULT_RULES.maxShocks;
+
+    return { targetScore, maxShocks };
+}
 
 // 初期の箱配列を生成
 export function createInitialChairs(): Chair[] {
@@ -23,7 +51,8 @@ export function createInitialChairs(): Chair[] {
 export function createInitialGameState(
     roomId: string,
     player1Id: string,
-    player2Id: string
+    player2Id: string,
+    rules: GameRules = DEFAULT_RULES
 ): GameState {
     // ランダムで先攻を決定
     const isPlayer1First = Math.random() < 0.5;
@@ -31,6 +60,7 @@ export function createInitialGameState(
     return {
         id: crypto.randomUUID(),
         roomId,
+        rules,
         chairs: createInitialChairs(),
         player1Score: 0,
         player2Score: 0,
@@ -66,19 +96,21 @@ export function checkWinCondition(
     player1Id: string,
     player2Id: string
 ): { winner: string | null; reason: 'score' | 'shock' | 'last_chair' | null } {
-    // 40点以上獲得
-    if (gameState.player1Score >= WIN_SCORE) {
+    const { targetScore, maxShocks } = gameState.rules ?? DEFAULT_RULES;
+
+    // 目標点以上獲得
+    if (gameState.player1Score >= targetScore) {
         return { winner: player1Id, reason: 'score' };
     }
-    if (gameState.player2Score >= WIN_SCORE) {
+    if (gameState.player2Score >= targetScore) {
         return { winner: player2Id, reason: 'score' };
     }
 
-    // 3回爆発で負け
-    if (gameState.player1Shocks >= MAX_SHOCKS) {
+    // 規定回数の爆発で負け（一撃必殺モードは1回）
+    if (gameState.player1Shocks >= maxShocks) {
         return { winner: player2Id, reason: 'shock' };
     }
-    if (gameState.player2Shocks >= MAX_SHOCKS) {
+    if (gameState.player2Shocks >= maxShocks) {
         return { winner: player1Id, reason: 'shock' };
     }
 
@@ -202,3 +234,6 @@ export const CHARACTER_IDS = ['kirarin', 'ponyu'] as const;
 export function avatarForPlayerNumber(playerNumber: number): string {
     return CHARACTER_IDS[(playerNumber - 1) % CHARACTER_IDS.length];
 }
+
+/** 観戦「遅延」モードで、盤面の更新を何ミリ秒遅らせて届けるか */
+export const WATCH_DELAY_MS = 30_000;

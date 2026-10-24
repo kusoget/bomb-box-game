@@ -16,10 +16,24 @@
     cursor: pointer;
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-origin: center center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.chair:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+    border-radius: 18px;
+    z-index: 20;
 }
 
 .chair.disabled {
     cursor: default;
+}
+
+.chair:disabled:not(.removed) {
+    opacity: 1;
 }
 
 /* 取り終わった箱: 番号なし、薄暗くディスエーブル表示 */
@@ -65,11 +79,17 @@
 .bombIcon {
     position: absolute;
     z-index: 3;
-    font-size: 1.8rem;
+    width: 13cqw;
+    height: 13cqw;
     pointer-events: none;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -55%);
+    filter: drop-shadow(0 1.2cqw 1cqw rgba(0, 0, 0, 0.45));
+}
+
+.bombIcon img {
+    object-fit: contain;
 }
 
 /* 選択者インジケータ（アバター + 名前を箱の右上に絶対配置） */
@@ -239,6 +259,21 @@
 }
 
 @media (max-width: 600px) {
+    .selectedIndicator {
+        top: -14cqw;
+        right: -3cqw;
+    }
+
+    .selectedAvatar {
+        width: 11cqw;
+        height: 11cqw;
+    }
+
+    .centerCharacter img {
+        width: 25cqw;
+        height: 25cqw;
+    }
+
     .centerNumber {
         font-size: 6rem;
     }

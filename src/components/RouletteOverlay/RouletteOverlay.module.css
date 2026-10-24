@@ -1,6 +1,6 @@
 /* Retro Pop Style Roulette */
 .overlay {
-    position: fixed;
+    position: absolute;
     inset: 0;
     background: rgba(255, 255, 255, 0.95);
     z-index: 1000;

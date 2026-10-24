@@ -11,11 +11,20 @@ function RoomContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const roomCode = (searchParams.get('code') ?? '').toUpperCase();
+    // 観戦URL（?watch=TOKEN）で来た人は観戦者としてつなぐ
+    const watchToken = searchParams.get('watch') ?? '';
+    const watching = watchToken !== '';
 
     const [playerId, setPlayerId] = useState<string>('');
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        // 観戦者はプレイヤーとしてのセッションを使わない
+        if (watching) {
+            setIsClient(true);
+            return;
+        }
+
         // 再参加フラグがある場合はセッションを無視（クリア）して選択画面へ
         const isRejoin = searchParams.get('rejoin');
         if (isRejoin) {
@@ -30,13 +39,15 @@ function RoomContent() {
             setPlayerId(storedPlayerId);
         }
         setIsClient(true);
-    }, [searchParams]);
+    }, [searchParams, watching]);
 
     const {
         room,
         players,
         gameState,
         messages,
+        spectatorCount,
+        spectatorMode,
         loading,
         error,
         isHost,
@@ -47,11 +58,11 @@ function RoomContent() {
         nextRound,
         sendMessage,
         leaveRoom,
-    } = useGameState({ roomCode, playerId, ready: isClient });
+    } = useGameState({ roomCode, playerId: watching ? '' : playerId, watchToken: watching ? watchToken : undefined, ready: isClient });
 
     // プレイヤー検証 & リダイレクト制御
     useEffect(() => {
-        if (!loading && room) {
+        if (!loading && room && !watching) {
             // 1. セッション切れのプレイヤーIDが残っている場合は削除
             if (playerId && players.length > 0 && !players.some(p => p.id === playerId)) {
                 sessionStorage.removeItem('playerId');
@@ -68,7 +79,7 @@ function RoomContent() {
 
             // 3. ゲーム中だがセッションがない場合は下のレンダリング側で弾く
         }
-    }, [loading, room, players, playerId, roomCode, router]);
+    }, [loading, room, players, playerId, roomCode, router, watching]);
 
     const handleLeaveRoom = () => {
         leaveRoom();
@@ -133,8 +144,8 @@ function RoomContent() {
 
     // ゲーム中または終了後（リザルト表示）
     if ((room.status === 'playing' || room.status === 'finished') && gameState) {
-        // Strict Mode: セッションがない場合はアクセス拒否
-        if (!playerId) {
+        // Strict Mode: セッションがない場合はアクセス拒否（観戦者は除く）
+        if (!playerId && !watching) {
             return (
                 <div className={styles.error}>
                     <h2>ゲーム進行中</h2>
@@ -157,14 +168,17 @@ function RoomContent() {
                 gameState={gameState}
                 player1={player1}
                 player2={player2}
-                currentPlayerId={playerId}
+                currentPlayerId={watching ? '' : playerId}
                 messages={messages}
+                spectatorMode={watching ? spectatorMode : null}
+                spectatorCount={spectatorCount}
+                watchTokens={room.watchTokens}
                 onSetTrap={setTrap}
                 onSelectChair={selectChair}
                 onConfirmSelection={confirmSelection}
                 onNextRound={nextRound}
                 onSendMessage={sendMessage}
-                onBackToHome={handleBackToHome}
+                onBackToHome={watching ? () => router.push('/') : handleBackToHome}
             />
         );
     }
@@ -174,10 +188,12 @@ function RoomContent() {
         <Lobby
             room={room}
             players={players}
-            currentPlayerId={playerId}
-            isHost={isHost}
+            currentPlayerId={watching ? '' : playerId}
+            isHost={!watching && isHost}
+            spectator={watching}
+            spectatorCount={spectatorCount}
             onStartGame={startGame}
-            onLeaveRoom={handleLeaveRoom}
+            onLeaveRoom={watching ? () => router.push('/') : handleLeaveRoom}
         />
     );
 }

@@ -38,6 +38,9 @@ worker/room.ts        RoomDO — ルーム1つ = Durable Object 1つ
   計算結果は送らない（旧 Supabase 版はクライアント計算だったので改ざんできた）。
 - **爆弾の位置は仕掛け役にしか配信しない。** `maskGameState()` が受信者ごとに `isTrapped` を
   伏せる。結果発表フェーズ以降は全員に開示される。
+- **観戦者（`/room?code=XXX&watch=TOKEN`）には爆弾の位置も含めて全部見せる。** トークンはルームごとに
+  `watchToken` として発行し、プレイヤーにだけ配る（ルームコードだけでは観戦できない）。観戦者の接続からの
+  操作は `webSocketMessage` で全部無視する。
 - **`src/lib/rules.ts` に React / Next / Node 固有のものを持ち込まない。**
   Worker からも読まれるので、import は相対パスのみ（`@/` エイリアスは解決できない）。
 - ルームは最終更新から3時間で Durable Object の alarm により自動削除される。

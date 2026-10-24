@@ -26,9 +26,16 @@ export interface Player {
 }
 
 // ゲーム状態
+// 対戦ルール（ルーム作成時に決定。以後ゲーム中は不変）
+export interface GameRules {
+  targetScore: number;   // 何点先取で勝ちか
+  maxShocks: number;     // 何回爆発したら負けか（1 = 一撃必殺）
+}
+
 export interface GameState {
   id: string;
   roomId: string;
+  rules: GameRules;
   chairs: Chair[];
   player1Score: number;
   player2Score: number;
@@ -46,6 +53,12 @@ export interface GameState {
   updatedAt: string;
 }
 
+// 観戦モード
+//   live:  全部リアルタイムで見える（爆弾の位置も）
+//   delay: 全部見えるが WATCH_DELAY_MS 遅れて届く（配信向け）
+//   safe:  爆弾の位置は結果発表まで伏せる（対戦者本人が開いてもズルできない）
+export type WatchMode = 'live' | 'delay' | 'safe';
+
 // ルーム情報
 export interface Room {
   id: string;
@@ -53,6 +66,9 @@ export interface Room {
   status: 'waiting' | 'playing' | 'finished';
   hostId: string;
   createdAt: string;
+  rules: GameRules;
+  /** 観戦URL用のトークン（モードごと）。プレイヤーにだけ配られる（観戦者には配らない） */
+  watchTokens?: Record<WatchMode, string>;
 }
 
 // チャットメッセージ

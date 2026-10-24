@@ -2,7 +2,9 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { apiUrl, roomPath } from '@/lib/api';
+import { asset } from '@/lib/assets';
 import styles from './page.module.css';
 
 function HomeContent() {
@@ -14,6 +16,9 @@ function HomeContent() {
   const [hostName, setHostName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // 対戦ルール（作成者が設定）
+  const [targetScore, setTargetScore] = useState(40);
+  const [suddenDeath, setSuddenDeath] = useState(false);
 
   useEffect(() => {
     const joinCode = searchParams.get('join');
@@ -63,7 +68,13 @@ function HomeContent() {
       const res = await fetch(apiUrl('/api/rooms'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerName: playerName.trim() }),
+        body: JSON.stringify({
+          playerName: playerName.trim(),
+          rules: {
+            targetScore,
+            maxShocks: suddenDeath ? 1 : 3,
+          },
+        }),
       });
 
       const data = await res.json();
@@ -124,16 +135,13 @@ function HomeContent() {
   };
 
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} boxbom-home-screen`}>
       <div className={styles.container}>
         {/* ロゴ */}
         <div className={styles.logo}>
           <h1 className={styles.title}>
-            <span className={styles.bolt}>💣</span>
-            爆弾箱ゲーム
-            <span className={styles.bolt}>💥</span>
+            <Image src={asset('/images/boxbom/logo-v3.png')} alt="BOXBOM" width={515} height={191} className={styles.titleLogo} priority unoptimized />
           </h1>
-          <p className={styles.subtitle}>オンライン対戦爆発心理戦</p>
         </div>
 
         {/* メニュー */}
@@ -171,6 +179,46 @@ function HomeContent() {
               />
             </div>
 
+            {/* ルール設定 */}
+            <div className={styles.formGroup}>
+              <label className={styles.label}>目標スコア</label>
+              <div className={styles.ruleOptions}>
+                {[20, 40, 60].map((score) => (
+                  <button
+                    key={score}
+                    type="button"
+                    className={`${styles.ruleOption} ${targetScore === score ? styles.ruleOptionActive : ''}`}
+                    onClick={() => setTargetScore(score)}
+                    disabled={loading}
+                  >
+                    {score}点
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>一撃必殺モード</label>
+              <div className={styles.ruleOptions}>
+                <button
+                  type="button"
+                  className={`${styles.ruleOption} ${!suddenDeath ? styles.ruleOptionActive : ''}`}
+                  onClick={() => setSuddenDeath(false)}
+                  disabled={loading}
+                >
+                  OFF（3回で負け）
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.ruleOption} ${suddenDeath ? styles.ruleOptionActive : ''}`}
+                  onClick={() => setSuddenDeath(true)}
+                  disabled={loading}
+                >
+                  ON（1回で負け）
+                </button>
+              </div>
+            </div>
+
             {error && <div className={styles.error}>{error}</div>}
 
             <div className={styles.formActions}>
@@ -186,7 +234,7 @@ function HomeContent() {
                 onClick={() => { setMode('menu'); setError(''); }}
                 disabled={loading}
               >
-                戻る
+                ← メニューに戻る
               </button>
             </div>
           </div>
@@ -236,7 +284,7 @@ function HomeContent() {
                 onClick={() => { setMode('menu'); setError(''); }}
                 disabled={loading}
               >
-                戻る
+                ← メニューに戻る
               </button>
             </div>
           </div>
@@ -281,15 +329,22 @@ function HomeContent() {
 
         {/* ルール説明 */}
         <div className={styles.rules}>
-          <h3 className={styles.rulesTitle}>遊び方</h3>
+          <h3 className={styles.rulesTitle}>HOW TO PLAY</h3>
           <ul className={styles.rulesList}>
-            <li>2人対戦の心理戦ゲーム</li>
-            <li>「仕掛け人」が1つの箱に爆弾をセット</li>
-            <li>「解除役」が開ける箱を選ぶ</li>
-            <li>セーフなら箱の番号分の得点を獲得</li>
-            <li>爆発したら得点リセット...</li>
-            <li>40点達成か、相手を3回爆発させれば勝利！</li>
-            <li>残り1箱になったら、得点が高い方の勝ち</li>
+            <li>
+              <span className={styles.ruleIcon}><Image src={asset('/images/boxbom/bomb-mark.png')} alt="" width={38} height={38} unoptimized /></span>
+              <span>相手が12個の箱のひとつに爆弾を仕掛ける</span>
+            </li>
+            <li>
+              <span className={styles.ruleIcon}><Image src={asset('/images/boxbom/box_on.png')} alt="" width={38} height={38} unoptimized /></span>
+              <span>箱を選ぶ。セーフなら番号分を獲得、爆発なら得点は0</span>
+            </li>
+            <li>
+              <span className={styles.ruleIcon} aria-hidden="true">
+                <svg viewBox="0 0 32 32" role="presentation"><path d="M9 4h14v4h5v4c0 5-3.4 8-8 8.8V24h5v4H7v-4h5v-3.2C7.4 20 4 17 4 12V8h5V4Zm0 8H7c0 2.5 1.3 4.1 3.4 4.8A13 13 0 0 1 9 12Zm14 0c0 1.8-.5 3.4-1.4 4.8 2.1-.7 3.4-2.3 3.4-4.8h-2Z" /></svg>
+              </span>
+              <span>{targetScore}点先取か相手が{suddenDeath ? '1回でも' : '3回'}爆発で勝利。残り1箱なら高得点の勝ち</span>
+            </li>
           </ul>
         </div>
       </div>

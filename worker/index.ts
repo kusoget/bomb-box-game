@@ -1,4 +1,5 @@
-import { generateRoomCode } from '../src/lib/rules';
+import { generateRoomCode, normalizeRules } from '../src/lib/rules';
+import type { GameRules } from '../src/types/game';
 import type { Env } from './env';
 import { RoomDO } from './room';
 
@@ -36,6 +37,10 @@ async function readJson(request: Request): Promise<Record<string, unknown>> {
 
 function playerNameOf(body: Record<string, unknown>): string {
     return typeof body.playerName === 'string' ? body.playerName.trim() : '';
+}
+
+function rulesOf(body: Record<string, unknown>): GameRules {
+    return normalizeRules(body.rules);
 }
 
 export default {
@@ -92,11 +97,12 @@ async function handleRooms(request: Request, env: Env, url: URL): Promise<Respon
         const body = await readJson(request);
         const playerName = playerNameOf(body);
         if (!playerName) return json({ error: '名前を入力してください' }, 400);
+        const rules = rulesOf(body);
 
         // コード衝突時はリトライ
         for (let i = 0; i < 10; i++) {
             const roomCode = generateRoomCode();
-            const result = await roomStub(env, roomCode).createRoom(roomCode, playerName);
+            const result = await roomStub(env, roomCode).createRoom(roomCode, playerName, rules);
             if (result.ok) {
                 return json({ roomCode, roomId: roomCode, playerId: result.playerId });
             }

@@ -33,12 +33,43 @@
     gap: 8px;
 }
 
+.titleLogo {
+    display: block;
+    width: min(94%, 328px);
+    height: auto;
+}
+
 .subtitle {
     font-family: 'Quicksand', sans-serif;
     color: var(--pop-purple);
     margin-bottom: 24px;
     font-weight: 600;
     font-size: 0.95rem;
+}
+
+.ruleBadges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.ruleBadge {
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    background: var(--pop-yellow);
+    border: 2px solid var(--text-primary);
+    border-radius: var(--border-radius);
+    box-shadow: 2px 2px 0 var(--text-primary);
+    padding: 6px 12px;
+    white-space: nowrap;
+}
+
+.ruleBadgeDanger {
+    background: var(--pop-red);
+    color: #fff;
 }
 
 .roomCode {
@@ -231,10 +262,14 @@
 .actions {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    width: 100%;
 }
 
 .startButton {
+    width: 100%;
+    max-width: none;
+    min-height: 58px;
     font-size: 1.2rem;
     padding: 16px 40px;
     background: var(--pop-yellow);
@@ -284,15 +319,113 @@
 }
 
 .leaveButton {
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    padding: 8px;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    width: 100%;
+    min-height: 50px;
+    background: rgba(19, 10, 31, 0.9);
+    color: #fff;
+    font-size: 1rem;
+    padding: 11px 24px;
+    font-weight: 800;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    box-shadow: 4px 4px 0 #09060d;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 .leaveButton:hover {
-    color: var(--pop-red);
+    background: #35204f;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #09060d;
+}
+
+.leaveButton:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #09060d;
+}
+
+@media (min-width: 700px) {
+    .lobby {
+        position: relative;
+        width: min(430px, calc((100dvh - 32px) * 0.51));
+        height: min(844px, calc(100dvh - 32px));
+        min-height: 0;
+        margin: max(16px, calc((100dvh - 844px) / 2)) auto;
+        padding: 7px;
+        border-radius: 58px;
+        background: linear-gradient(145deg, #ff80b5 0%, #ffe87a 34%, #9873e5 76%, #ff8fbd 100%);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.58), 0 0 0 5px #1c1025, 0 25px 70px rgba(0, 0, 0, 0.65);
+        overflow: hidden;
+    }
+
+    .lobby::before {
+        content: '';
+        position: absolute;
+        top: 11px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 55px;
+        height: 5px;
+        border-radius: 999px;
+        background: #09060d;
+        z-index: 2;
+    }
+
+    .lobbyCard {
+        max-width: none;
+        min-height: 100%;
+        overflow-y: auto;
+        border-radius: 51px;
+        padding: 54px 22px 28px;
+        background:
+            linear-gradient(180deg, rgba(20, 7, 24, 0.72), rgba(20, 7, 24, 0.38) 46%, rgba(20, 7, 24, 0.78)),
+            url('/images/boxbom/bg_split.png') center / cover;
+    }
+
+    .title,
+    .sectionTitle {
+        color: #fff;
+        text-shadow: 2px 2px 0 #000;
+    }
+
+    .subtitle {
+        color: #ffe746;
+    }
+
+    .roomCode {
+        margin-bottom: 24px;
+        padding: 18px 12px;
+    }
+
+    .roomCodeValue {
+        font-size: 2rem;
+    }
+
+    .copyButtons {
+        gap: 8px;
+    }
+
+    .copyButton {
+        min-width: 0;
+        flex: 1;
+        padding: 10px 5px;
+        font-size: 0.75rem;
+    }
+
+    .playersSection {
+        margin-bottom: 24px;
+    }
+
+    .playersList {
+        gap: 12px;
+    }
+
+    .playerSlot {
+        min-width: 0;
+        flex: 1;
+        padding: 18px 10px;
+    }
+
+    .leaveButton {
+        color: #fff;
+    }
 }

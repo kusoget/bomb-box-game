@@ -1,8 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Player, Room } from '@/types/game';
 import { getAvatarDisplay } from '@/lib/gameLogic';
+import { asset } from '@/lib/assets';
+import { roomPath, shareUrl } from '@/lib/api';
+import { copyText } from '@/lib/clipboard';
+import WatchShare from '@/components/WatchShare/WatchShare';
 import styles from './Lobby.module.css';
 
 interface LobbyProps {
@@ -10,6 +15,9 @@ interface LobbyProps {
     players: Player[];
     currentPlayerId: string;
     isHost: boolean;
+    /** 観戦URLから来た人。コピーやゲーム開始は出さない */
+    spectator?: boolean;
+    spectatorCount?: number;
     onStartGame: () => void;
     onLeaveRoom: () => void;
 }
@@ -19,43 +27,25 @@ export default function Lobby({
     players,
     currentPlayerId,
     isHost,
+    spectator = false,
+    spectatorCount = 0,
     onStartGame,
     onLeaveRoom,
 }: LobbyProps) {
     const [copied, setCopied] = useState(false);
     const [urlCopied, setUrlCopied] = useState(false);
 
-    const copyRoomCode = async () => {
-        try {
-            await navigator.clipboard.writeText(room.roomCode);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch {
-            fallbackCopy(room.roomCode, setCopied);
-        }
-    };
-
-    const copyInviteUrl = async () => {
-        try {
-            const url = window.location.href;
-            await navigator.clipboard.writeText(url);
-            setUrlCopied(true);
-            setTimeout(() => setUrlCopied(false), 2000);
-        } catch {
-            fallbackCopy(window.location.href, setUrlCopied);
-        }
-    };
-
-    const fallbackCopy = (text: string, setStatus: (status: boolean) => void) => {
-        const input = document.createElement('input');
-        input.value = text;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
+    const copyUrl = async (text: string, setStatus: (status: boolean) => void) => {
+        if (!(await copyText(text))) return;
         setStatus(true);
         setTimeout(() => setStatus(false), 2000);
     };
+
+    const copyRoomCode = () => copyUrl(room.roomCode, setCopied);
+
+    // iOS アプリ内の location.href（capacitor://）は他人が開けないので、Web 版の URL を組み立てる
+    const copyInviteUrl = () => copyUrl(shareUrl(roomPath(room.roomCode)), setUrlCopied);
+
 
     const canStart = players.length === 2;
 
@@ -68,11 +58,23 @@ export default function Lobby({
     };
 
     return (
-        <div className={styles.lobby}>
+        <div className={`${styles.lobby} boxbom-lobby-screen`}>
             <div className={`card ${styles.lobbyCard}`}>
-                <h1 className={styles.title}>⚡ 爆弾箱ゲーム</h1>
-                <p className={styles.subtitle}>対戦相手を待っています...</p>
+                <h1 className={styles.title}>
+                    <Image src={asset('/images/boxbom/logo-v3.png')} alt="BOXBOM" width={515} height={191} className={styles.titleLogo} priority unoptimized />
+                </h1>
+                <p className={styles.subtitle}>
+                    {spectator ? '👀 観戦モード：対戦開始を待っています...' : '対戦相手を待っています...'}
+                </p>
 
+                <div className={styles.ruleBadges}>
+                    <span className={styles.ruleBadge}>🎯 {room.rules?.targetScore ?? 40}点先取</span>
+                    {room.rules?.maxShocks === 1 && (
+                        <span className={`${styles.ruleBadge} ${styles.ruleBadgeDanger}`}>💀 一撃必殺</span>
+                    )}
+                </div>
+
+                {!spectator && (
                 <div className={styles.roomCode}>
                     <div className={styles.roomCodeLabel}>ルームコード</div>
                     <div className={styles.roomCodeValue}>{room.roomCode}</div>
@@ -93,6 +95,11 @@ export default function Lobby({
                     </div>
                     {(copied || urlCopied) && <div className={styles.copySuccess}>クリップボードにコピーしました</div>}
                 </div>
+                )}
+
+                {room.watchTokens && (
+                    <WatchShare roomCode={room.roomCode} tokens={room.watchTokens} spectatorCount={spectatorCount} />
+                )}
 
                 {/* プレイヤー一覧 */}
                 <div className={styles.playersSection}>
@@ -144,7 +151,7 @@ export default function Lobby({
 
                 {/* アクション */}
                 <div className={styles.actions}>
-                    {isHost ? (
+                    {spectator ? null : isHost ? (
                         <button
                             className={`btn btn-primary ${styles.startButton}`}
                             onClick={onStartGame}
@@ -159,7 +166,7 @@ export default function Lobby({
                     )}
 
                     <button className={styles.leaveButton} onClick={onLeaveRoom}>
-                        ルームを退出
+                        {spectator ? '← 観戦をやめる' : '← ルームを退出'}
                     </button>
                 </div>
             </div>

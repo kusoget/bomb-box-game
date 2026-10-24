@@ -19,3 +19,17 @@ export function wsUrl(path: string): string {
 export function roomPath(roomCode: string): string {
     return `/room?code=${encodeURIComponent(roomCode)}`;
 }
+
+/** 観戦画面の URL（/room?code=XXXXXX&watch=TOKEN） */
+export function watchPath(roomCode: string, watchToken: string): string {
+    return `${roomPath(roomCode)}&watch=${encodeURIComponent(watchToken)}`;
+}
+
+/**
+ * 人に送る用の絶対 URL。
+ * iOS アプリは capacitor://localhost で動いているので、そのままでは開けない。
+ * ネイティブ版は API_BASE（本番 Worker）がそのまま Web 版の配信元なので、そちらを使う。
+ */
+export function shareUrl(path: string): string {
+    return new URL(path, API_BASE || window.location.origin).toString();
+}

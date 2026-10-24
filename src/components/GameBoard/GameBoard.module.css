@@ -2,23 +2,32 @@
 .gameBoard {
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    /* PLAY画面は絶対スクロールさせない: ビューポート高さにピッタリ収める */
+    height: 100dvh;
     background: #000;
-    overflow-x: hidden;
+    overflow: hidden;
+    /* hidden だとフォーカス移動などでブラウザが横にずらせてしまうので、clip で一切スクロールさせない */
+    overflow: clip;
+    display: flex;
+    flex-direction: column;
 }
 
 .mainArea {
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    /* 100dvh 固定ではなく、セーフエリアを除いた残り高さを埋める（はみ出し＝スクロールを防ぐ） */
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    overflow: clip; /* 傾いた帯がはみ出しているので、横ずれしないよう clip */
     display: flex;
     flex-direction: column;
     /* 二色分割の背景画像（フルブリード） */
     background:
         url('/images/boxbom/bg_split.png') center/cover no-repeat,
         linear-gradient(90deg, #FF2D55 50%, #9b59b6 50%);
-    padding-bottom: 200px;
-    /* ボタン + スタンプ用の余白 */
+    /* 下部の固定ボタン + スタンプ用の余白 */
+    padding-bottom: calc(176px + env(safe-area-inset-bottom, 0px));
 }
 
 /* 上端：黒グラデで暗くフェード（端でも80%程度、真っ黒にしない） */
@@ -62,17 +71,73 @@
 .gameContainer {
     position: relative;
     width: 100%;
-    max-width: 480px;
+    /* 横幅だけでなく「残り高さ」でも頭打ちにして、盤面がはみ出さない＝切れない */
+    max-width: min(480px, calc(100dvh - 320px));
     aspect-ratio: 1;
     margin: 0 auto;
     padding: 0 4px;
     container-type: inline-size;
 }
 
+/* 観戦バッジ（盤面の右上） */
+.watchBadge {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    z-index: 5;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 3px solid #000;
+    background: #FFFF00;
+    color: #000;
+    font-family: 'LINE Seed JP', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    box-shadow: 2px 2px 0 #000;
+    white-space: nowrap;
+}
+
+.watchButton {
+    cursor: pointer;
+}
+
+.watchPopover {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    left: 10px;
+    max-width: 340px;
+    margin-left: auto;
+    z-index: 20;
+}
+
+.watchPopover > div {
+    margin-top: 0;
+}
+
+.watchClose {
+    display: block;
+    margin: 8px 0 0 auto;
+    padding: 4px 14px;
+    border: 2px solid #000;
+    border-radius: 999px;
+    background: #fff;
+    color: #000;
+    font-weight: 900;
+    font-size: 0.8rem;
+    box-shadow: 2px 2px 0 #000;
+    cursor: pointer;
+}
+
+.watchButton:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
 /* Fixed Footer (アクションボタン) */
 .gameFooter {
     position: fixed;
-    bottom: 110px;
+    bottom: calc(110px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     padding: 0 16px;
@@ -135,6 +200,62 @@
 .textPlayer1 { color: #FF2D55; }
 .textPlayer2 { color: #9b59b6; }
 
+@media (min-width: 700px) {
+    .gameBoard {
+        width: min(430px, calc((100dvh - 32px) * 0.51));
+        height: min(844px, calc(100dvh - 32px));
+        min-height: 0;
+        margin: max(16px, calc((100dvh - 844px) / 2)) auto;
+        padding: 7px;
+        border-radius: 58px;
+        background: linear-gradient(145deg, #ff80b5 0%, #ffe87a 34%, #9873e5 76%, #ff8fbd 100%);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.58), 0 0 0 5px #1c1025, 0 25px 70px rgba(0, 0, 0, 0.65);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .gameBoard::before {
+        content: '';
+        position: absolute;
+        top: 11px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 55px;
+        height: 5px;
+        border-radius: 999px;
+        background: #09060d;
+        z-index: 200;
+    }
+
+    .mainArea {
+        min-height: 0;
+        flex: 1;
+        border-radius: 51px;
+        overflow: hidden;
+        padding-top: 17px;
+        padding-bottom: 150px;
+    }
+
+    .gameFooter,
+    .stampTrayWrapper {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        right: auto;
+        transform: none;
+    }
+
+    .gameFooter {
+        bottom: 92px;
+    }
+
+    .stampTrayWrapper {
+        bottom: 0;
+        background: linear-gradient(to top, rgba(13, 7, 18, 0.94), rgba(13, 7, 18, 0));
+    }
+}
+
 @media (max-width: 600px) {
     .gameContainer {
         max-width: 100%;
@@ -148,6 +269,25 @@
     }
 
     .gameFooter {
-        bottom: 100px;
+        bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+@media (max-width: 600px) and (max-height: 700px) {
+    .mainArea {
+        padding-bottom: calc(170px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .gameContainer {
+        max-width: min(100vw, calc(100dvh - 290px));
+    }
+
+    .footerButton {
+        height: 52px;
+        font-size: 1.15rem;
+    }
+
+    .gameFooter {
+        bottom: calc(82px + env(safe-area-inset-bottom, 0px));
     }
 }

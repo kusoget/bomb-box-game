@@ -63,6 +63,7 @@ function buildGameState(scenario: Scenario): GameState {
     return {
         id: 'mock-game',
         roomId: 'mock-room',
+        rules: { targetScore: 40, maxShocks: 3 },
         chairs,
         player1Score: PLAYER1.score,
         player2Score: PLAYER2.score,

@@ -1,13 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChatMessage, GameState, Player, Room } from '@/types/game';
+import { ChatMessage, GameState, Player, Room, WatchMode } from '@/types/game';
 import { ClientMessage, RoomSnapshot, ServerMessage } from '@/types/realtime';
 import { wsUrl } from '@/lib/api';
 
 interface UseGameStateProps {
     roomCode: string;
     playerId: string;
+    /** 観戦トークン。指定すると観戦者としてつなぐ（操作は送れない） */
+    watchToken?: string;
     /** sessionStorage の読み出しが済むまで接続を待つ（false の間は何もしない） */
     ready?: boolean;
 }
@@ -17,6 +19,8 @@ interface UseGameStateReturn {
     players: Player[];
     gameState: GameState | null;
     messages: ChatMessage[];
+    spectatorCount: number;
+    spectatorMode: WatchMode | null;
     loading: boolean;
     error: string | null;
     isHost: boolean;
@@ -37,6 +41,8 @@ const EMPTY: LocalSnapshot = {
     players: [],
     gameState: null,
     messages: [],
+    spectatorCount: 0,
+    spectatorMode: null,
 };
 
 const PING_INTERVAL_MS = 30_000;
@@ -46,7 +52,7 @@ const MAX_RETRIES = 5;
  * ルームの Durable Object に WebSocket でつなぎ、状態を丸ごと受け取る。
  * 得点計算・勝敗判定はサーバー側で行うので、ここからは「操作」だけを送る。
  */
-export function useGameState({ roomCode, playerId, ready = true }: UseGameStateProps): UseGameStateReturn {
+export function useGameState({ roomCode, playerId, watchToken, ready = true }: UseGameStateProps): UseGameStateReturn {
     const [snapshot, setSnapshot] = useState<LocalSnapshot>(EMPTY);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -57,6 +63,8 @@ export function useGameState({ roomCode, playerId, ready = true }: UseGameStateP
         if (!ready || !roomCode) return;
 
         let disposed = false;
+        // ルームが無い（解散 / 観戦トークン違い）と言われたら再接続しない
+        let gone = false;
         let retries = 0;
         let retryTimer: ReturnType<typeof setTimeout> | undefined;
         let pingTimer: ReturnType<typeof setInterval> | undefined;
@@ -64,9 +72,10 @@ export function useGameState({ roomCode, playerId, ready = true }: UseGameStateP
         const connect = () => {
             if (disposed) return;
 
-            const ws = new WebSocket(
-                wsUrl(`/api/rooms/${encodeURIComponent(roomCode)}/ws?playerId=${encodeURIComponent(playerId)}`)
-            );
+            const query = watchToken
+                ? `watch=${encodeURIComponent(watchToken)}`
+                : `playerId=${encodeURIComponent(playerId)}`;
+            const ws = new WebSocket(wsUrl(`/api/rooms/${encodeURIComponent(roomCode)}/ws?${query}`));
             wsRef.current = ws;
 
             ws.onopen = () => {
@@ -86,13 +95,14 @@ export function useGameState({ roomCode, playerId, ready = true }: UseGameStateP
                 }
                 if (message.t !== 'STATE') return;
 
+                if (message.payload === null) gone = true;
                 setSnapshot(message.payload ?? EMPTY);
                 setLoading(false);
             };
 
             ws.onclose = () => {
                 clearInterval(pingTimer);
-                if (disposed) return;
+                if (disposed || gone) return;
 
                 if (retries >= MAX_RETRIES) {
                     setError('接続が切れました。ページを再読み込みしてください');
@@ -114,14 +124,14 @@ export function useGameState({ roomCode, playerId, ready = true }: UseGameStateP
             wsRef.current?.close();
             wsRef.current = null;
         };
-    }, [roomCode, playerId, ready]);
+    }, [roomCode, playerId, watchToken, ready]);
 
     const send = useCallback((message: ClientMessage) => {
         const ws = wsRef.current;
         if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(message));
     }, []);
 
-    const { room, players, gameState, messages } = snapshot;
+    const { room, players, gameState, messages, spectatorCount, spectatorMode } = snapshot;
 
     const startGame = useCallback(() => send({ t: 'START_GAME' }), [send]);
 
@@ -165,6 +175,8 @@ export function useGameState({ roomCode, playerId, ready = true }: UseGameStateP
         players,
         gameState,
         messages,
+        spectatorCount,
+        spectatorMode,
         loading,
         error,
         isHost: !!room && room.hostId === playerId,

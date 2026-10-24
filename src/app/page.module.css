@@ -6,6 +6,9 @@
   padding: 40px 20px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  background:
+    linear-gradient(180deg, rgba(20, 7, 24, 0.58), rgba(20, 7, 24, 0.27) 50%, rgba(20, 7, 24, 0.68)),
+    url('/images/boxbom/bg_split.png') center / cover;
 }
 
 /* Background Effects - Removed Cyber Lines, kept simple or could add pop pattern */
@@ -21,7 +24,7 @@
 /* Logo */
 .logo {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 22px;
 }
 
 .title {
@@ -29,12 +32,19 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+}
+
+.titleLogo {
+  display: block;
+  width: min(88%, 340px);
+  height: auto;
+  margin: 0 auto;
 }
 
 .bolt {
@@ -45,7 +55,7 @@
   font-family: 'Quicksand', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--pop-purple);
+  color: #ffe746;
   letter-spacing: 0.05em;
 }
 
@@ -54,11 +64,12 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 48px;
+  margin-bottom: 30px;
 }
 
 .menuButton {
   width: 100%;
+  max-width: none;
   padding: 20px 32px;
   font-size: 1.2rem;
   border-width: 3px;
@@ -78,7 +89,7 @@
 .formTitle {
   font-family: 'LINE Seed JP', sans-serif;
   font-size: 1.5rem;
-  color: var(--text-primary);
+  color: #fff;
   text-align: center;
   margin-bottom: 24px;
 }
@@ -91,7 +102,7 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #fff;
   margin-bottom: 8px;
 }
 
@@ -125,6 +136,42 @@
   text-transform: uppercase;
 }
 
+/* ルール選択（セグメントボタン） */
+.ruleOptions {
+  display: flex;
+  gap: 8px;
+}
+
+.ruleOption {
+  flex: 1;
+  padding: 10px 8px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  background: #fff;
+  border: 2px solid var(--text-primary);
+  border-radius: var(--border-radius);
+  box-shadow: 2px 2px 0 var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.ruleOption:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--text-primary);
+}
+
+.ruleOptionActive {
+  background: var(--pop-yellow);
+  box-shadow: 4px 4px 0 var(--text-primary);
+}
+
+.ruleOption:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .error {
   color: #fff;
   font-weight: 700;
@@ -142,14 +189,17 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .submitButton {
   width: 100%;
+  max-width: none;
+  min-height: 58px;
   padding: 16px 32px;
   font-size: 1.1rem;
   font-weight: 700;
-  background-color: var(--pop-purple);
+  background-color: var(--pop-pink);
   /* Force Purple */
   color: #fff;
   /* Force White */
@@ -190,12 +240,12 @@
 }
 
 .menuButtonPrimary {
-  background-color: var(--pop-purple);
+  background-color: var(--pop-pink);
   color: #fff;
 }
 
 .menuButtonSecondary {
-  background-color: var(--pop-orange);
+  background-color: var(--pop-purple);
   color: #fff;
 }
 
@@ -222,24 +272,54 @@
 */
 
 .backButton {
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding: 8px;
-  transition: color var(--transition-fast);
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  width: 100%;
+  max-width: none;
+  min-height: 52px;
+  background: rgba(19, 10, 31, 0.9);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 12px 24px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  box-shadow: 4px 4px 0 #09060d;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
-.backButton:hover {
-  color: var(--text-primary);
+.backButton:hover:not(:disabled) {
+  background: #35204f;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #09060d;
+}
+
+.backButton:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #09060d;
+}
+
+.backButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.inviteMessage {
+  margin-bottom: 22px;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.hostName,
+.inviteTitle {
+  color: #ffe746;
+  font-weight: 900;
 }
 
 /* Rules */
 .rules {
-  background: #fff;
-  border: var(--border-main);
+  background: rgba(12, 8, 24, 0.88);
+  border: 3px solid #ffe746;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-pop);
   padding: 28px 24px;
@@ -250,7 +330,7 @@
   font-family: 'LINE Seed JP', sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--pop-purple);
+  color: #ffe746;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -265,15 +345,138 @@
 .rulesList li {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #fff;
   line-height: 1.5;
-  padding-left: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   position: relative;
 }
 
-.rulesList li::before {
-  content: '💣';
-  position: absolute;
-  left: 0;
-  font-size: 1rem;
+.ruleIcon {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  margin-top: 1px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid #120b1a;
+  border-radius: 11px;
+  background: #ffe746;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.ruleIcon img {
+  width: 31px;
+  height: 31px;
+  object-fit: contain;
+}
+
+.ruleIcon svg {
+  width: 25px;
+  height: 25px;
+  fill: #ff315f;
+  stroke: #120b1a;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.rulesList li > span:last-child {
+  flex: 1;
+}
+
+@media (min-width: 700px) {
+  .main {
+    position: relative;
+    width: min(430px, calc((100dvh - 32px) * 0.51));
+    height: min(844px, calc(100dvh - 32px));
+    min-height: 0;
+    margin: max(16px, calc((100dvh - 844px) / 2)) auto;
+    padding: 7px;
+    border-radius: 58px;
+    background: linear-gradient(145deg, #ff80b5 0%, #ffe87a 34%, #9873e5 76%, #ff8fbd 100%);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.58), 0 0 0 5px #1c1025, 0 25px 70px rgba(0, 0, 0, 0.65);
+    overflow: hidden;
+  }
+
+  .main::before {
+    content: '';
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 55px;
+    height: 5px;
+    border-radius: 999px;
+    background: #09060d;
+    z-index: 2;
+  }
+
+  .container {
+    max-width: none;
+    height: 100%;
+    overflow-y: auto;
+    border-radius: 51px;
+    padding: 52px 24px 26px;
+    background:
+      linear-gradient(180deg, rgba(20, 7, 24, 0.58), rgba(20, 7, 24, 0.27) 50%, rgba(20, 7, 24, 0.68)),
+      url('/images/boxbom/bg_split.png') center / cover;
+  }
+
+  .logo {
+    margin-bottom: 24px;
+  }
+
+  .titleLogo {
+    width: min(94%, 328px);
+  }
+
+  .subtitle {
+    color: #ffe746;
+    text-shadow: 1px 1px 0 #000;
+  }
+
+  .menu {
+    gap: 14px;
+    margin: 0 auto 34px;
+    width: 100%;
+    max-width: none;
+  }
+
+  .menuButton {
+    min-height: 58px;
+    padding: 13px 20px;
+    font-size: 1.05rem;
+  }
+
+  .formCard {
+    margin-bottom: 24px;
+  }
+
+  .formTitle,
+  .label,
+  .backButton {
+    color: #fff;
+  }
+
+  .rules {
+    margin-top: 0;
+    padding: 18px;
+    width: 100%;
+  }
+
+  .rulesTitle {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+
+  .rulesList {
+    gap: 12px;
+  }
+
+  .rulesList li {
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
 }

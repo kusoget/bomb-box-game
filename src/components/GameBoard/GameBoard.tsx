@@ -1,15 +1,18 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { GameState, Player, ChatMessage } from '@/types/game';
+import { GameState, Player, ChatMessage, WatchMode } from '@/types/game';
 import ChairCircle from '@/components/ChairCircle/ChairCircle';
 import ScoreBoard from '@/components/ScoreBoard/ScoreBoard';
 import StampTray from '@/components/StampTray/StampTray';
+import StampOverlay from '@/components/StampOverlay/StampOverlay';
 import ElectricEffect from '@/components/ElectricEffect/ElectricEffect';
 import GameOverlay from '@/components/GameOverlay/GameOverlay';
 import RouletteOverlay from '@/components/RouletteOverlay/RouletteOverlay';
 import Toast from '@/components/Toast/Toast';
-import { getBoxbomCharacter } from '@/lib/gameLogic';
+import { getBoxbomCharacter, WATCH_DELAY_MS } from '@/lib/gameLogic';
+import { hapticImpact, hapticNotify } from '@/lib/native';
+import WatchShare from '@/components/WatchShare/WatchShare';
 import styles from './GameBoard.module.css';
 
 interface GameBoardProps {
@@ -17,7 +20,6 @@ interface GameBoardProps {
     player1: Player | null;
     player2: Player | null;
     currentPlayerId: string;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     messages: ChatMessage[];
     onSetTrap: (chairId: number) => void;
     onSelectChair: (chairId: number) => void;
@@ -25,6 +27,12 @@ interface GameBoardProps {
     onNextRound: () => void;
     onSendMessage: (message: string) => void;
     onBackToHome: () => void;
+    /** 観戦者として見ているならそのモード（操作不可） */
+    spectatorMode?: WatchMode | null;
+    /** いま観戦している人数 */
+    spectatorCount?: number;
+    /** 観戦URL用トークン（プレイヤーにだけ届く） */
+    watchTokens?: Record<WatchMode, string>;
     // プレビュー用: false にすると結果演出(revealing)を自動で送らず保持する
     autoAdvanceReveal?: boolean;
 }
@@ -34,12 +42,16 @@ export default function GameBoard({
     player1,
     player2,
     currentPlayerId,
+    messages,
     onSetTrap,
     onSelectChair,
     onConfirmSelection,
     onNextRound,
     onSendMessage,
     onBackToHome,
+    spectatorMode = null,
+    spectatorCount = 0,
+    watchTokens,
     autoAdvanceReveal = true,
 }: GameBoardProps) {
     const [isShocking, setIsShocking] = useState(false);
@@ -60,8 +72,7 @@ export default function GameBoard({
     const previousPhaseRef = useRef(gameState.phase);
     const revealTimerRef = useRef<NodeJS.Timeout | null>(null);
     const revealingHandledRef = useRef(false);
-    const lastClickTimeRef = useRef<number>(0);
-    const CLICK_COOLDOWN_MS = 500;
+    const lastSubmitTimeRef = useRef<number>(0);
 
     // revealing フェーズ処理
     useEffect(() => {
@@ -73,6 +84,9 @@ export default function GameBoard({
 
             if (!isSafe) {
                 setIsShocking(true);
+                void hapticNotify('error');   // 爆発: 強い振動
+            } else {
+                void hapticNotify('success');  // セーフ
             }
 
             setRevealResult({
@@ -124,14 +138,20 @@ export default function GameBoard({
     const canSelectChair = gameState.phase === 'selecting_chair' && isSitter;
     const canSetTrap = gameState.phase === 'setting_trap' && isSwitcher;
 
-    const handleChairClick = (chairId: number) => {
-        const now = Date.now();
-        if (now - lastClickTimeRef.current < CLICK_COOLDOWN_MS) return;
-        lastClickTimeRef.current = now;
+    const spectator = spectatorMode !== null;
+    const [showWatchShare, setShowWatchShare] = useState(false);
+    const spectatorLabel =
+        spectatorMode === 'delay' ? `👀 観戦中（${WATCH_DELAY_MS / 1000}秒遅れ）` :
+            spectatorMode === 'safe' ? '👀 観戦中（爆弾ふせ）' : '👀 観戦中';
 
+    const handleChairClick = (chairId: number) => {
         if (canSetTrap) {
-            if (gameState.trappedChair !== chairId) onSetTrap(chairId);
+            if (gameState.trappedChair !== chairId) {
+                void hapticImpact('light');
+                onSetTrap(chairId);
+            }
         } else if (canSelectChair) {
+            void hapticImpact('light');
             onSelectChair(chairId);
         }
     };
@@ -162,7 +182,7 @@ export default function GameBoard({
     const activeCharacter = getBoxbomCharacter(activePlayer?.avatar);
 
     return (
-        <div className={styles.gameBoard}>
+        <div className={`${styles.gameBoard} boxbom-play-screen`}>
             {showRoulette && player1 && player2 && (
                 <RouletteOverlay
                     player1Name={player1.name}
@@ -181,12 +201,28 @@ export default function GameBoard({
                 />
 
                 <div className={styles.gameArea}>
+                    {/* 観戦: 観戦者には「観戦中」、プレイヤーには観戦URLコピー + 観戦人数 */}
+                    {spectator ? (
+                        <div className={styles.watchBadge}>{spectatorLabel}</div>
+                    ) : watchTokens ? (
+                        <>
+                            <button type="button" className={`${styles.watchBadge} ${styles.watchButton}`} onClick={() => setShowWatchShare(v => !v)}>
+                                👀 {spectatorCount > 0 ? `${spectatorCount}人が観戦中` : '観戦URL'}
+                            </button>
+                            {showWatchShare && (
+                                <div className={styles.watchPopover}>
+                                    <WatchShare roomCode={gameState.roomId} tokens={watchTokens} spectatorCount={spectatorCount} />
+                                    <button type="button" className={styles.watchClose} onClick={() => setShowWatchShare(false)}>とじる</button>
+                                </div>
+                            )}
+                        </>
+                    ) : null}
                     <div className={styles.gameContainer}>
                         <ChairCircle
                             chairs={gameState.chairs}
                             selectedChair={gameState.selectedChair}
                             trappedChair={gameState.trappedChair}
-                            showTrapped={isSwitcher || gameState.phase === 'revealing'}
+                            showTrapped={spectator || isSwitcher || gameState.phase === 'revealing'}
                             canSelect={canSelectChair || canSetTrap}
                             isShocking={isShocking}
                             shockingChair={gameState.selectedChair}
@@ -228,28 +264,32 @@ export default function GameBoard({
                     }
                     onClick={() => {
                         const now = Date.now();
-                        if (now - lastClickTimeRef.current < CLICK_COOLDOWN_MS) return;
-                        lastClickTimeRef.current = now;
+                        if (now - lastSubmitTimeRef.current < 500) return;
+                        lastSubmitTimeRef.current = now;
 
+                        void hapticImpact('medium');
                         if (canSetTrap && gameState.trappedChair) onSetTrap(gameState.trappedChair);
                         else if (canSelectChair) onConfirmSelection();
                     }}
                 >
-                    けってい！
+                    {spectator ? spectatorLabel : canSetTrap ? '爆弾をセット！' : canSelectChair ? 'この箱にする！' : '相手の番です'}
                 </button>
             </div>
 
-            {/* スタンプトレイ (下部) */}
-            <div className={styles.stampTrayWrapper}>
+            {/* スタンプトレイ (下部)。観戦者は送れない */}
+            {!spectator && <div className={styles.stampTrayWrapper}>
                 <StampTray
                     myAvatar={
                         currentPlayerId === player1?.id ? player1?.avatar ?? null :
                             currentPlayerId === player2?.id ? player2?.avatar ?? null :
                                 null
                     }
-                    onSendStamp={(stampId) => onSendMessage(`:stamp:${stampId}`)}
+                    onSendStamp={(stampId) => { void hapticImpact('light'); onSendMessage(`:stamp:${stampId}`); }}
                 />
-            </div>
+            </div>}
+
+            {/* スタンプ演出（ふわっと浮かんで消える） */}
+            <StampOverlay messages={messages} currentPlayerId={currentPlayerId} />
 
             {/* 感電エフェクト */}
             <ElectricEffect isActive={isShocking} />
@@ -260,6 +300,7 @@ export default function GameBoard({
                 player1={player1}
                 player2={player2}
                 currentPlayerId={currentPlayerId}
+                spectator={spectator}
                 revealResult={revealResult}
                 onContinue={onNextRound}
                 onBackToHome={onBackToHome}

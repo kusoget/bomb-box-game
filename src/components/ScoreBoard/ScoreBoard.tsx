@@ -23,6 +23,7 @@ export default function ScoreBoard({
     const p2Score = gameState?.player2Score ?? 0;
     const p1Shocks = gameState?.player1Shocks ?? 0;
     const p2Shocks = gameState?.player2Shocks ?? 0;
+    const maxShocks = gameState?.rules?.maxShocks ?? 3;
     const round = gameState?.currentRound ?? 1;
 
     // アクティブなプレイヤー（手番）を判定
@@ -56,9 +57,9 @@ export default function ScoreBoard({
 
         switch (gameState.phase) {
             case 'setting_trap':
-                return `${switcherName}が爆弾セット中`;
+                return isSwitcher ? '爆弾を仕掛けよう！' : `${switcherName}が爆弾セット中`;
             case 'selecting_chair':
-                return `${sitterName}が箱を選択中`;
+                return isSitter ? '開ける箱を選ぼう！' : `${sitterName}が箱を選択中`;
             case 'confirming':
                 return isSitter ? '決定しますか？' : `${sitterName}が確認中...`;
             case 'revealing':
@@ -118,11 +119,11 @@ export default function ScoreBoard({
 
                 {/* ハート行 */}
                 <div className={styles.lifeIndicator}>
-                    {[0, 1, 2].map(i => (
+                    {Array.from({ length: maxShocks }, (_, i) => (
                         <Image
                             key={i}
-                            src={i < 3 - shocks ? asset('/images/boxbom/heart_on.png') : asset('/images/boxbom/heart_off.png')}
-                            alt={i < 3 - shocks ? 'life' : 'lost'}
+                            src={i < maxShocks - shocks ? asset('/images/boxbom/heart_on.png') : asset('/images/boxbom/heart_off.png')}
+                            alt={i < maxShocks - shocks ? 'life' : 'lost'}
                             width={20}
                             height={20}
                             className={styles.lifeHeart}

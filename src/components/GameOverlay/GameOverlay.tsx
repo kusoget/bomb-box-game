@@ -10,6 +10,8 @@ interface GameOverlayProps {
     player1: Player | null;
     player2: Player | null;
     currentPlayerId: string;
+    /** 観戦者には「勝利/敗北」ではなく勝者名を出す */
+    spectator?: boolean;
     revealResult: { safe: boolean; points: number } | null;
     onContinue: () => void;
     onBackToHome: () => void;
@@ -20,6 +22,7 @@ export default function GameOverlay({
     player1,
     player2,
     currentPlayerId,
+    spectator = false,
     revealResult,
     onContinue,
     onBackToHome,
@@ -72,7 +75,7 @@ export default function GameOverlay({
 
         const winnerPlayer = gameState.winner === player1?.id ? player1 : gameState.winner === player2?.id ? player2 : null;
         const winnerChar = winnerPlayer ? getBoxbomCharacter(winnerPlayer.avatar) : null;
-        const resultClass = isDraw ? styles.draw : isWinner ? styles.win : styles.lose;
+        const resultClass = isDraw ? styles.draw : (spectator || isWinner) ? styles.win : styles.lose;
 
         return (
             <div className={styles.gameOverOverlay}>
@@ -84,7 +87,7 @@ export default function GameOverlay({
                             </div>
                         )}
                         <h1 className={`${styles.resultTitle} ${resultClass}`}>
-                            {isDraw ? '引き分け' : isWinner ? '勝利' : '敗北'}
+                            {isDraw ? '引き分け' : spectator ? `${winnerPlayer?.name ?? ''}の勝利` : isWinner ? '勝利' : '敗北'}
                         </h1>
                         <div className={styles.winReason}>{getWinReasonText()}</div>
                     </div>

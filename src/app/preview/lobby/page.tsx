@@ -12,6 +12,7 @@ const ROOM: Room = {
     status: 'waiting',
     hostId: 'p1',
     createdAt: new Date().toISOString(),
+    rules: { targetScore: 40, maxShocks: 3 },
 };
 
 const PLAYER1: Player = {
